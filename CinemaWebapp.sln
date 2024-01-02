@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34322.80
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaStore", "CinemaStore\CinemaStore.csproj", "{1EAE36AB-F6F9-4D19-8C42-EDD4CAEDA9E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaData", "CinemaData\CinemaData.csproj", "{623578FA-7314-4000-97AF-54648C2EBB30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EAE36AB-F6F9-4D19-8C42-EDD4CAEDA9E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EAE36AB-F6F9-4D19-8C42-EDD4CAEDA9E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EAE36AB-F6F9-4D19-8C42-EDD4CAEDA9E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EAE36AB-F6F9-4D19-8C42-EDD4CAEDA9E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{623578FA-7314-4000-97AF-54648C2EBB30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{623578FA-7314-4000-97AF-54648C2EBB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{623578FA-7314-4000-97AF-54648C2EBB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{623578FA-7314-4000-97AF-54648C2EBB30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF2A4D2D-AB99-4DA0-9E60-E5D70EEFA09C}
+	EndGlobalSection
+EndGlobal
