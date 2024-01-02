@@ -1,6 +1,6 @@
 ﻿/*
 *  Εδώ φτιάχνουμε τις οντότητες που θα ενταχθούν στην βάση δεδομένων 
-*  π.χ Users, Movies κλπ.
+*  π.χ User, Movie κλπ.
 */
 using System.ComponentModel.DataAnnotations;
 

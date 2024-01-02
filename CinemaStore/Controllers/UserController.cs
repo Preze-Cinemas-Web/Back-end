@@ -26,39 +26,5 @@ namespace Cinema.Controllers
             _logger = logger;
             _usersService = usersService;
         }
-
-        [HttpGet]
-        public IEnumerable<UserDTO> GetUsers()
-        {
-            return _usersService.GetAllUsers();
-        }
-
-        [HttpGet("{id:int}")]
-        public ActionResult<UserDTO> GetOneUser(int id)
-        {
-            var user = _usersService.GetUserById(id);
-
-            if (user != null)
-            {
-                return user;
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        [HttpPost]
-        public ActionResult<UserDTO> CreateOneUser(UserDTO user)
-        {
-            try
-            {
-                return _usersService.CreateUser(user);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
     }
 }
