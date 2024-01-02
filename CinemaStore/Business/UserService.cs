@@ -51,10 +51,5 @@ namespace CinemaStore.Business
         {
             throw new NotImplementedException();
         }
-
-        public UserDTO UpdatePartialUser(UserDTO user)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

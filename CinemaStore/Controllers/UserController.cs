@@ -47,5 +47,11 @@ namespace Cinema.Controllers
                 return NotFound();
             }
         }
+
+        [HttpPost]
+        public ActionResult<UserDTO> CreateUser (UserDTO user)
+        {
+            return _usersService.CreateUser(user);
+        }
     }
 }
