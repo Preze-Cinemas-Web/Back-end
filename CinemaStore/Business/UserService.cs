@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Cinema.Models;
 using CinemaData;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaStore.Business
 {
@@ -34,11 +35,17 @@ namespace CinemaStore.Business
              *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
              *  τα πεδία του user (π.χ. το email να έχει το format email @gmail.com)
              */
-            User user = this._mapper.Map<User>(u); // Μετατρέπω το UserDTO (Store) -> User (Data)
+            
+            if (u == null)
+            {
+                throw new ArgumentNullException(nameof(u));
+            }
 
+            User user = this._mapper.Map<User>(u); // Μετατρέπω το UserDTO (Store) -> User (Data)
+            
             var result = _context.User.Add(user);
             _context.SaveChanges();
-
+      
             return u;
         }
 

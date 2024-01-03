@@ -26,5 +26,18 @@ namespace Cinema.Controllers
             _logger = logger;
             _usersService = usersService;
         }
+
+        [HttpPost]
+        public ActionResult<UserDTO> AddUser([FromBody] UserDTO userDTO) 
+        {
+            try
+            {
+                return _usersService.CreateUser(userDTO);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
