@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Controllers
 {
     [ApiController]
-    [Route("/Ath21's API/1.0/[controller]")]
+    [Route("/API/1.0/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger _logger;
@@ -25,6 +25,27 @@ namespace Cinema.Controllers
         {
             _logger = logger;
             _usersService = usersService;
+        }
+
+        [HttpGet]
+        public IEnumerable<UserDTO> GetUsers()
+        {
+            return _usersService.GetAllUsers();
+        }
+
+        [HttpGet("{id:int}")]
+        public ActionResult<UserDTO> GetOneUser(int id)
+        {
+            var user = _usersService.GetUserById(id);
+
+            if (user != null)
+            {
+                return user;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
