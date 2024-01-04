@@ -19,24 +19,24 @@ namespace Cinema.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly IUserService _usersService;
+        private readonly IUserService _userService;
 
-        public UserController(ILogger<UserController> logger, IUserService usersService)
+        public UserController(ILogger<UserController> logger, IUserService userService)
         {
             _logger = logger;
-            _usersService = usersService;
+            _userService = userService;
         }
 
         [HttpGet]
         public IEnumerable<UserDTO> GetUsers()
         {
-            return _usersService.GetAllUsers();
+            return _userService.GetAllUsers();
         }
 
         [HttpGet("{id:int}")]
         public ActionResult<UserDTO> GetOneUser(int id)
         {
-            var user = _usersService.GetUserById(id);
+            var user = _userService.GetUserById(id);
 
             if (user != null)
             {
@@ -49,9 +49,20 @@ namespace Cinema.Controllers
         }
 
         [HttpPost]
-        public ActionResult<UserDTO> CreateUser (UserDTO user)
+        public ActionResult<UserDTO> AddUser(UserDTO userDTO)
         {
-            return _usersService.CreateUser(user);
+            try
+            {
+                return _userService.CreateUser(userDTO);
+            }
+            catch (ArgumentNullException ex1)
+            {
+                return BadRequest(ex1.Message);
+            }
+            catch (MyException ex2)
+            {
+                return BadRequest(ex2.Message);
+            }
         }
     }
 }
