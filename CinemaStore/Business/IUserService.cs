@@ -12,8 +12,6 @@ namespace CinemaStore.Business
         public UserDTO CreateUser(UserDTO user);
         // [HttpPut("{id:int}")]
         public UserDTO UpdateUser(UserDTO user);
-        // [HttpPatch("{id:int}")]
-        public UserDTO UpdatePartialUser(UserDTO user);
         // [HttpDelete("{id:int}")]
         public void DeleteUserById(int id);
     }
