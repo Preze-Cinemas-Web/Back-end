@@ -2,9 +2,11 @@
 {
     public class MyException : Exception
     {
-        public MyException(string msg) 
-            : base(msg)
-        {             
-        }
+        public MyException() { }
+
+        public MyException(string message) : base(message) { }
+
+        public MyException(string message, Exception innerException) : base(message, innerException) { }
     }
+
 }

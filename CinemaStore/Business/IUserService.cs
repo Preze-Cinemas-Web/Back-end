@@ -13,6 +13,6 @@ namespace CinemaStore.Business
         // [HttpPut("{id:int}")]
         public UserDTO UpdateUser(UserDTO user);
         // [HttpDelete("{id:int}")]
-        public void DeleteUserById(int id);
+        bool DeleteUserById(int id);
     }
 }

@@ -64,5 +64,56 @@ namespace Cinema.Controllers
                 return BadRequest(ex2.Message);
             }
         }
+
+        [HttpPut]
+        public ActionResult<UserDTO> UpdateUser(UserDTO updatedUserDTO)
+        {
+            try
+            {
+                var updatedUser = _userService.UpdateUser(updatedUserDTO);
+
+                if (updatedUser != null)
+                {
+                    return updatedUser;
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (ArgumentNullException ex1)
+            {
+                return BadRequest(ex1.Message);
+            }
+            catch (MyException ex2)
+            {
+                return BadRequest(ex2.Message);
+            }
+        }
+
+
+        [HttpDelete("{id:int}")]
+        public ActionResult DeleteUserById(int id)
+        {
+            try
+            {
+                bool isDeleted = _userService.DeleteUserById(id);
+
+                if (isDeleted)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (MyException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 }

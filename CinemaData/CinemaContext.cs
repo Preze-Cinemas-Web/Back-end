@@ -20,12 +20,13 @@ namespace CinemaData
 
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(
-                    "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +
+                _ = optionsBuilder.UseSqlServer(
+                    "server=DESKTOP-4S64V8A\\SQLEXPRESS;" +
                     "database=CinemaDatabase;" +
                     "Integrated Security=True;" +
                     "MultipleActiveResultSets=True;" +
-                    "TrustServerCertificate=True");
+                    "TrustServerCertificate=True",
+                    b => b.MigrationsAssembly("CinemaStore"));
             }
         }
     }

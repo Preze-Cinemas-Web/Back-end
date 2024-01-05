@@ -207,14 +207,45 @@ namespace CinemaStore.Business
             return userDTO;
         }
 
-        public UserDTO UpdateUser(UserDTO user)
+        public UserDTO UpdateUser(UserDTO updatedUserDTO)
         {
-            throw new NotImplementedException();
+            var existingUser = _context.User.FirstOrDefault(u => u.Id == updatedUserDTO.Id);
+
+            if (existingUser != null)
+            {
+                _mapper.Map(updatedUserDTO, existingUser);
+
+                _context.SaveChanges();
+                return updatedUserDTO;
+            }
+            else
+            {
+                throw new MyException("Δεν βρέθηκε χρήστης για ενημέρωση.");
+            }
         }
 
-        public void DeleteUserById(int id)
+        public bool DeleteUserById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var userToDelete = _context.User.FirstOrDefault(u => u.Id == id);
+
+                if (userToDelete != null)
+                {
+                    _context.User.Remove(userToDelete);
+                    _context.SaveChanges();
+                    return true; // Επιτυχής διαγραφή
+                }
+                else
+                {
+                    return false; // Δεν βρέθηκε ο χρήστης
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new MyException("Deletion failed.", ex);
+            }
         }
+
     }
 }
