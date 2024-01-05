@@ -21,7 +21,7 @@ namespace CinemaData
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    "server=MSI\\SQLEXPRESS;" +
+                    "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +
                     "database=CinemaDatabase;" +
                     "Integrated Security=True;" +
                     "MultipleActiveResultSets=True;" +
