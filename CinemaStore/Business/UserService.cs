@@ -28,156 +28,290 @@ namespace CinemaStore.Business
             return user;
         }
 
+       /*  HTTP POST - User
+        *  
+        *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
+        *  τα πεδία του User (π.χ. το email να έχει το format email @gmail.com). 
+        *  
+        *  Business Logic User
+        */
         public UserDTO CreateUser(UserDTO userDTO)
         {
             /*
-             *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
-             *  τα πεδία του user (π.χ. το email να έχει το format email @gmail.com)
+             *  Null Object :
              */
-
-            // Null Object Check
             if (userDTO == null)
             {
                 throw new ArgumentNullException(nameof(userDTO));
             }
 
-            // Id Check
+            /* Id :
+             * 
+             * [1] To id πρέπει να είναι ίσο με 0. Για κάθε εγγραφή στην βάση το id αυξάνεται κατά 1
+             * 
+             */
             int id = userDTO.Id;
             
-            if (id > 0)
+            if (id > 0) // [1] 
             {
-                throw new MyException("Λανθασμένο id. Το πεδίο Id δεν πρέπει να συμπληρωθεί από τον client, πρέπει να παραμείνει 0!!");
+                throw new MyException("Λανθασμένο id\n[1] To id πρέπει να είναι ίσο με 0. Για κάθε εγγραφή στην βάση το id αυξάνεται κατά 1");
             }
 
-            // FirstName Check
+            /* FirstName :
+             * 
+             * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3
+		     * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
+	         * [3] Πρέπει να περιέχει μόνο γράμματα
+		     * [4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο
+		     * [5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά
+		     * [6] Τα γράμματα πρέπει να είναι όλα λατινικά
+             * 
+             */
+            // [1] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+            // [2] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
             string firstName = userDTO.FirstName;
-
-            char[] nameArrayF = firstName.ToCharArray();
-            bool containsLettersF = firstName.All(char.IsLetter);                      // Ελέγχω αν όλα είναι γράμματα
-            bool upperFirstLetterF = char.IsUpper(nameArrayF[0]);                      // Ελέγχω αν το 1ο γράμμα είναι κεφαλαίο
-            bool lowerRestLettersF = firstName.Substring(1).All(char.IsLower);         // Ελέγχω αν τα υπόλοιπα γράμματα είναι πεζά
-            bool isLatinF = true;                                                      // Ελέγχω αν έχει μόνο λατινικά γράμματα
+            
+            char[] nameArrayF = firstName.ToCharArray(); 
+            bool containsLettersF = firstName.All(char.IsLetter);              // [3]
+            bool upperFirstLetterF = char.IsUpper(nameArrayF[0]);              // [4]
+            bool lowerRestLettersF = firstName.Substring(1).All(char.IsLower); // [5] 
+            bool isLatinF = true;                                              // [6]                                            
             int i;
             for (i = 0; i < nameArrayF.Length; i++)
             {
-                isLatinF = (nameArrayF[i] >= 'A' && nameArrayF[i] <= 'Z') || (nameArrayF[i] >= 'a' && nameArrayF[i] <= 'z');
-                if (!isLatinF)
+                isLatinF = (nameArrayF[i] >= 'A' && nameArrayF[i] <= 'Z') || (nameArrayF[i] >= 'a' && nameArrayF[i] <= 'z'); // [6]
+                if (!isLatinF)                                                                                               // [6]
                 {
                     break;
                 }
             }
-            if (!containsLettersF)
+            if (!containsLettersF) // [3]
             {
-                throw new MyException("Λανθασμένο όνομα.\nΠρέπει να έχει μόνο γράμματα!!");
+                throw new MyException("Λανθασμένο όνομα\n[3] Πρέπει να περιέχει μόνο γράμματα");
             }
-            if (!upperFirstLetterF)
+            if (!upperFirstLetterF) // [4]
             {
-                throw new MyException("Λανθασμένο όνομα.\nΠρέπει το 1ο γράμμα να είναι κεφαλαίο!!");
+                throw new MyException("Λανθασμένο όνομα\n[4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο");
             }
-            if (!lowerRestLettersF)
+            if (!lowerRestLettersF) // [5]
             {
-                throw new MyException("Λανθασμένο όνομα.\nΠρέπει τα γράμματα εκτός από το 1ο να είναι πεζά!!");
+                throw new MyException("Λανθασμένο όνομα\n[5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά");
             }
-            if (!isLatinF)
+            if (!isLatinF)          // [6]
             {
-                throw new MyException("Λανθασμένο όνομα.\nΠρέπει τα γράμματα να είναι λατινικά!!");
+                throw new MyException("Λανθασμένο όνομα\n[6] Τα γράμματα πρέπει να είναι όλα λατινικά");
             }
 
-            // LastName Check
+            /* LastName :
+             * 
+             * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3
+		     * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
+	         * [3] Πρέπει να περιέχει μόνο γράμματα
+		     * [4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο
+		     * [5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά
+		     * [6] Τα γράμματα πρέπει να είναι όλα λατινικά
+             * 
+             */
+            // [1] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+            // [2] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
             string lastName = userDTO.LastName;
 
             char[] nameArrayL = lastName.ToCharArray();
-            bool containsLettersL = lastName.All(char.IsLetter);                       // Ελέγχω αν όλα είναι γράμματα
-            bool upperFirstLetterL = char.IsUpper(nameArrayL[0]);                      // Ελέγχω αν το 1ο γράμμα είναι κεφαλαίο
-            bool lowerRestLettersL = lastName.Substring(1).All(char.IsLower);          // Ελέγχω αν τα υπόλοιπα γράμματα είναι πεζά
-            bool isLatinL = true;                                                      // Ελέγχω αν έχει μόνο λατινικά γράμματα
+            bool containsLettersL = lastName.All(char.IsLetter);                // [3]
+            bool upperFirstLetterL = char.IsUpper(nameArrayL[0]);               // [4]       
+            bool lowerRestLettersL = lastName.Substring(1).All(char.IsLower);   // [5]       
+            bool isLatinL = true;                                               // [6]       
             int j;
             for (j = 0; j < nameArrayL.Length; j++)
             {
-                isLatinL = (nameArrayL[j] >= 'A' && nameArrayL[j] <= 'Z') || (nameArrayL[j] >= 'a' && nameArrayL[j] <= 'z');
-                if (!isLatinL)
+                isLatinL = (nameArrayL[j] >= 'A' && nameArrayL[j] <= 'Z') || (nameArrayL[j] >= 'a' && nameArrayL[j] <= 'z'); // [6]
+                if (!isLatinL)                                                                                               // [6]
                 {
                     break;
                 }
             }
-            if (!containsLettersL)
+            if (!containsLettersL)  // [3]
             {
-                throw new MyException("Λανθασμένο επώνυμο.\nΠρέπει να έχει μόνο γράμματα!!");
+                throw new MyException("Λανθασμένο επώνυμο\n[3] Πρέπει να περιέχει μόνο γράμματα");
             }
-            if (!upperFirstLetterL)
+            if (!upperFirstLetterL) // [4]
             {
-                throw new MyException("Λανθασμένο επώνυμο.\nΠρέπει το 1ο γράμμα να είναι κεφαλαίο!!");
+                throw new MyException("Λανθασμένο επώνυμο\n[4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο");
             }
-            if (!lowerRestLettersL)
+            if (!lowerRestLettersL) // [5]
             {
-                throw new MyException("Λανθασμένο επώνυμο.\nΠρέπει τα γράμματα εκτός από το 1ο να είναι πεζά!!");
+                throw new MyException("Λανθασμένο επώνυμο\n[5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά");
             }
-            if (!isLatinL)
+            if (!isLatinL)          // [6]
             {
-                throw new MyException("Λανθασμένο επώνυμο.\nΠρέπει τα γράμματα να είναι λατινικά!!");
+                throw new MyException("Λανθασμένο επώνυμο\n[6] Τα γράμματα πρέπει να είναι όλα λατινικά");
             }
 
-            // Email Check
+            /* Email :
+             * 
+             * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
+             * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 25
+             * [3] Πρέπει να τελειώνει σε "@gmail.com" ή "@hotmail.com" ή "@outlook.com"
+             * [4] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
+             * [5] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.' 
+             * [6] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής
+             * [7] Τα γράμματα πρέπει να είναι όλα λατινικά
+             * 
+             */
+            // [1] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+            // [2] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
             string email = userDTO.Email;
 
-            bool validEmail = email.EndsWith("@gmail.com") || email.EndsWith("@hotmail.com") || email.EndsWith("@outlook.com");
-            if (!validEmail) 
+            bool emailFormat = email.EndsWith("@gmail.com") || email.EndsWith("@hotmail.com") || email.EndsWith("@outlook.com"); // [3]
+            if (!emailFormat)                                                                                                    // [3]
             {
-                throw new MyException("Λανθασμένο email.\nΠρέπει να τελειώνει σε @gmail.com ή @hotmail.com ή @outlook.com!!");
+                throw new MyException("Λανθασμένο email\n[3] Πρέπει να τελειώνει σε \"@gmail.com\" ή \"@hotmail.com\" ή \"@outlook.com\"");
+            }
+            string[] subEmails = email.Split('@');
+            string emailName = subEmails[0];
+            string emailDomain = subEmails[1];
+            char[] emailNameArray = emailName.ToCharArray();
+            bool containsLettersE = emailName.Any(char.IsLetter);         // [4]
+            bool containsSymbolsE = emailName.Any(char.IsSymbol);         // [5]
+            bool containsWhiteSpacesE = emailName.Any(char.IsWhiteSpace); // [6]
+            bool isLatinE = true;                                         // [7]
+            int w;
+            for (w = 0; w < emailName.Length; w++)
+            {
+                isLatinE = (emailName[w] >= 'A' && emailName[w] <= 'Z') || (emailName[w] >= 'a' && emailName[w] <= 'z'); // [7]
+                if (!isLatinE)                                                                                           // [7]
+                {
+                    break;
+                }
+            }
+            if (!containsLettersE)     // [4]
+            {
+                throw new MyException("Λανθασμένο email\n[4] Πρέπει να περιέχει τουλάχιστον 1 γράμμα");
+            }
+            if (!containsSymbolsE)     // [5]
+            {
+                throw new MyException("Λανθασμένο email\n[5] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.'");
+            }
+            if (!containsWhiteSpacesE) // [6]
+            {
+                throw new MyException("Λανθασμένο email\n[6] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής");
+            }
+            if (!isLatinE)             // [7]
+            {
+                throw new MyException("Λανθασμένο email\n[7] Τα γράμματα πρέπει να είναι όλα λατινικά");
             }
 
-            // PhoneNumber Check
+            /* PhoneNumber :
+             * 
+             * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
+             * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
+             * [3] Πρέπει να περιέχει μόνο ψηφία
+             * [4] Πρέπει να ξεκινάει από τα ψηφία 69
+               (Ο αριθμός τηλεφώνου πρέπει να είναι κινητό νούμερο και από ελληνική εταιρία κινητής τηλεφωνίας)
+             * 
+             */
+            // [1] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+            // [2] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
             string phoneNumber = userDTO.PhoneNumber;
 
-            bool validPhoneNumber = phoneNumber.All(char.IsDigit);
-            if (!validPhoneNumber) 
+            bool containsDigitsP = phoneNumber.All(char.IsDigit); // [3]
+            if (!containsDigitsP)                                 // [3]
             {
-                throw new MyException("Λανθασμένο νούμερο τηλεφώνου.\nΠρέπει να περιλαμβάνει αυστηρά 10 ψηφία!!");
+                throw new MyException("Λανθασμένος αριθμός τηλεφώνου\n[3] Πρέπει να περιέχει μόνο ψηφία");
+            }
+            bool startsWith69 = phoneNumber.StartsWith("69"); // [4]
+            if (!startsWith69)                                // [4]
+            {
+                throw new MyException("Λανθασμένος αριθμός τηλεφώνου\n[4] Πρέπει να ξεκινάει από τα ψηφία 69");
             }
 
-            // BirthDate Check
+            /* Birthdate :
+             *
+             * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
+             * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
+             * [3] Η ημερομηνία πρέπει να είναι έγκυρη
+             *    [3.1] Η ημερομηνία πρέπει να περιλαμβάνει τον χαρακτήρα '-'
+             *    [3.2] Η ημερομηνία πρέπει να περιλαμβάνει μόνο ψηφία
+             *    [3.3] Το μορφότυπο της ημερομηνίας πρέπει να είναι "ΧΧΧΧ-ΜΜ-ΗΗ"
+             *    [3.4] Η ημερομηνία γέννησης θα πρέπει να είναι έγκυρη ως προς την αντιστοιχία ημερών και μήνα
+                  (παράδειγμα1: Με εισαγωγή 01 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 31, καθώς ο μήνας Ιανουάριος διαρκεί 31 μέρες)
+                  (παράδειγμα2: Με εισαγωγή 2003 στο πεδίο "ΧΧΧΧ" και 02 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 28, 
+                                καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη-δίσεκτα έτη)
+             * [4] Ο χρόνος γέννησης "ΧΧΧΧ" πρέπει να είναι από 1924 εώς 2024
+             * [5] Το απόρρητο ηλικίας είναι από 15 χρονών και πάνω, δηλαδή επιτρεπτοί χρόνοι γέννησης βάση απορρήτου είναι από 1924 εώς 2009 
+               (δεδομένου ότι η τρέχουσα χρονιά είναι 2024)
+             */
+            // [1] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+            // [2] στο CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
             string birthdate = userDTO.Birthdate;
 
-            bool isDate = DateTime.TryParse(birthdate, out DateTime BirthDate);
+            bool isDate = DateTime.TryParse(birthdate, out DateTime BirthDate); // [3]
 
-            if (!isDate)
+            if (!isDate) // [3]
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης.\nΤο μορφότυπο της ημερομηνίας πρέπει να είναι ΧΧΧΧ-ΜΜ-ΗΗ!!");
+                throw new MyException("Λανθασμένη ημερομηνία γέννησης\n[3] Η ημερομηνία πρέπει να είναι έγκυρη" +
+                                                                    "\n   [3.1] Η ημερομηνία πρέπει να περιλαμβάνει τον χαρακτήρα '-'" +
+                                                                    "\n   [3.2] Η ημερομηνία πρέπει να περιλαμβάνει μόνο ψηφία" +
+                                                                    "\n   [3.3] Το μορφότυπο της ημερομηνίας πρέπει να είναι \"ΧΧΧΧ-ΜΜ-ΗΗ\"" +
+                                                                    "\n   [3.4] Η ημερομηνία γέννησης θα πρέπει να είναι έγκυρη ως προς την αντιστοιχία ημερών και μήνα");
             } 
             else
             {
-                bool validYear = (BirthDate.Year >= 1924 && BirthDate.Year <= DateTime.Now.Year);   // Έγκυρες χρονολογίες από 1924 μέχρι 2024..
-                bool validAge = (DateTime.Now.Year - BirthDate.Year >= 15);
-
-                if (!validYear)
+                bool validYear = (BirthDate.Year >= 1924 && BirthDate.Year <= DateTime.Now.Year);  // [4]
+                bool validAge = (DateTime.Now.Year - BirthDate.Year >= 15);                        // [5]
+                if (!validYear) // [4]
                 {
-                    throw new MyException("Λανθασμένη ημερομηνία γέννησης.\nΈγκυρες χρονολογίες από 1924 εώς 2024!!");
+                    throw new MyException("Λανθασμένη ημερομηνία γέννησης\n[4] Ο χρόνος γέννησης \"ΧΧΧΧ\" πρέπει να είναι από 1924 εώς 2024");
                 }
-                if (!validAge)
+                if (!validAge)  // [5] 
                 {
-                    throw new MyException("Παραβίαση απορρήτου ηλικίας.\nΜόνο ηλικίες 15+ επιτρέπονται για εγγραφή!!");
+                    throw new MyException("Λανθασμένη ημερομηνία γέννησης\n[5] Το απόρρητο ηλικίας είναι από 15 χρονών και πάνω, δηλαδή επιτρεπτοί χρόνοι γέννησης βάση απορρήτου είναι από 1924 εώς 2009");
                 }
             }
+            
 
-            // Username Check
+           /* Username 
+            * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
+		    * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
+	        * [3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
+		    * [4] Μπορεί να περιέχει το πολύ 1 ειδικό σύμβολο ('@', '#', '$', '%', '^', '&', '_')
+		    * [5] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής 
+		    * [6] Τα γράμματα πρέπει να είναι όλα λατινικά
+            */
             string username = userDTO.Username;
 
-            bool containsLettersU = username.Any(char.IsLetter);
-            bool containsDigitsU = username.Any(char.IsDigit);
+            char[] usernameArray = username.ToCharArray();
+            bool containsLettersU = username.Any(char.IsLetter);                                                         // [3]
             bool containsSpecialCharsU = username.Contains("&") ||  username.Contains("@") || username.Contains("#") 
-                || username.Contains("$") || username.Contains("%") || username.Contains("^") || username.Contains("_");
-            if (!containsLettersU)
+                || username.Contains("$") || username.Contains("%") || username.Contains("^") || username.Contains("_"); // [4]
+            bool containsWhiteSpaceU = username.Any(char.IsWhiteSpace);                                                  // [5]
+            bool isLatinU = true;                                                                                        // [6]                                            
+            int k;
+            for (k = 0; i < usernameArray.Length; i++)
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη.\nΠρέπει να περιέχει γράμματα!!");
+                isLatinU = (usernameArray[k] >= 'A' && usernameArray[k] <= 'Z') || (usernameArray[k] >= 'a' && usernameArray[k] <= 'z'); // [6]
+                if (!isLatinU)                                                                                                           // [6]
+                {
+                    break;
+                }
             }
-            if (!containsDigitsU)
+            if (!containsLettersU)       // [3]
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη.\nΠρέπει να περιέχει αριθμούς!!");
+                throw new MyException("Λανθασμένο όνομα χρήστη\n[3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα");
             }
-            if (!containsSpecialCharsU)
+            if (!containsSpecialCharsU)  // [4]
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη.\nΠρέπει να περιέχει ειδικούς χαρακτήρες!!");
+                throw new MyException("Λανθασμένο όνομα χρήστη\n[4] Μπορεί να περιέχει το πολύ 1 ειδικό σύμβολο ('@', '#', '$', '%', '^', '&', '_')");
             }
+            if (!containsWhiteSpaceU)    // [5]
+            {
+                throw new MyException("Λανθασμένο όνομα χρήστη\n[5] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής");
+            }
+            if (!isLatinU)               // [6]
+            {
+                throw new MyException("Λανθασμένο όνομα χρήστη\n[6] Τα γράμματα πρέπει να είναι όλα λατινικά");
+            }
+
 
             // Password Check
             string password = userDTO.Password;
