@@ -8,7 +8,7 @@ namespace Cinema.Models
 {
     public class UserDTO
     {
-        public int Id { get; set; }
+        public int Id { get; set; } 
         [MinLength(3, ErrorMessage = "Λάθος όνομα. [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3")]   // [1] στο CinemaStore/Business/UserService.cs/CreateUser()
         [MaxLength(15, ErrorMessage = "Λάθος όνομα. [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15")]     // [2] στο CinemaStore/Business/UserService.cs/CreateUser()
         public string FirstName { get; set; }
