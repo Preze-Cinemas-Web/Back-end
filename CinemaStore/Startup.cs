@@ -40,9 +40,9 @@ namespace CinemaStore
                 options.AddDefaultPolicy(
                     policy =>
                     {
-                        policy.WithOrigins("https://localhost:7236", 
-                                           "http://localhost:5139",
-                                           "Client's URL...");
+                        policy.WithOrigins("https://localhost:7236", // Server's URL 1 
+                                           "http://localhost:5139",  // Server's URL 2
+                                           "http://localhost:3000"); // Client's URL
                     });
             });
 
