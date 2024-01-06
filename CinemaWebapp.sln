@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaStore", "CinemaStore\CinemaStore.csproj", "{1EAE36AB-F6F9-4D19-8C42-EDD4CAEDA9E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaStore", "CinemaStore\CinemaStore.csproj", "{1EAE36AB-F6F9-4D19-8C42-EDD4CAEDA9E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaData", "CinemaData\CinemaData.csproj", "{623578FA-7314-4000-97AF-54648C2EBB30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaData", "CinemaData\CinemaData.csproj", "{623578FA-7314-4000-97AF-54648C2EBB30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaStoreUnitTests", "CinemaStoreUnitTests\CinemaStoreUnitTests.csproj", "{C6DBFACF-E8DF-4609-91DC-061C13C69A95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaStoreIntegrationTests", "CinemaStoreIntegrationTests\CinemaStoreIntegrationTests.csproj", "{E02B47E6-DB8D-4FEF-8F11-97F1438D795B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{623578FA-7314-4000-97AF-54648C2EBB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{623578FA-7314-4000-97AF-54648C2EBB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{623578FA-7314-4000-97AF-54648C2EBB30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6DBFACF-E8DF-4609-91DC-061C13C69A95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6DBFACF-E8DF-4609-91DC-061C13C69A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6DBFACF-E8DF-4609-91DC-061C13C69A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6DBFACF-E8DF-4609-91DC-061C13C69A95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E02B47E6-DB8D-4FEF-8F11-97F1438D795B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E02B47E6-DB8D-4FEF-8F11-97F1438D795B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E02B47E6-DB8D-4FEF-8F11-97F1438D795B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E02B47E6-DB8D-4FEF-8F11-97F1438D795B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
