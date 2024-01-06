@@ -28,178 +28,44 @@ namespace CinemaStore.Business
             return user;
         }
 
+       /*  HTTP POST - User
+        *  
+        *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
+        *  τα πεδία του User (π.χ. το email να έχει το format email @gmail.com).
+        */
         public UserDTO CreateUser(UserDTO userDTO)
         {
-            /*
-             *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
-             *  τα πεδία του user (π.χ. το email να έχει το format email @gmail.com)
-             */
+            // Business Logic User
 
-            // Null Object Check
-            if (userDTO == null)
-            {
-                throw new ArgumentNullException(nameof(userDTO));
-            }
+            UserBusinessLogic.DefineNullObjectBL(userDTO);
 
-            // Id Check
             int id = userDTO.Id;
-            
-            if (id > 0)
-            {
-                throw new MyException("Λανθασμένο id. Το πεδίο Id δεν πρέπει να συμπληρωθεί από τον client, πρέπει να παραμείνει 0!!");
-            }
+            UserBusinessLogic.DefineIdBL(id);
 
-            // FirstName Check
             string firstName = userDTO.FirstName;
+            UserBusinessLogic.DefineNameBL(firstName, "όνομα");
 
-            char[] nameArrayF = firstName.ToCharArray();
-            bool containsLettersF = firstName.All(char.IsLetter);                      // Ελέγχω αν όλα είναι γράμματα
-            bool upperFirstLetterF = char.IsUpper(nameArrayF[0]);                      // Ελέγχω αν το 1ο γράμμα είναι κεφαλαίο
-            bool lowerRestLettersF = firstName.Substring(1).All(char.IsLower);         // Ελέγχω αν τα υπόλοιπα γράμματα είναι πεζά
-            bool isLatinF = true;                                                      // Ελέγχω αν έχει μόνο λατινικά γράμματα
-            int i;
-            for (i = 0; i < nameArrayF.Length; i++)
-            {
-                isLatinF = (nameArrayF[i] >= 'A' && nameArrayF[i] <= 'Z') || (nameArrayF[i] >= 'a' && nameArrayF[i] <= 'z');
-                if (!isLatinF)
-                {
-                    break;
-                }
-            }
-            if (!containsLettersF)
-            {
-                throw new MyException("Λανθασμένο όνομα.\nΠρέπει να έχει μόνο γράμματα!!");
-            }
-            if (!upperFirstLetterF)
-            {
-                throw new MyException("Λανθασμένο όνομα.\nΠρέπει το 1ο γράμμα να είναι κεφαλαίο!!");
-            }
-            if (!lowerRestLettersF)
-            {
-                throw new MyException("Λανθασμένο όνομα.\nΠρέπει τα γράμματα εκτός από το 1ο να είναι πεζά!!");
-            }
-            if (!isLatinF)
-            {
-                throw new MyException("Λανθασμένο όνομα.\nΠρέπει τα γράμματα να είναι λατινικά!!");
-            }
-
-            // LastName Check
             string lastName = userDTO.LastName;
+            UserBusinessLogic.DefineNameBL(lastName, "επώνυμο");
 
-            char[] nameArrayL = lastName.ToCharArray();
-            bool containsLettersL = lastName.All(char.IsLetter);                       // Ελέγχω αν όλα είναι γράμματα
-            bool upperFirstLetterL = char.IsUpper(nameArrayL[0]);                      // Ελέγχω αν το 1ο γράμμα είναι κεφαλαίο
-            bool lowerRestLettersL = lastName.Substring(1).All(char.IsLower);          // Ελέγχω αν τα υπόλοιπα γράμματα είναι πεζά
-            bool isLatinL = true;                                                      // Ελέγχω αν έχει μόνο λατινικά γράμματα
-            int j;
-            for (j = 0; j < nameArrayL.Length; j++)
-            {
-                isLatinL = (nameArrayL[j] >= 'A' && nameArrayL[j] <= 'Z') || (nameArrayL[j] >= 'a' && nameArrayL[j] <= 'z');
-                if (!isLatinL)
-                {
-                    break;
-                }
-            }
-            if (!containsLettersL)
-            {
-                throw new MyException("Λανθασμένο επώνυμο.\nΠρέπει να έχει μόνο γράμματα!!");
-            }
-            if (!upperFirstLetterL)
-            {
-                throw new MyException("Λανθασμένο επώνυμο.\nΠρέπει το 1ο γράμμα να είναι κεφαλαίο!!");
-            }
-            if (!lowerRestLettersL)
-            {
-                throw new MyException("Λανθασμένο επώνυμο.\nΠρέπει τα γράμματα εκτός από το 1ο να είναι πεζά!!");
-            }
-            if (!isLatinL)
-            {
-                throw new MyException("Λανθασμένο επώνυμο.\nΠρέπει τα γράμματα να είναι λατινικά!!");
-            }
-
-            // Email Check
             string email = userDTO.Email;
+            UserBusinessLogic.DefineEmailBL(email);
 
-            bool validEmail = email.EndsWith("@gmail.com") || email.EndsWith("@hotmail.com") || email.EndsWith("@outlook.com");
-            if (!validEmail) 
-            {
-                throw new MyException("Λανθασμένο email.\nΠρέπει να τελειώνει σε @gmail.com ή @hotmail.com ή @outlook.com!!");
-            }
-
-            // PhoneNumber Check
             string phoneNumber = userDTO.PhoneNumber;
+            UserBusinessLogic.DefinePhoneNumberBL(phoneNumber);
 
-            bool validPhoneNumber = phoneNumber.All(char.IsDigit);
-            if (!validPhoneNumber) 
-            {
-                throw new MyException("Λανθασμένο νούμερο τηλεφώνου.\nΠρέπει να περιλαμβάνει αυστηρά 10 ψηφία!!");
-            }
-
-            // BirthDate Check
             string birthdate = userDTO.Birthdate;
+            UserBusinessLogic.DefineBirthdateBL(birthdate);
 
-            bool isDate = DateTime.TryParse(birthdate, out DateTime BirthDate);
-
-            if (!isDate)
-            {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης.\nΤο μορφότυπο της ημερομηνίας πρέπει να είναι ΧΧΧΧ-ΜΜ-ΗΗ!!");
-            } 
-            else
-            {
-                bool validYear = (BirthDate.Year >= 1924 && BirthDate.Year <= DateTime.Now.Year);   // Έγκυρες χρονολογίες από 1924 μέχρι 2024..
-                bool validAge = (DateTime.Now.Year - BirthDate.Year >= 15);
-
-                if (!validYear)
-                {
-                    throw new MyException("Λανθασμένη ημερομηνία γέννησης.\nΈγκυρες χρονολογίες από 1924 εώς 2024!!");
-                }
-                if (!validAge)
-                {
-                    throw new MyException("Παραβίαση απορρήτου ηλικίας.\nΜόνο ηλικίες 15+ επιτρέπονται για εγγραφή!!");
-                }
-            }
-
-            // Username Check
             string username = userDTO.Username;
+            UserBusinessLogic.DefineUsernameBL(username);
 
-            bool containsLettersU = username.Any(char.IsLetter);
-            bool containsDigitsU = username.Any(char.IsDigit);
-            bool containsSpecialCharsU = username.Contains("&") ||  username.Contains("@") || username.Contains("#") 
-                || username.Contains("$") || username.Contains("%") || username.Contains("^") || username.Contains("_");
-            if (!containsLettersU)
-            {
-                throw new MyException("Λανθασμένο όνομα χρήστη.\nΠρέπει να περιέχει γράμματα!!");
-            }
-            if (!containsDigitsU)
-            {
-                throw new MyException("Λανθασμένο όνομα χρήστη.\nΠρέπει να περιέχει αριθμούς!!");
-            }
-            if (!containsSpecialCharsU)
-            {
-                throw new MyException("Λανθασμένο όνομα χρήστη.\nΠρέπει να περιέχει ειδικούς χαρακτήρες!!");
-            }
-
-            // Password Check
             string password = userDTO.Password;
+            UserBusinessLogic.DefinePasswordBL(password);
+            
+            // Mapping to User & Insert into database
 
-            bool containsLettersP = password.Any(char.IsLetter);
-            bool containsDigitsP = password.Any(char.IsDigit);
-            bool containsSpecialCharsP = password.Contains("&") || password.Contains("@") || password.Contains("#")
-               || password.Contains("$") || password.Contains("%") || password.Contains("^") || password.Contains("_");
-            if (!containsLettersP)
-            {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης.\nΠρέπει να περιέχει γράμματα!!");
-            }
-            if (!containsDigitsP)
-            {
-                throw new MyException("Λανθασμένο κωδικός πρόσβασης.\nΠρέπει να περιέχει αριθμούς!!");
-            }
-            if (!containsSpecialCharsP)
-            {
-                throw new MyException("Λανθασμένο κωδικός πρόσβασης.\nΠρέπει να περιέχει ειδικούς χαρακτήρες!!");
-            }
-
-            User user = this._mapper.Map<User>(userDTO); // Μετατρέπω το UserDTO (Store) -> User (Data)
+            User user = this._mapper.Map<User>(userDTO); 
 
             _context.User.Add(user);
             _context.SaveChanges();
