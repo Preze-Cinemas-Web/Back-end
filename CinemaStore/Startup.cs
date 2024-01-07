@@ -10,9 +10,12 @@ namespace CinemaStore
             get;
         }
 
+        public string MyAllowSpecificOrigins { get; };
+
         public Startup(IConfiguration configuration)
         {
             configRoot = configuration;       
+            MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         }
 
 
@@ -37,13 +40,14 @@ namespace CinemaStore
             /****** [4] ******/
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
-                    policy =>
-                    {
-                        policy.WithOrigins("https://localhost:7236", // Server's URL 1 
-                                           "http://localhost:5139",  // Server's URL 2
-                                           "http://localhost:3000"); // Client's URL
-                    });
+                options.AddPolicy(MyAllowSpecificOrigins,
+                                    policy =>
+                                    {
+                                        policy.WithOrigins("https://localhost:7236",  // Server's URL
+                                                           "http://localhost:3000")   // Client's URL
+                                                           .AllowAnyHeader()
+                                                           .AllowAnyMethod();
+                                    });
             });
 
 
@@ -60,7 +64,7 @@ namespace CinemaStore
                 app.UseSwaggerUI();
             }
 
-            app.UseCors();
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseHttpsRedirection();
 
