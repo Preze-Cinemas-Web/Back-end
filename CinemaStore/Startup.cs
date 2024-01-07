@@ -10,7 +10,7 @@ namespace CinemaStore
             get;
         }
 
-        public string MyAllowSpecificOrigins { get; };
+        public string MyAllowSpecificOrigins { get; }
 
         public Startup(IConfiguration configuration)
         {
