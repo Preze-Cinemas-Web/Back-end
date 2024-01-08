@@ -1,4 +1,5 @@
 using AutoMapper;
+using Cinema.Models;
 using CinemaData;
 using CinemaStore.Business;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,15 @@ namespace CinemaStoreUnitTests
             _userService = new UserService(_mockContext.Object, _mockMapper.Object);
         }
 
-        // [Test]
-        // ...
+        [Test]
+        public void UserServiceIdTest()
+        {
+            UserDTO userDTO = new UserDTO()
+            {
+                Id = 1
+            };
+
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO));
+        }
     }
 }
