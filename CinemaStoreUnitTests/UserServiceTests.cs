@@ -29,11 +29,11 @@ namespace CinemaStoreUnitTests
         [Test]
         public void UserServiceIdTest()
         {
+            // [1] To id πρέπει να είναι ίσο με 0
             UserDTO userDTO = new UserDTO()
             {
                 Id = 1
             };
-
             Assert.Throws<MyException>(() => _userService.CreateUser(userDTO));
         }
 
