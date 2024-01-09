@@ -67,10 +67,10 @@ namespace CinemaStore.Business
 
             User user = this._mapper.Map<User>(userDTO); 
 
-            _context.User.Add(user);
+            var result = _context.User.Add(user);
             _context.SaveChanges();
 
-            return userDTO;
+            return userDTO; //_mapper.Map<UserDTO>(result);
         }
 
         public UserDTO UpdateUser(UserDTO user)
