@@ -155,6 +155,32 @@ namespace CinemaStoreUnitTests
             Assert.Throws<MyException>(() => _userService.CreateUser(userDTO5));
         }
 
+        [Test]
+        public void UserServicePhoneNumberTest()
+        {
+            // [3] Πρέπει να περιέχει μόνο ψηφία
+            UserDTO userDTO1 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "697Ab_1599"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO1));
 
+            // [4] Πρέπει να ξεκινάει από τα ψηφία 69
+            UserDTO userDTO2 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "5971346467"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO2));
+        }
+
+       
     }
 }
