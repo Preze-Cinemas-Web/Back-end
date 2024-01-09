@@ -70,7 +70,7 @@ namespace CinemaStore.Business
             var result = _context.User.Add(user);
             _context.SaveChanges();
 
-            return userDTO; //_mapper.Map<UserDTO>(result);
+            return _mapper.Map<UserDTO>(result);
         }
 
         public UserDTO UpdateUser(UserDTO user)
