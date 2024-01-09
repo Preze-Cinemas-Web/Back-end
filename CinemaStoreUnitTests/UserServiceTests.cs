@@ -150,7 +150,7 @@ namespace CinemaStoreUnitTests
                 Id = 0,
                 FirstName = "George",
                 LastName = "Prezerakos",
-                Email = "gpreeeeeeeeeez@outlook.com"
+                Email = "gpreeeeeeeeeez123@outlook.com"
             };
             Assert.Throws<MyException>(() => _userService.CreateUser(userDTO2));
 
