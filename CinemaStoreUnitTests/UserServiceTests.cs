@@ -374,5 +374,74 @@ namespace CinemaStoreUnitTests
             };
             Assert.Throws<MyException>(() => _userService.CreateUser(userDTO10));
         }
+
+        [Test]
+        public void UserServiceUsernameTest()
+        {
+            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
+            UserDTO userDTO1 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6971586860",
+                Birthdate = "1967-04-13",
+                Username = "gprez"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO1));
+
+            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
+            UserDTO userDTO2 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6971586860",
+                Birthdate = "1967-04-13",
+                Username = "gpreeeeeeeeeeeez"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO2));
+
+            // [3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
+            UserDTO userDTO3 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6971586860",
+                Birthdate = "1967-04-13",
+                Username = "1234@67_9"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO3));
+
+            // [4] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής 
+            UserDTO userDTO4 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6971586860",
+                Birthdate = "1967-04-13",
+                Username = "gprez 123"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO4));
+
+            // [5] Τα γράμματα πρέπει να είναι όλα λατινικά
+            UserDTO userDTO5 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6971586860",
+                Birthdate = "1967-04-13",
+                Username = "γπρεζ_123"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO5));
+        }
     }
 }
