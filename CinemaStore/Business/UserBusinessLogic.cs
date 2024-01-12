@@ -1,4 +1,4 @@
-﻿using Cinema.Models;
+using Cinema.Models;
 
 namespace CinemaStore.Business
 {
@@ -30,33 +30,27 @@ namespace CinemaStore.Business
             }
         }
 
-       /* FirstName & LastName :
-        * 
-        * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3
-		* [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
-	    * [3] Πρέπει να περιέχει μόνο γράμματα
-		* [4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο
-		* [5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά
-		* [6] Τα γράμματα πρέπει να είναι όλα λατινικά
-        * 
-        */
+        /* FirstName & LastName :
+         * 
+         * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3
+		 * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
+	     * [3] Πρέπει να περιέχει μόνο γράμματα
+		 * [4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο
+		 * [5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά
+		 * [6] Τα γράμματα πρέπει να είναι όλα λατινικά
+         * 
+         */
         public static void DefineNameBL(string name, string type)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3
-            if (name.Length < 3)
-            {
-                throw new MyException("Λανθασμένο " + type + "\n" +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3");
-            }
+            /******* [1] *******/
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
-            if (name.Length > 15)
-            {
-                throw new MyException("Λανθασμένο " + type + "\n" +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
-            }
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
 
-            // [3] Πρέπει να περιέχει μόνο γράμματα
+            /******* [2] *******/
+
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+
+            /******* [3] *******/
             bool containsLetters = name.All(char.IsLetter);
             if (!containsLetters)
             {
@@ -64,7 +58,7 @@ namespace CinemaStore.Business
                                       "[3] Πρέπει να περιέχει μόνο γράμματα");
             }
 
-            // [4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο
+            /******* [4] *******/
             char[] nameArray = name.ToCharArray();
             bool isUpperFirstLetter = char.IsUpper(nameArray[0]);          
             if (!isUpperFirstLetter)
@@ -73,7 +67,7 @@ namespace CinemaStore.Business
                                       "[4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο");
             }
 
-            // [5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά
+            /******* [5] *******/
             bool areLowerRestLetters = name.Substring(1).All(char.IsLower); 
             if (!areLowerRestLetters)
             {
@@ -81,7 +75,7 @@ namespace CinemaStore.Business
                                       "[5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά");
             }
 
-            // [6] Τα γράμματα πρέπει να είναι όλα λατινικά
+            /******* [6] *******/
             bool isLatinLetter = true;                                                                              
             int i;
             for (i = 0; i < nameArray.Length; i++)
@@ -107,21 +101,15 @@ namespace CinemaStore.Business
         */
         public static void DefineEmailBL(string email)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
-            if (email.Length < 10)
-            {
-                throw new MyException("Λανθασμένο email\n" +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
-            }
+            /******* [1] *******/
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 25
-            if (email.Length > 25)
-            {
-                throw new MyException("Λανθασμένο email\n" +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 25");
-            }
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs 
 
-            // [3] Πρέπει να τελειώνει σε "@gmail.com" ή "@hotmail.com" ή "@outlook.com"
+            /******* [2] *******/
+
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+
+            /******* [3] *******/
             bool isEmailFormat = email.EndsWith("@gmail.com") || email.EndsWith("@hotmail.com") || email.EndsWith("@outlook.com");
             if (!isEmailFormat)                                                                                                 
             {
@@ -129,7 +117,7 @@ namespace CinemaStore.Business
                                       "[3] Πρέπει να τελειώνει σε \"@gmail.com\" ή \"@hotmail.com\" ή \"@outlook.com\"");
             }
 
-            // [4] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
+            /******* [4] *******/
             string[] subEmails = email.Split('@');
             string emailUsername = subEmails[0];
             bool containsLetters = emailUsername.Any(char.IsLetter);
@@ -139,7 +127,7 @@ namespace CinemaStore.Business
                                       "[4] Πρέπει να περιέχει τουλάχιστον 1 γράμμα");
             }
 
-            // [5] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.' 
+            /******* [5] *******/
             bool containsSymbols = emailUsername.Any(char.IsSymbol);
             if (containsSymbols) 
             {
@@ -147,7 +135,7 @@ namespace CinemaStore.Business
                                       "[5] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.'");
             }
 
-            // [6] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής
+            /******* [6] *******/
             bool containsWhiteSpaces = emailUsername.Any(char.IsWhiteSpace);
             if (containsWhiteSpaces)
             {
@@ -155,7 +143,7 @@ namespace CinemaStore.Business
                                       "[6] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής");
             }
 
-            // [7] Τα γράμματα πρέπει να είναι όλα λατινικά
+            /******* [7] *******/
             char[] emailNameArray = emailUsername.ToCharArray();        
             bool isLatinLetter = true;                          
             int i;
@@ -184,21 +172,15 @@ namespace CinemaStore.Business
         */
         public static void DefinePhoneNumberBL(string phoneNumber)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
-            if (phoneNumber.Length < 10)
-            {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου\n" +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
-            }
+            /******* [1] *******/
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
-            if (phoneNumber.Length > 10)
-            {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου\n" +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10");
-            }
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs 
 
-            // [3] Πρέπει να περιέχει μόνο ψηφία
+            /******* [2] *******/
+
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+
+            /******* [3] *******/
             bool containsDigits = phoneNumber.All(char.IsDigit); 
             if (!containsDigits)                              
             {
@@ -206,7 +188,7 @@ namespace CinemaStore.Business
                                       "[3] Πρέπει να περιέχει μόνο ψηφία");
             }
 
-            // [4] Πρέπει να ξεκινάει από τα ψηφία 69
+            /******* [4] *******/
             bool startsWith69 = phoneNumber.StartsWith("69"); 
             if (!startsWith69)                                
             {
@@ -225,7 +207,7 @@ namespace CinemaStore.Business
          *    [3.2] Η ημερομηνία πρέπει να περιλαμβάνει μόνο ψηφία
          *    [3.3] Το μορφότυπο της ημερομηνίας πρέπει να είναι "ΧΧΧΧ-ΜΜ-ΗΗ"
          *    [3.4] Η ημερομηνία γέννησης θα πρέπει να είναι έγκυρη ως προς την αντιστοιχία ημερών και μήνα
-                    [3.4.1] Με εισαγωγή 01 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 31, καθώς ο μήνας Ιανουάριος διαρκεί 31 μέρες
+                    [3.4.1] Με εισαγωγή 04 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 30, καθώς ο μήνας Απρίλιος διαρκεί 30 μέρες
                     [3.4.2] Με εισαγωγή 2003 στο πεδίο "ΧΧΧΧ" και 02 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 28, 
                             καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη-δίσεκτα έτη
          * [4] Ο χρόνος γέννησης "ΧΧΧΧ" πρέπει να είναι από 1924 εώς 2024
@@ -234,21 +216,15 @@ namespace CinemaStore.Business
          */
         public static void DefineBirthdateBL(string birthdate)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
-            if (birthdate.Length < 10)
-            {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης\n" +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
-            }
+            /******* [1] *******/
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
-            if (birthdate.Length > 10)
-            {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης\n" +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10");
-            }
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs 
 
-            // [3] Η ημερομηνία πρέπει να είναι έγκυρη
+            /******* [2] *******/
+
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+
+            /******* [3] *******/
             bool isValidDate = DateTime.TryParse(birthdate, out DateTime BirthDate); 
             if (!isValidDate) 
             {
@@ -258,12 +234,12 @@ namespace CinemaStore.Business
                                       "   [3.2] Η ημερομηνία πρέπει να περιλαμβάνει μόνο ψηφία\n" +
                                       "   [3.3] Το μορφότυπο της ημερομηνίας πρέπει να είναι \"ΧΧΧΧ-ΜΜ-ΗΗ\"\n" +
                                       "   [3.4] Η ημερομηνία γέννησης θα πρέπει να είναι έγκυρη ως προς την αντιστοιχία ημερών και μήνα\n" +
-                                      "        [3.4.1] Με εισαγωγή 04 στο πεδίο \"ΜΜ\", οι έγκυρες εισαγωγές στο πεδίο \"ΗΗ\" είναι από 1 εώς 30, καθώς ο μήνας Απρίλιος διαρκεί 30 μέρες\n" +
+                                      "        [3.4.1] Με εισαγωγή 01 στο πεδίο \"ΜΜ\", οι έγκυρες εισαγωγές στο πεδίο \"ΗΗ\" είναι από 1 εώς 31, καθώς ο μήνας Ιανουάριος διαρκεί 31 μέρες\n" +
                                       "        [3.4.2] Με εισαγωγή 2003 στο πεδίο \"ΧΧΧΧ\" και 02 στο πεδίο \"ΜΜ\", οι έγκυρες εισαγωγές στο πεδίο \"ΗΗ\" είναι από 1 εώς 28," +
                                       "                καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη-δίσεκτα έτη");
             }
 
-            // [4] Ο χρόνος γέννησης "ΧΧΧΧ" πρέπει να είναι από 1924 εώς 2024
+            /******* [4] *******/
             bool isValidYear = (BirthDate.Year >= 1924 && BirthDate.Year <= DateTime.Now.Year);
             if (!isValidYear) 
             {
@@ -271,7 +247,7 @@ namespace CinemaStore.Business
                                       "[4] Ο χρόνος γέννησης \"ΧΧΧΧ\" πρέπει να είναι από 1924 εώς 2024");
             }
 
-            // [5] Το απόρρητο ηλικίας είναι από 15 χρονών και πάνω
+            /******* [5] *******/
             bool isValidAge = (DateTime.Now.Year - BirthDate.Year >= 15);                      
             if (!isValidAge)   
             {
@@ -291,21 +267,15 @@ namespace CinemaStore.Business
         */
         public static void DefineUsernameBL(string username)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
-            if (username.Length < 8)
-            {
-                throw new MyException("Λανθασμένο όνομα χρήστη\n" +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8");
-            }
+            /******* [1] *******/
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
-            if (username.Length > 15)
-            {
-                throw new MyException("Λανθασμένη όνομα χρήστη\n" +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
-            }
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs 
 
-            // [3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
+            /******* [2] *******/
+
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+
+            /******* [3] *******/
             bool containsLetters = username.Any(char.IsLetter);
             if (!containsLetters)
             {
@@ -313,7 +283,7 @@ namespace CinemaStore.Business
                                       "[3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα");
             }
 
-            // [4] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής
+            /******* [4] *******/
             bool containsWhiteSpaces = username.Any(char.IsWhiteSpace);
             if (containsWhiteSpaces)
             {
@@ -321,7 +291,7 @@ namespace CinemaStore.Business
                                       "[4] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής");
             }
 
-            // [5] Τα γράμματα πρέπει να είναι όλα λατινικά
+            /******* [5] *******/
             char[] usernameArray = username.ToCharArray();
             bool isLatinLetter = true;
             int i;
@@ -353,21 +323,15 @@ namespace CinemaStore.Business
         */
         public static void DefinePasswordBL(string password)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
-            if (password.Length < 8)
-            {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8");
-            }
+            /******* [1] *******/
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
-            if (password.Length > 15)
-            {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
-            }
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs 
 
-            // [3] Πρέπει να περιέχει τουλάχιστον 1 κεφαλαίο γράμμα
+            /******* [2] *******/
+
+            // Η προδιαγραφή ελέγχεται στην κλάση CinemaData/User.cs & CinemaStore/Models/UserDTO.cs
+
+            /******* [3] *******/
             bool containsUpperLetter = password.Any(char.IsUpper);
             if (!containsUpperLetter) 
             {
@@ -375,7 +339,7 @@ namespace CinemaStore.Business
                                       "[3] Πρέπει να περιέχει τουλάχιστον 1 κεφαλαίο γράμμα");
             }
 
-            // [4] Πρέπει να περιέχει τουλάχιστον 1 πεζό γράμμα
+            /******* [4] *******/
             bool containsLowerLetter = password.Any(char.IsLower);
             if (!containsLowerLetter)  
             {
@@ -383,7 +347,7 @@ namespace CinemaStore.Business
                                       "[4] Πρέπει να περιέχει τουλάχιστον 1 πεζό γράμμα");
             }
 
-            // [5] Πρέπει να περιέχει τουλάχιστον 1 ψηφίο
+            /******* [5] *******/
             bool containsDigit = password.Any(char.IsDigit);
             if (!containsDigit)
             {
@@ -391,7 +355,7 @@ namespace CinemaStore.Business
                                       "[5] Πρέπει να περιέχει τουλάχιστον 1 ψηφίο");
             }
 
-            // [6] Πρέπει να περιέχει τουλάχιστον 1 ειδικό σύμβολο ('@', '#', '$', '%', '^', '&', '_')
+            /******* [6] *******/
             bool containsSpecialChar = password.Contains("&") || password.Contains("@") || password.Contains("#")
                || password.Contains("$") || password.Contains("%") || password.Contains("^") || password.Contains("_");
             if (!containsSpecialChar) 
@@ -400,7 +364,7 @@ namespace CinemaStore.Business
                                       "[6] Πρέπει να περιέχει τουλάχιστον 1 ειδικό σύμβολο ('@', '#', '$', '%', '^', '&', '_')");
             }
 
-            // [7] Δεν μπορεί να περιέχει χαρακτήρες διαφυγής
+            /******* [7] *******/
             bool containsWhiteSpaces = password.Any(char.IsWhiteSpace);
             if (containsWhiteSpaces)
             {
@@ -408,7 +372,7 @@ namespace CinemaStore.Business
                                       "[7] Δεν μπορεί να περιέχει χαρακτήρες διαφυγής");
             }
 
-            // [8] Τα γράμματα πρέπει να είναι όλα λατινικά
+            /******* [8] *******/
             char[] passwordArray = password.ToCharArray();
             bool isLatinLetter = true;                                                                                     
             int i;
