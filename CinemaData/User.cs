@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CinemaData
 {
     public class User
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [MinLength(3, ErrorMessage = "Λάθος όνομα.\nΟι χαρακτήρες πρέπει να είναι τουλάχιστον 3!!")]
         [MaxLength(15, ErrorMessage = "Λάθος όνομα.\nΟι χαρακτήρες πρέπει να είναι το πολύ 15!!")]

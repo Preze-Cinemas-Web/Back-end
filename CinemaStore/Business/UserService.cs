@@ -28,26 +28,24 @@ namespace CinemaStore.Business
             return user;
         }
 
-        public UserDTO CreateUser(UserDTO userDTO)
+        private void ValidateUser(UserDTO userDTO, bool isNewUser)
         {
-            /*
-             *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
-             *  τα πεδία του user (π.χ. το email να έχει το format email @gmail.com)
-             */
 
-            // Null Object Check
             if (userDTO == null)
             {
                 throw new ArgumentNullException(nameof(userDTO));
             }
 
-            // Id Check
-            int id = userDTO.Id;
-            
-            if (id > 0)
+            if (!isNewUser && userDTO.Id <= 0)
             {
-                throw new MyException("Λανθασμένο id. Το πεδίο Id δεν πρέπει να συμπληρωθεί από τον client, πρέπει να παραμείνει 0!!");
+                throw new MyException("Λανθασμένο id. Το πεδίο Id πρέπει να είναι μεγαλύτερο από 0 για υπάρχοντα χρήστη.");
             }
+
+            // Null Object Check
+            
+
+            // Id Check
+            
 
             // FirstName Check
             string firstName = userDTO.FirstName;
@@ -204,11 +202,30 @@ namespace CinemaStore.Business
             _context.User.Add(user);
             _context.SaveChanges();
 
+        }
+
+        public UserDTO CreateUser(UserDTO userDTO)
+        {
+            int id = userDTO.Id;
+            ValidateUser(userDTO, true);
+
+            if (id > 0)
+            {
+                throw new MyException("Λανθασμένο id. Το πεδίο Id δεν πρέπει να συμπληρωθεί από τον client, πρέπει να παραμείνει 0!!");
+            }
+            
+
+            User user = this._mapper.Map<User>(userDTO);
+            _context.User.Add(user);
+            _context.SaveChanges();
+
             return userDTO;
         }
 
         public UserDTO UpdateUser(UserDTO updatedUserDTO)
         {
+            ValidateUser(updatedUserDTO, false);
+
             var existingUser = _context.User.FirstOrDefault(u => u.Id == updatedUserDTO.Id);
 
             if (existingUser != null)
@@ -224,6 +241,9 @@ namespace CinemaStore.Business
             }
         }
 
+
+
+
         public bool DeleteUserById(int id)
         {
             try
@@ -234,18 +254,17 @@ namespace CinemaStore.Business
                 {
                     _context.User.Remove(userToDelete);
                     _context.SaveChanges();
-                    return true; // Επιτυχής διαγραφή
+                    return true;
                 }
                 else
                 {
-                    return false; // Δεν βρέθηκε ο χρήστης
+                    return false;
                 }
             }
             catch (Exception ex)
             {
-                throw new MyException("Deletion failed.", ex);
+                throw new MyException("Η διαγραφή απέτυχε.", ex);
             }
         }
-
     }
 }
