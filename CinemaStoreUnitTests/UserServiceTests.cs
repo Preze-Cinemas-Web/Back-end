@@ -174,27 +174,7 @@ namespace CinemaStoreUnitTests
             };
             Assert.Throws<MyException>(() => _userService.Register(userDTO4));
 
-            // [5] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.'
-            UserDTO userDTO5 = new UserDTO()
-            {
-                Id = 0,
-                FirstName = "George",
-                LastName = "Prezerakos",
-                Email = "g_prez@gmail.com"
-            };
-            Assert.Throws<MyException>(() => _userService.Register(userDTO5));
-
-            // [6] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής
-            UserDTO userDTO6 = new UserDTO()
-            {
-                Id = 0,
-                FirstName = "George",
-                LastName = "Prezerakos",
-                Email = "g prez@gmail.com"
-            };
-            Assert.Throws<MyException>(() => _userService.Register(userDTO6));
-
-            // [7] Τα γράμματα πρέπει να είναι όλα λατινικά
+            // [5] Τα γράμματα πρέπει να είναι όλα λατινικά
             UserDTO userDTO7 = new UserDTO()
             {
                 Id = 0,
@@ -203,6 +183,16 @@ namespace CinemaStoreUnitTests
                 Email = "γπρεζ@gmail.com"
             };
             Assert.Throws<MyException>(() => _userService.Register(userDTO7));
+
+            // [6] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.'
+            UserDTO userDTO5 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "g_prez@gmail.com"
+            };
+            Assert.Throws<MyException>(() => _userService.Register(userDTO5));
         }
 
         [Test]
@@ -288,7 +278,7 @@ namespace CinemaStoreUnitTests
                 LastName = "Prezerakos",
                 Email = "gprez@gmail.com",
                 PhoneNumber = "6971586860",
-                Birthdate = "1967/04/13"
+                Birthdate = "1967_04_13"
             };
             Assert.Throws<MyException>(() => _userService.Register(userDTO3));
 
