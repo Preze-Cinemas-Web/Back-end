@@ -80,7 +80,8 @@ namespace CinemaStore.Business
             int i;
             for (i = 0; i < nameArray.Length; i++)
             {
-                isLatinLetter = (nameArray[i] >= 'A' && nameArray[i] <= 'Z') || (nameArray[i] >= 'a' && nameArray[i] <= 'z'); 
+                isLatinLetter = (nameArray[i] >= 'A' && nameArray[i] <= 'Z') || (nameArray[i] >= 'a' && nameArray[i] <= 'z');
+		if(!isLatinLetter)
                 {
                     throw new MyException("Λανθασμένο " + type + "\n" +
                                           "[6] Τα γράμματα πρέπει να είναι όλα λατινικά");
