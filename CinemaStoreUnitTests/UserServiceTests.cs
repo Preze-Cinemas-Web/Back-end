@@ -316,8 +316,20 @@ namespace CinemaStoreUnitTests
             };
             Assert.Throws<MyException>(() => _userService.CreateUser(userDTO5));
 
-            // [3.4.1] Με εισαγωγή 04 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 30, καθώς ο μήνας Απρίλιος διαρκεί 30 μέρες
+            // [3.4.1] Η εισαγωγή χρονιάς μεγαλύτερης του 2024 δεν είναι επιτρεπτή
             UserDTO userDTO6 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6971586860",
+                Birthdate = "2100-04-31"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO6));
+
+            // [3.4.2] Με εισαγωγή 04 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 30, καθώς ο μήνας Απρίλιος διαρκεί 30 μέρες
+            UserDTO userDTO7 = new UserDTO()
             {
                 Id = 0,
                 FirstName = "George",
@@ -326,10 +338,10 @@ namespace CinemaStoreUnitTests
                 PhoneNumber = "6971586860",
                 Birthdate = "1967-04-31"
             };
-            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO6));
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO7));
 
-            // [3.4.2] Με εισαγωγή 2003 στο πεδίο "ΧΧΧΧ" και 02 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 28, καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη - δίσεκτα έτη
-            UserDTO userDTO7 = new UserDTO()
+            // [3.4.3] Με εισαγωγή 2003 στο πεδίο "ΧΧΧΧ" και 02 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 28, καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη - δίσεκτα έτη
+            UserDTO userDTO8 = new UserDTO()
             {
                 Id = 0,
                 FirstName = "George",
@@ -338,18 +350,9 @@ namespace CinemaStoreUnitTests
                 PhoneNumber = "6971586860",
                 Birthdate = "1967-02-29"
             };
-            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO7));
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO8));
 
-            // [4] Ο χρόνος γέννησης "ΧΧΧΧ" πρέπει να είναι από 1924 εώς 2024
-            UserDTO userDTO8 = new UserDTO()
-            {
-                Id = 0,
-                FirstName = "George",
-                LastName = "Prezerakos",
-                Email = "gprez@gmail.com",
-                PhoneNumber = "6971586860",
-                Birthdate = "1821-04-13"
-            };
+            // [4.1] Η τελευταία επιτρεπτή ημερομηνία γέννησης πρέπει να είναι 2009-ΤρέχωνΜήνας-ΤρέχωνΗμέρα 
             UserDTO userDTO9 = new UserDTO()
             {
                 Id = 0,
@@ -357,12 +360,8 @@ namespace CinemaStoreUnitTests
                 LastName = "Prezerakos",
                 Email = "gprez@gmail.com",
                 PhoneNumber = "6971586860",
-                Birthdate = "2050-04-13"
+                Birthdate = "2015-04-13"
             };
-            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO8));
-            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO9));
-
-            // [5] Το απόρρητο ηλικίας είναι από 15 χρονών και πάνω
             UserDTO userDTO10 = new UserDTO()
             {
                 Id = 0,
@@ -370,9 +369,32 @@ namespace CinemaStoreUnitTests
                 LastName = "Prezerakos",
                 Email = "gprez@gmail.com",
                 PhoneNumber = "6971586860",
-                Birthdate = "2050-04-13"
+                Birthdate = "2009-04-13"
             };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO9));
             Assert.Throws<MyException>(() => _userService.CreateUser(userDTO10));
+
+            // [5.1] Η πρώτη ημερομηνία γέννησης πρέπει να είναι 1933-ΤρέχωνΜήνας-(ΤρέχωνΗμέρα-1)
+            UserDTO userDTO11 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6971586860",
+                Birthdate = "1920-04-13"
+            };
+            UserDTO userDTO12 = new UserDTO()
+            {
+                Id = 0,
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6971586860",
+                Birthdate = "1934-01-01"
+            };
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO11));
+            Assert.Throws<MyException>(() => _userService.CreateUser(userDTO12));
         }
 
         [Test]
