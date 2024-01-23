@@ -48,12 +48,34 @@ namespace Cinema.Controllers
             }
         }
 
-        [HttpPost]
+
+        [HttpPost("Register")]
         public ActionResult<UserDTO> AddUser(UserDTO userDTO)
         {
             try
             {
-                return _userService.CreateUser(userDTO);
+                return _userService.Register(userDTO);
+            }
+            catch (ArgumentNullException ex1)
+            {
+                return BadRequest(ex1.Message);
+            }
+            catch (MyException ex2)
+            {
+                return BadRequest(ex2.Message);
+            }
+        }
+
+        [HttpPost("Login")]
+        public ActionResult<UserDTO> ValidateUser(UserDTO userDTO)
+        {
+            try
+            {
+                var isValid = _userService.Login(userDTO);
+                if (isValid) 
+                    return Ok();
+                else
+                    return NotFound();
             }
             catch (ArgumentNullException ex1)
             {
