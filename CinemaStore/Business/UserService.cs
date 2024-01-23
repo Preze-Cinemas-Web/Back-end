@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Cinema.Models;
 using CinemaData;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Business
 {
@@ -8,7 +9,7 @@ namespace CinemaStore.Business
     {
         private CinemaContext _context;
         private IMapper _mapper;
-
+        
         public UserService(CinemaContext context, IMapper mapper)
         {
             _context = context;
@@ -33,7 +34,7 @@ namespace CinemaStore.Business
         *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
         *  τα πεδία του User (π.χ. το email να έχει το format email @gmail.com).
         */
-        public UserDTO CreateUser(UserDTO userDTO)
+        public UserDTO Register(UserDTO userDTO)
         {
             // Business Logic User
 
@@ -71,6 +72,29 @@ namespace CinemaStore.Business
             _context.SaveChanges();
 
             return userDTO; //_mapper.Map<UserDTO>(result);
+        }
+
+        public bool Login(UserDTO userDTO)
+        {
+            User user = this._mapper.Map<User>(userDTO);
+            bool isValid = ValidateLogin(user.Username, user.Password);
+            if (isValid)
+                return true;
+            else
+                return false;
+        }
+
+        private bool ValidateLogin(string username, string password)
+        {
+           var res = _context.User.SingleOrDefault(u => u.Username == username);
+           if (res != null)
+           {
+                if (res.Password == password)
+                {
+                    return true;
+                }
+           }
+           return false;
         }
 
         public UserDTO UpdateUser(UserDTO user)

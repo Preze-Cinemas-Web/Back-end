@@ -141,8 +141,8 @@ namespace CinemaStore.Business
             }
 
             // [5] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.' 
-            bool containsSymbols = emailUsername.Any(char.IsSymbol);
-            if (containsSymbols)
+            bool containsSymbols = emailUsername.All(char.IsLetterOrDigit);
+            if (!containsSymbols)
             {
                 throw new MyException("Λανθασμένο email\n" +
                                       "[5] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.'");
