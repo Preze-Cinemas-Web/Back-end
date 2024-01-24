@@ -30,7 +30,7 @@ namespace CinemaStoreIntegrationTests
                 Email = "thpav13@gmail.com",
                 PhoneNumber = "6971234345",
                 Birthdate = "1962-02-01",
-                Username = "thpav13",
+                Username = "thpav123",
                 Password = "Wiki_123"
             };
            
