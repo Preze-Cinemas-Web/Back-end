@@ -68,10 +68,10 @@ namespace CinemaStore.Business
 
             User user = this._mapper.Map<User>(userDTO); 
 
-            var result = _context.User.Add(user);
+            _context.User.Add(user);
             _context.SaveChanges();
 
-            return userDTO; //_mapper.Map<UserDTO>(result);
+            return _mapper.Map<UserDTO>(user);
         }
 
         public bool Login(UserDTO userDTO)
