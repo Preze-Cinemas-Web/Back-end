@@ -9,9 +9,9 @@ namespace CinemaStore.Business
         public IEnumerable<UserDTO> GetAllUsers();
         // [HttpGet("{id:int}")]
         public UserDTO GetUserById(int id);
-        // [HttpGet("{username:string, password:string}")]
+        // [HttpPost("Login")]
         public bool Login(UserDTO userDTO);
-        // [HttpPost]
+        // [HttpPost("Register")]
         public UserDTO Register(UserDTO user);
         // [HttpPut("{id:int}")]
         public UserDTO UpdateUser(UserDTO user);
