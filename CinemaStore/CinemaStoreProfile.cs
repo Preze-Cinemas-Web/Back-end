@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CinemaData;
 using Cinema.Models;
+using CinemaStore.Models;
 
 namespace CinemaStore
 {
@@ -9,6 +10,7 @@ namespace CinemaStore
         public CinemaStoreProfile()
         {
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<OldUser, OldUserDTO>().ReverseMap();
         }
     }
 }
