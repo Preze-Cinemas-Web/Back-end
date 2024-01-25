@@ -10,6 +10,7 @@
 
 using Cinema.Models;
 using CinemaStore.Business;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Controllers
@@ -28,15 +29,15 @@ namespace Cinema.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<UserDTO> GetUsers()
+        public IEnumerable<UserDTO> GetAllUsers()
         {
-            return _userService.GetAllUsers();
+            return _userService.FindAllUsers();
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<UserDTO> GetOneUser(int id)
+        public ActionResult<UserDTO> GetUserById(int id)
         {
-            var user = _userService.GetUserById(id);
+            var user = _userService.FindUserById(id);
 
             if (user != null)
             {
@@ -48,6 +49,20 @@ namespace Cinema.Controllers
             }
         }
 
+        [HttpGet("{username}")]
+        public ActionResult<UserDTO> GetUserByUsername(string username)
+        {
+            var user = _userService.FindUserByUsername(username);
+
+            if (user != null)
+            {
+                return user;
+            }
+            else
+            {
+                return NotFound();
+            }
+        }   
 
         [HttpPost("Register")]
         public ActionResult<UserDTO> AddUser(UserDTO userDTO)
@@ -67,15 +82,14 @@ namespace Cinema.Controllers
         }
 
         [HttpPost("Login")]
-        public ActionResult<UserDTO> ValidateUser(UserDTO userDTO)
+        public IActionResult Login(OldUserDTO oldUserDTO)
         {
             try
             {
-                var isValid = _userService.Login(userDTO);
-                if (isValid) 
+                if (_userService.Login(oldUserDTO))
                     return Ok();
-                else
-                    return NotFound();
+                else 
+                    return Unauthorized();
             }
             catch (ArgumentNullException ex1)
             {
@@ -86,5 +100,6 @@ namespace Cinema.Controllers
                 return BadRequest(ex2.Message);
             }
         }
+
     }
 }

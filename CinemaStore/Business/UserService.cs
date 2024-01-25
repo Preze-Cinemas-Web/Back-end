@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Cinema.Models;
 using CinemaData;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Business
@@ -16,15 +17,23 @@ namespace CinemaStore.Business
             _mapper = mapper;
         }
 
-        public IEnumerable<UserDTO> GetAllUsers()
+        public IEnumerable<UserDTO> FindAllUsers()
         {
             return this._mapper.Map<IEnumerable<UserDTO>>(_context.User);
         }
 
-        public UserDTO GetUserById(int id)
+        public UserDTO FindUserById(int id)
         {
             var usersList = this._mapper.Map<IEnumerable<UserDTO>>(_context.User); // Μετατροπή από List<User> (Data) -> List<UserDTO> (Store)
             var user = usersList.FirstOrDefault(x => x.Id == id); // Βρες τον user με user.Id == id
+
+            return user;
+        }
+
+        public UserDTO FindUserByUsername(string username)
+        {
+            var usersList = this._mapper.Map<IEnumerable<UserDTO>>(_context.User); // Μετατροπή από List<User> (Data) -> List<UserDTO> (Store)
+            var user = usersList.FirstOrDefault(x => x.Username == username); // Βρες τον user με user.Username == username
 
             return user;
         }
@@ -74,27 +83,18 @@ namespace CinemaStore.Business
             return _mapper.Map<UserDTO>(user);
         }
 
-        public bool Login(UserDTO userDTO)
+        public bool Login(OldUserDTO oldUserDTO)
         {
-            User user = this._mapper.Map<User>(userDTO);
-            bool isValid = ValidateLogin(user.Username, user.Password);
-            if (isValid)
-                return true;
-            else
+            var userDTO = this.FindUserByUsername(oldUserDTO.existingUsername); 
+            
+            if (userDTO == null)
+            {
                 return false;
-        }
+            }
 
-        private bool ValidateLogin(string username, string password)
-        {
-           var res = _context.User.SingleOrDefault(u => u.Username == username);
-           if (res != null)
-           {
-                if (res.Password == password)
-                {
-                    return true;
-                }
-           }
-           return false;
+            User user = this._mapper.Map<User>(userDTO);
+
+            return user.Password == oldUserDTO.existingPassword;
         }
 
         public UserDTO UpdateUser(UserDTO user)
