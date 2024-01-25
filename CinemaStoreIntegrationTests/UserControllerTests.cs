@@ -1,5 +1,6 @@
 using Cinema.Models;
 using CinemaStore;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Newtonsoft.Json;
@@ -34,7 +35,7 @@ namespace CinemaStoreIntegrationTests
                 Password = "Wiki_123"
             };
            
-            var result = await client.PostAsync(route, new StringContent(JsonConvert.SerializeObject(userDTO), System.Text.Encoding.UTF8, "application/json"));
+            var result = await TestUtilities.Post(client, route, userDTO);
             var userDTO2 = await ReadUser(result);
             Assert.True(userDTO2.Id > 0);
             Assert.True(userDTO2.FirstName == userDTO.FirstName);
@@ -46,11 +47,29 @@ namespace CinemaStoreIntegrationTests
             Assert.True(userDTO2.Password == userDTO.Password);
         }
 
+        [Fact]
+        public async Task Login()
+        {
+            var route = "https://localhost:7236/API/1.0/User/Login";
+            var client = _factory.CreateClient();
+
+            OldUserDTO oldUserDTO = new OldUserDTO()
+            {
+                Username = "thpav123",
+                Password = "Wiki_123"
+            };
+
+            var result = await TestUtilities.Post(client, route, oldUserDTO);
+            var userDTO = await ReadUser(result);
+            Assert.True(userDTO.Username == oldUserDTO.Username);
+            Assert.True(userDTO.Password == oldUserDTO.Password);
+        }
+
         private async Task<UserDTO> ReadUser(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
             return JsonConvert.DeserializeObject<UserDTO>(
                 await result.Content.ReadAsStringAsync());
-        }   
+        }
     }
 }

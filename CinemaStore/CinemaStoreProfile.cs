@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CinemaData;
 using Cinema.Models;
+using CinemaStore.Models;
 
 namespace CinemaStore
 {

@@ -1,4 +1,5 @@
 ﻿using Cinema.Models;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Business
@@ -6,11 +7,13 @@ namespace CinemaStore.Business
     public interface IUserService
     {
         // [HttpGet] 
-        public IEnumerable<UserDTO> GetAllUsers();
+        public IEnumerable<UserDTO> FindAllUsers();
         // [HttpGet("{id:int}")]
-        public UserDTO GetUserById(int id);
+        public UserDTO FindUserById(int id);
+        // [HttpGet("{username:string}")]
+        public UserDTO FindUserByUsername(string username);
         // [HttpPost("Login")]
-        public bool Login(UserDTO userDTO);
+        public bool Login(OldUserDTO oldUserDTO);
         // [HttpPost("Register")]
         public UserDTO Register(UserDTO user);
         // [HttpPut("{id:int}")]
