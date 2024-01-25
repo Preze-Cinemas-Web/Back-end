@@ -28,14 +28,14 @@ namespace Cinema.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<UserDTO> GetAllUsers()
         {
             return _userService.FindAllUsers();
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetUserById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<UserDTO> GetUserById(int id)
@@ -52,31 +52,15 @@ namespace Cinema.Controllers
             }
         }
 
-        [HttpGet("{username}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<UserDTO> GetUserByUsername(string username)
-        {
-            var user = _userService.FindUserByUsername(username);
-
-            if (user != null)
-            {
-                return user;
-            }
-            else
-            {
-                return NotFound();
-            }
-        }   
-
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<UserDTO> AddUser(UserDTO userDTO)
         {
             try
             {
-                return _userService.Register(userDTO);
+                return CreatedAtRoute("GetUserById", new { id = userDTO.Id }, _userService.Register(userDTO));
             }
             catch (ArgumentNullException ex1)
             {
@@ -86,12 +70,17 @@ namespace Cinema.Controllers
             {
                 return BadRequest(ex2.Message);
             }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult ValidateUser(OldUserDTO oldUserDTO)
         {
             try
@@ -108,6 +97,10 @@ namespace Cinema.Controllers
             catch (MyException ex2)
             {
                 return BadRequest(ex2.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
