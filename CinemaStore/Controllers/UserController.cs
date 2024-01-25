@@ -29,12 +29,15 @@ namespace Cinema.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<UserDTO> GetAllUsers()
         {
             return _userService.FindAllUsers();
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<UserDTO> GetUserById(int id)
         {
             var user = _userService.FindUserById(id);
@@ -50,6 +53,8 @@ namespace Cinema.Controllers
         }
 
         [HttpGet("{username}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<UserDTO> GetUserByUsername(string username)
         {
             var user = _userService.FindUserByUsername(username);
@@ -65,6 +70,8 @@ namespace Cinema.Controllers
         }   
 
         [HttpPost("Register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<UserDTO> AddUser(UserDTO userDTO)
         {
             try
@@ -82,7 +89,10 @@ namespace Cinema.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Login(OldUserDTO oldUserDTO)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public IActionResult ValidateUser(OldUserDTO oldUserDTO)
         {
             try
             {

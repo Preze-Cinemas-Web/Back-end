@@ -2,7 +2,7 @@
 {
     public class OldUserDTO
     {
-        public string existingUsername { get; set; }
-        public string existingPassword { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

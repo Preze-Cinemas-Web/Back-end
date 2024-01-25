@@ -25,7 +25,7 @@ namespace CinemaStore.Business
         public UserDTO FindUserById(int id)
         {
             var usersList = this._mapper.Map<IEnumerable<UserDTO>>(_context.User); // Μετατροπή από List<User> (Data) -> List<UserDTO> (Store)
-            var user = usersList.FirstOrDefault(x => x.Id == id); // Βρες τον user με user.Id == id
+            var user = usersList.FirstOrDefault(x => x.Id == id);                  // Βρες τον user με user.Id == id
 
             return user;
         }
@@ -33,7 +33,7 @@ namespace CinemaStore.Business
         public UserDTO FindUserByUsername(string username)
         {
             var usersList = this._mapper.Map<IEnumerable<UserDTO>>(_context.User); // Μετατροπή από List<User> (Data) -> List<UserDTO> (Store)
-            var user = usersList.FirstOrDefault(x => x.Username == username); // Βρες τον user με user.Username == username
+            var user = usersList.FirstOrDefault(x => x.Username == username);      // Βρες τον user με user.Username == username
 
             return user;
         }
@@ -85,7 +85,7 @@ namespace CinemaStore.Business
 
         public bool Login(OldUserDTO oldUserDTO)
         {
-            var userDTO = this.FindUserByUsername(oldUserDTO.existingUsername); 
+            var userDTO = this.FindUserByUsername(oldUserDTO.Username); 
             
             if (userDTO == null)
             {
@@ -94,7 +94,7 @@ namespace CinemaStore.Business
 
             User user = this._mapper.Map<User>(userDTO);
 
-            return user.Password == oldUserDTO.existingPassword;
+            return user.Password == oldUserDTO.Password;
         }
 
         public UserDTO UpdateUser(UserDTO user)
