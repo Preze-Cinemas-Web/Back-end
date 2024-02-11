@@ -21,13 +21,13 @@ namespace CinemaData
             if (!optionsBuilder.IsConfigured)
             {
                 // Ath Server
-                optionsBuilder.UseSqlServer(
+                /*optionsBuilder.UseSqlServer(
                     "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +
                     "database=CinemaDatabase;" +
                     "Integrated Security=True;" +
                     "MultipleActiveResultSets=True;" +
-                    "TrustServerCertificate=True");
-                
+                    "TrustServerCertificate=True");*/
+
                 // Panos Server
                 /*optionsBuilder.UseSqlServer(
                     "server=DESKTOP-611K8P1\\SQLEXPRESS;" +
@@ -35,6 +35,14 @@ namespace CinemaData
                     "Integrated Security=True;" +
                     "MultipleActiveResultSets=True;" +
                     "TrustServerCertificate=True");*/
+
+                // Spyros Server
+                optionsBuilder.UseSqlServer(
+                    "server=DESKTOP-4S64V8A\\SQLEXPRESS;" +
+                    "database=CinemaDatabase;" +
+                    "Integrated Security=True;" +
+                    "MultipleActiveResultSets=True;" +
+                    "TrustServerCertificate=True");
             }
         }
     }

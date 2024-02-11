@@ -12,6 +12,7 @@ using Cinema.Models;
 using CinemaStore.Business;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace Cinema.Controllers
 {
@@ -103,6 +104,71 @@ namespace Cinema.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpPut("Update/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult UpdateUser(int id, [FromBody] UserDTO userDTO)
+        {
+            try
+            {
+                // Ensure the ID in the URL matches the ID in the request body
+                if (id != userDTO.Id)
+                {
+                    return BadRequest("The ID in the URL does not match the ID in the request body.");
+                }
+
+                var existingUser = _userService.FindUserById(id);
+                if (existingUser == null)
+                {
+                    return NotFound();
+                }
+
+                var updatedUser = _userService.UpdateUser(userDTO);
+                return Ok(updatedUser);
+            }
+            catch (ArgumentNullException ex1)
+            {
+                return BadRequest(ex1.Message);
+            }
+            catch (MyException ex2)
+            {
+                return BadRequest(ex2.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+
+        [HttpDelete("Delete/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult DeleteUser(int id)
+        {
+            try
+            {
+                var existingUser = _userService.FindUserById(id);
+                if (existingUser == null)
+                {
+                    return NotFound();
+                }
+
+                _userService.DeleteUserById(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
 
     }
 }

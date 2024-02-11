@@ -3,6 +3,8 @@ using Cinema.Models;
 using CinemaData;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace CinemaStore.Business
 {
@@ -97,14 +99,89 @@ namespace CinemaStore.Business
             return user.Password == oldUserDTO.Password;
         }
 
-        public UserDTO UpdateUser(UserDTO user)
+        public UserDTO UpdateUser(UserDTO userDTO)
         {
-            throw new NotImplementedException();
+            UserBusinessLogic.DefineNullObjectBL(userDTO);
+
+            int userId = userDTO.Id;
+
+            string firstName = userDTO.FirstName;
+            UserBusinessLogic.DefineNameBL(firstName, "First Name");
+
+            string lastName = userDTO.LastName;
+            UserBusinessLogic.DefineNameBL(lastName, "Last Name");
+
+            string email = userDTO.Email;
+            UserBusinessLogic.DefineEmailBL(email);
+
+            string phoneNumber = userDTO.PhoneNumber;
+            UserBusinessLogic.DefinePhoneNumberBL(phoneNumber);
+
+            string birthdate = userDTO.Birthdate;
+            UserBusinessLogic.DefineBirthdateBL(birthdate);
+
+            string username = userDTO.Username;
+            UserBusinessLogic.DefineUsernameBL(username);
+
+            string password = userDTO.Password;
+            UserBusinessLogic.DefinePasswordBL(password);
+
+            User existingUser = _context.User.Find(userDTO.Id);
+            if (existingUser == null)
+            {
+                throw new Exception("Δεν βρέθηκε ο χρήστης.");
+            }
+
+
+
+
+            if (userDTO.FirstName != null)
+            {
+                existingUser.FirstName = userDTO.FirstName;
+            }
+
+            if (userDTO.LastName != null)
+            {
+                existingUser.LastName = userDTO.LastName;
+            }
+
+            if (userDTO.Email != null)
+            {
+                existingUser.Email = userDTO.Email;
+            }
+
+            if (userDTO.PhoneNumber != null)
+            {
+                existingUser.PhoneNumber = userDTO.PhoneNumber;
+            }
+
+            if (userDTO.Birthdate != null)
+            {
+                existingUser.Birthdate = userDTO.Birthdate;
+            }
+
+            if (userDTO.Username != null)
+            {
+                existingUser.Username = userDTO.Username;
+            }
+
+            if (userDTO.Password != null)
+            {
+                existingUser.Password = userDTO.Password;
+            }
+
+            _context.SaveChanges();
+
+            return _mapper.Map<UserDTO>(existingUser);
         }
 
         public void DeleteUserById(int id)
         {
-            throw new NotImplementedException();
+            var userToDelete = _context.User.FirstOrDefault(u => u.Id == id);
+
+            _context.User.Remove(userToDelete);
+            _context.SaveChanges();
+
         }
     }
 }
