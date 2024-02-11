@@ -114,10 +114,9 @@ namespace Cinema.Controllers
         {
             try
             {
-                // Ensure the ID in the URL matches the ID in the request body
                 if (id != userDTO.Id)
                 {
-                    return BadRequest("The ID in the URL does not match the ID in the request body.");
+                    return BadRequest("Error!");
                 }
 
                 var existingUser = _userService.FindUserById(id);
