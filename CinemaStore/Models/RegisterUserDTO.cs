@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cinema.Models
 {
-    public class UserDTO
+    public class RegisterUserDTO
     {
         public int Id { get; set; } 
         public string? FirstName { get; set; }

@@ -9,7 +9,7 @@ namespace CinemaStore
     {
         public CinemaStoreProfile()
         {
-            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, RegisterUserDTO>().ReverseMap();
         }
     }
 }

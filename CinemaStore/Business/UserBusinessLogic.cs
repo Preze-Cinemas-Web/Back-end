@@ -8,7 +8,7 @@ namespace CinemaStore.Business
         /*
          *  Null Object :
          */
-        public static void DefineNullObjectBL(UserDTO userDTO)
+        public static void DefineNullObjectBL(RegisterUserDTO userDTO)
         {
             if (userDTO == null)
             {
