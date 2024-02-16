@@ -7,17 +7,15 @@ namespace CinemaStore.Business
     public interface IUserService
     {
         // [HttpGet] 
-        public IEnumerable<UserDTO> FindAllUsers();
-        // [HttpGet("{id:int}")]
-        public UserDTO FindUserById(int id);
+        public IEnumerable<RegisterUserDTO> FindAllUsers();
         // [HttpGet("{username:string}")]
-        public UserDTO FindUserByUsername(string username);
+        public RegisterUserDTO FindUserByUsername(string username);
         // [HttpPost("Login")]
-        public bool Login(OldUserDTO oldUserDTO);
+        public bool Login(LoginUserDTO oldUserDTO);
         // [HttpPost("Register")]
-        public UserDTO Register(UserDTO user);
+        public RegisterUserDTO Register(RegisterUserDTO user);
         // [HttpPut("{id:int}")]
-        public UserDTO UpdateUser(UserDTO user);
+        public RegisterUserDTO UpdateUser(RegisterUserDTO user);
         // [HttpDelete("{id:int}")]
         public void DeleteUserById(int id);
     }

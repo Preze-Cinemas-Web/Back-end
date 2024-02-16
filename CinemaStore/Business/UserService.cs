@@ -17,22 +17,14 @@ namespace CinemaStore.Business
             _mapper = mapper;
         }
 
-        public IEnumerable<UserDTO> FindAllUsers()
+        public IEnumerable<RegisterUserDTO> FindAllUsers()
         {
-            return this._mapper.Map<IEnumerable<UserDTO>>(_context.User);
+            return this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
         }
 
-        public UserDTO FindUserById(int id)
+        public RegisterUserDTO FindUserByUsername(string username)
         {
-            var usersList = this._mapper.Map<IEnumerable<UserDTO>>(_context.User); // Μετατροπή από List<User> (Data) -> List<UserDTO> (Store)
-            var user = usersList.FirstOrDefault(x => x.Id == id);                  // Βρες τον user με user.Id == id
-
-            return user;
-        }
-
-        public UserDTO FindUserByUsername(string username)
-        {
-            var usersList = this._mapper.Map<IEnumerable<UserDTO>>(_context.User); // Μετατροπή από List<User> (Data) -> List<UserDTO> (Store)
+            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User); // Μετατροπή από List<User> (Data) -> List<UserDTO> (Store)
             var user = usersList.FirstOrDefault(x => x.Username == username);      // Βρες τον user με user.Username == username
 
             return user;
@@ -43,7 +35,7 @@ namespace CinemaStore.Business
         *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
         *  τα πεδία του User (π.χ. το email να έχει το format email @gmail.com).
         */
-        public UserDTO Register(UserDTO userDTO)
+        public RegisterUserDTO Register(RegisterUserDTO userDTO)
         {
             // Business Logic User
 
@@ -80,10 +72,10 @@ namespace CinemaStore.Business
             _context.User.Add(user);
             _context.SaveChanges();
 
-            return _mapper.Map<UserDTO>(user);
+            return _mapper.Map<RegisterUserDTO>(user);
         }
 
-        public bool Login(OldUserDTO oldUserDTO)
+        public bool Login(LoginUserDTO oldUserDTO)
         {
             var userDTO = this.FindUserByUsername(oldUserDTO.Username); 
             
@@ -97,7 +89,7 @@ namespace CinemaStore.Business
             return user.Password == oldUserDTO.Password;
         }
 
-        public UserDTO UpdateUser(UserDTO user)
+        public RegisterUserDTO UpdateUser(RegisterUserDTO user)
         {
             throw new NotImplementedException();
         }

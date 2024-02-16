@@ -23,7 +23,7 @@ namespace CinemaStoreIntegrationTests
             var route = "https://localhost:7236/API/1.0/User/Register";
             var client = _factory.CreateClient();
 
-            UserDTO userDTO = new UserDTO()
+            RegisterUserDTO userDTO = new RegisterUserDTO()
             {
                 Id = 0,
                 FirstName = "Theodosis",
@@ -53,7 +53,7 @@ namespace CinemaStoreIntegrationTests
             var route = "https://localhost:7236/API/1.0/User/Login";
             var client = _factory.CreateClient();
 
-            OldUserDTO oldUserDTO = new OldUserDTO()
+            LoginUserDTO oldUserDTO = new LoginUserDTO()
             {
                 Username = "thpav123",
                 Password = "Wiki_123"
@@ -65,10 +65,10 @@ namespace CinemaStoreIntegrationTests
             Assert.True(userDTO.Password == oldUserDTO.Password);
         }
 
-        private async Task<UserDTO> ReadUser(HttpResponseMessage result)
+        private async Task<RegisterUserDTO> ReadUser(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
-            return JsonConvert.DeserializeObject<UserDTO>(
+            return JsonConvert.DeserializeObject<RegisterUserDTO>(
                 await result.Content.ReadAsStringAsync());
         }
     }

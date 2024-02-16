@@ -1,5 +1,9 @@
 ﻿using CinemaData;
 using CinemaStore.Business;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace CinemaStore
 {
@@ -30,14 +34,14 @@ namespace CinemaStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            /****** [1] ******/
+            /****** [1] DatabaseContext ******/
             services.AddDbContext<CinemaContext>();
-            /****** [2] ******/
+            /****** [2] Services & BL ******/
             services.AddScoped(
                 typeof(IUserService), typeof(UserService));
-            /****** [3] ******/
+            /****** [3] AutoMapper ******/
             services.AddAutoMapper(typeof(CinemaStoreProfile));
-            /****** [4] ******/
+            /****** [4] CORS ******/
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
@@ -50,7 +54,22 @@ namespace CinemaStore
                                     });
             });
 
-
+            /****** [6] Authentication ******/
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            /****** [7] Jwt Bearer ******/
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = configRoot["JWT:Audience"],
+                    ValidIssuer = configRoot["JWT:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configRoot["JWT:Key"]))
+                };
+            });
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
@@ -68,6 +87,7 @@ namespace CinemaStore
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

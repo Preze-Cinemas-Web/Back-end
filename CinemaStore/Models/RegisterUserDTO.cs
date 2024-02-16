@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿/*
+*  Εδώ φτιάχνουμε τις οντότητες που θα ενταχθούν στην βάση δεδομένων 
+*  π.χ User, Movie κλπ.
+*/
+using System.ComponentModel.DataAnnotations;
 
-namespace CinemaData
+namespace Cinema.Models
 {
-    public class User
+    public class RegisterUserDTO
     {
-        public int Id { get; set; }
+        public int Id { get; set; } 
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }
