@@ -53,17 +53,9 @@ namespace CinemaStore
                                                            .AllowAnyMethod();
                                     });
             });
-            /****** [5] Identity ******/
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<CinemaContext>()
-                .AddDefaultTokenProviders();
+
             /****** [6] Authentication ******/
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             /****** [7] Jwt Bearer ******/
             .AddJwtBearer(options =>
             {
@@ -78,7 +70,6 @@ namespace CinemaStore
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configRoot["JWT:Key"]))
                 };
             });
-
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
