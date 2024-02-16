@@ -83,7 +83,7 @@ namespace CinemaStore.Business
             return _mapper.Map<UserDTO>(user);
         }
 
-        public bool Login(OldUserDTO oldUserDTO)
+        public bool Login(LoginUserDTO oldUserDTO)
         {
             var userDTO = this.FindUserByUsername(oldUserDTO.Username); 
             

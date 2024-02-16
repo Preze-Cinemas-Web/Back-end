@@ -81,7 +81,7 @@ namespace Cinema.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult ValidateUser(OldUserDTO oldUserDTO)
+        public IActionResult ValidateUser(LoginUserDTO oldUserDTO)
         {
             try
             {

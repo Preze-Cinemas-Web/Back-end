@@ -53,7 +53,7 @@ namespace CinemaStoreIntegrationTests
             var route = "https://localhost:7236/API/1.0/User/Login";
             var client = _factory.CreateClient();
 
-            OldUserDTO oldUserDTO = new OldUserDTO()
+            LoginUserDTO oldUserDTO = new LoginUserDTO()
             {
                 Username = "thpav123",
                 Password = "Wiki_123"
