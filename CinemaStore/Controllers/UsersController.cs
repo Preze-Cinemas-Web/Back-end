@@ -24,15 +24,5 @@ namespace CinemaStore.Controllers
             var users = _userService.FindAllUsers();
             return Ok(users);
         }
-
-        [HttpGet]
-        [Route("Get-User/{username}")]
-        public ActionResult<RegisterUserDTO> GetUser(string username)
-        {
-            var user = _userService.FindUserByUsername(username);
-            if (user == null)
-                return NotFound();
-            return Ok(user);
-        }
     }
 }

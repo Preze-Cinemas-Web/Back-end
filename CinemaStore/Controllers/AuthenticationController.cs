@@ -1,13 +1,9 @@
-﻿using AutoMapper;
-using Cinema.Models;
-using CinemaData;
+﻿using Cinema.Models;
 using CinemaStore.Business;
 using CinemaStore.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace CinemaStore.Controllers
@@ -16,23 +12,14 @@ namespace CinemaStore.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public AuthenticationController(
-            UserManager<IdentityUser> userManager, 
-            RoleManager<IdentityRole> roleManager, 
-            IConfiguration configuration, 
-            IMapper mapper, 
+        public AuthenticationController( 
+            IConfiguration configuration,  
             IUserService userService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
             _configuration = configuration;
-            _mapper = mapper;
             _userService = userService;
         }
 
