@@ -23,7 +23,7 @@ namespace CinemaData
                 // Ath Server
                 optionsBuilder.UseSqlServer(
                     "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +
-                    "database=CinemaDatabase;" +
+                    "database=CinemaDatabase_Production;" +
                     "Integrated Security=True;" +
                     "MultipleActiveResultSets=True;" +
                     "TrustServerCertificate=True");
