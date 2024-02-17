@@ -26,7 +26,7 @@ namespace CinemaStore.Business
             // [1] To id πρέπει να είναι ίσο με 0
             if (id != 0)
             {
-                throw new MyException("Λανθασμένο id\n" +
+                throw new MyException("Λανθασμένο id " +
                                       "[1] To id πρέπει να είναι ίσο με 0");
             }
         }
@@ -46,14 +46,14 @@ namespace CinemaStore.Business
             // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3
             if (name.Length < 3)
             {
-                throw new MyException("Λανθασμένο " + type + "\n" +
+                throw new MyException("Λανθασμένο " + type + " " +
                                      "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3");
             }
 
             // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
             if (name.Length > 15)
             {
-                throw new MyException("Λανθασμένο " + type + "\n" +
+                throw new MyException("Λανθασμένο " + type + " " +
                                      "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
             }
 
@@ -61,7 +61,7 @@ namespace CinemaStore.Business
             bool containsLetters = name.All(char.IsLetter);
             if (!containsLetters)
             {
-                throw new MyException("Λανθασμένο " + type + "\n" +
+                throw new MyException("Λανθασμένο " + type + " " +
                                       "[3] Πρέπει να περιέχει μόνο γράμματα");
             }
 
@@ -70,7 +70,7 @@ namespace CinemaStore.Business
             bool isUpperFirstLetter = char.IsUpper(nameArray[0]);
             if (!isUpperFirstLetter)
             {
-                throw new MyException("Λανθασμένο " + type + "\n" +
+                throw new MyException("Λανθασμένο " + type + " " +
                                       "[4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο");
             }
 
@@ -78,7 +78,7 @@ namespace CinemaStore.Business
             bool areLowerRestLetters = name.Substring(1).All(char.IsLower);
             if (!areLowerRestLetters)
             {
-                throw new MyException("Λανθασμένο " + type + "\n" +
+                throw new MyException("Λανθασμένο " + type + " " +
                                       "[5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά");
             }
 
@@ -90,7 +90,7 @@ namespace CinemaStore.Business
                 isLatinLetter = (nameArray[i] >= 'A' && nameArray[i] <= 'Z') || (nameArray[i] >= 'a' && nameArray[i] <= 'z');
                 if (!isLatinLetter)
                 {
-                    throw new MyException("Λανθασμένο " + type + "\n" +
+                    throw new MyException("Λανθασμένο " + type + " " +
                                           "[6] Τα γράμματα πρέπει να είναι όλα λατινικά");
                 }
             }
@@ -111,14 +111,14 @@ namespace CinemaStore.Business
             // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
             if (email.Length < 10)
             {
-                throw new MyException("Λανθασμένο email\n" +
+                throw new MyException("Λανθασμένο email " +
                                      "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
             }
 
             // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 25
             if (email.Length > 25)
             {
-                throw new MyException("Λανθασμένο email\n" +
+                throw new MyException("Λανθασμένο email " +
                                      "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 25");
             }
 
@@ -126,7 +126,7 @@ namespace CinemaStore.Business
             bool isEmailFormat = email.EndsWith("@gmail.com") || email.EndsWith("@hotmail.com") || email.EndsWith("@outlook.com");
             if (!isEmailFormat)
             {
-                throw new MyException("Λανθασμένο email\n" +
+                throw new MyException("Λανθασμένο email " +
                                       "[3] Πρέπει να τελειώνει σε \"@gmail.com\" ή \"@hotmail.com\" ή \"@outlook.com\"");
             }
 
@@ -136,7 +136,7 @@ namespace CinemaStore.Business
             bool containsLetters = emailUsername.Any(char.IsLetter);
             if (!containsLetters)
             {
-                throw new MyException("Λανθασμένο email\n" +
+                throw new MyException("Λανθασμένο email " +
                                       "[4] Πρέπει να περιέχει τουλάχιστον 1 γράμμα");
             }
 
@@ -151,7 +151,7 @@ namespace CinemaStore.Business
                     isLatinLetter = (emailUsername[i] >= 'A' && emailUsername[i] <= 'Z') || (emailUsername[i] >= 'a' && emailUsername[i] <= 'z');
                     if (!isLatinLetter)
                     {
-                        throw new MyException("Λανθασμένο email\n" +
+                        throw new MyException("Λανθασμένο email " +
                                               "[5] Τα γράμματα πρέπει να είναι όλα λατινικά");
                     }
                 }
@@ -161,7 +161,7 @@ namespace CinemaStore.Business
             bool containsSymbols = Regex.IsMatch(emailUsername, @"^[a-zA-Z0-9]+$");
             if (!containsSymbols)
             {
-                throw new MyException("Λανθασμένο email\n" +
+                throw new MyException("Λανθασμένο email " +
                                       "[6] Δεν πρέπει να περιλαμβάνει άλλα ειδικά σύμβολα πέρα από το σύμβολο '@' και το σύμβολο '.'");
             }
 
@@ -181,14 +181,14 @@ namespace CinemaStore.Business
             // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
             if (phoneNumber.Length < 10)
             {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου\n" +
+                throw new MyException("Λανθασμένος αριθμός τηλεφώνου " +
                                      "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
             }
 
             // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
             if (phoneNumber.Length > 10)
             {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου\n" +
+                throw new MyException("Λανθασμένος αριθμός τηλεφώνου " +
                                      "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10");
             }
 
@@ -196,7 +196,7 @@ namespace CinemaStore.Business
             bool containsDigits = phoneNumber.All(char.IsDigit);
             if (!containsDigits)
             {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου\n" +
+                throw new MyException("Λανθασμένος αριθμός τηλεφώνου " +
                                       "[3] Πρέπει να περιέχει μόνο ψηφία");
             }
 
@@ -204,9 +204,9 @@ namespace CinemaStore.Business
             bool startsWith69 = phoneNumber.StartsWith("69");
             if (!startsWith69)
             {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου\n" +
-                                      "[4] Πρέπει να ξεκινάει από τα ψηφία 69\n" +
-                                      "   [4.1] Ο αριθμός τηλεφώνου πρέπει να είναι κινητό νούμερο και από ελληνική εταιρία κινητής τηλεφωνίας");
+                throw new MyException("Λανθασμένος αριθμός τηλεφώνου " +
+                                      "[4] Πρέπει να ξεκινάει από τα ψηφία 69 " +
+                                      "[4.1] Ο αριθμός τηλεφώνου πρέπει να είναι κινητό νούμερο και από ελληνική εταιρία κινητής τηλεφωνίας");
             }
         }
 
@@ -233,14 +233,14 @@ namespace CinemaStore.Business
             // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
             if (birthdate.Length < 10)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης\n" +
+                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
                                      "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
             }
 
             // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
             if (birthdate.Length > 10)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης\n" +
+                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
                                      "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10");
             }
 
@@ -248,16 +248,15 @@ namespace CinemaStore.Business
             bool isValidDate = DateTime.TryParse(birthdate, out DateTime BirthDate);
             if (!isValidDate)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης\n" +
-                                      "[3] Η ημερομηνία πρέπει να είναι έγκυρη\n" +
-                                      "   [3.1] Η ημερομηνία πρέπει να περιλαμβάνει τον χαρακτήρα '-' ή '\' ακριβώς 3 φορές\n" +
-                                      "   [3.2] Η ημερομηνία πρέπει να περιλαμβάνει μόνο ψηφία\n" +
-                                      "   [3.3] Το μορφότυπο της ημερομηνίας πρέπει να είναι \"ΧΧΧΧ-ΜΜ-ΗΗ\"\n" +
-                                      "   [3.4] Η ημερομηνία γέννησης θα πρέπει να είναι έγκυρη ως προς την αντιστοιχία ημερών και μήνα\n" +
-                                      "        [3.4.1] Η εισαγωγή χρονιάς μεγαλύτερης του 2024 δεν είναι επιτρεπτή\n" +
-                                      "        [3.4.2] Με εισαγωγή 04 στο πεδίο \"ΜΜ\", οι έγκυρες εισαγωγές στο πεδίο \"ΗΗ\" είναι από 1 εώς 30, καθώς ο μήνας Απρίλιος διαρκεί 30 μέρες\n" +
-                                      "        [3.4.3] Με εισαγωγή 2003 στο πεδίο \"ΧΧΧΧ\" και 02 στο πεδίο \"ΜΜ\", οι έγκυρες εισαγωγές στο πεδίο \"ΗΗ\" είναι από 1 εώς 28,\n" +
-                                      "                καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη - δίσεκτα έτη");
+                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
+                                      "[3] Η ημερομηνία πρέπει να είναι έγκυρη " +
+                                      "[3.1] Η ημερομηνία πρέπει να περιλαμβάνει τον χαρακτήρα - ή \\ ακριβώς 3 φορές " +
+                                      "[3.2] Η ημερομηνία πρέπει να περιλαμβάνει μόνο ψηφία " +
+                                      "[3.3] Το μορφότυπο της ημερομηνίας πρέπει να είναι ΧΧΧΧ-ΜΜ-ΗΗ " +
+                                      "[3.4] Η ημερομηνία γέννησης θα πρέπει να είναι έγκυρη ως προς την αντιστοιχία ημερών και μήνα " +
+                                      "[3.4.1] Η εισαγωγή χρονιάς μεγαλύτερης του 2024 δεν είναι επιτρεπτή " +
+                                      "[3.4.2] Με εισαγωγή 04 στο πεδίο ΜΜ, οι έγκυρες εισαγωγές στο πεδίο ΗΗ είναι από 1 εώς 30, καθώς ο μήνας Απρίλιος διαρκεί 30 μέρες " +
+                                      "[3.4.3] Με εισαγωγή 2003 στο πεδίο ΧΧΧΧ και 02 στο πεδίο ΜΜ, οι έγκυρες εισαγωγές στο πεδίο ΗΗ είναι από 1 εώς 28, καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη - δίσεκτα έτη");
             }
 
 
@@ -266,9 +265,9 @@ namespace CinemaStore.Business
             bool is15yearsOldplus = (BirthDate.Year < 2009);
             if (!is15yearsOld && !is15yearsOldplus)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης\n" +
-                                      "[4] Το όριο ηλικίας ξεκινάει από 15 χρονών\n" +
-                                      "   [4.1] Η τελευταία επιτρεπτή ημερομηνία γέννησης πρέπει να είναι 2009 - ΤρέχωνΜήνας - ΤρέχωνΗμέρα9");
+                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
+                                      "[4] Το όριο ηλικίας ξεκινάει από 15 χρονών " +
+                                      "[4.1] Η τελευταία επιτρεπτή ημερομηνία γέννησης πρέπει να είναι 2009 - ΤρέχωνΜήνας - ΤρέχωνΗμέρα9");
             }
 
             //  [5] Το όριο ηλικίας τελειώνει σε 90 χρονών
@@ -276,9 +275,9 @@ namespace CinemaStore.Business
             bool is90yearsOldminus = (BirthDate.Year > 1934);
             if (!is90yearsOld && !is90yearsOldminus)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης\n" +
-                      "[5] Το όριο ηλικίας τελειώνει σε 90 χρονών\n" +
-                      "   [5.1] Η πρώτη ημερομηνία γέννησης πρέπει να είναι 1933 - ΤρέχωνΜήνας - (ΤρέχωνΗμέρα - 1)");
+                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
+                      "[5] Το όριο ηλικίας τελειώνει σε 90 χρονών " +
+                      "[5.1] Η πρώτη ημερομηνία γέννησης πρέπει να είναι 1933 - ΤρέχωνΜήνας - (ΤρέχωνΗμέρα - 1)");
             }
         }
 
@@ -296,14 +295,14 @@ namespace CinemaStore.Business
             // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
             if (username.Length < 8)
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη\n" +
+                throw new MyException("Λανθασμένο όνομα χρήστη " +
                                      "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8");
             }
 
             // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
             if (username.Length > 15)
             {
-                throw new MyException("Λανθασμένη όνομα χρήστη\n" +
+                throw new MyException("Λανθασμένη όνομα χρήστη " +
                                      "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
             }
 
@@ -311,7 +310,7 @@ namespace CinemaStore.Business
             bool containsLetters = username.Any(char.IsLetter);
             if (!containsLetters)
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη\n" +
+                throw new MyException("Λανθασμένο όνομα χρήστη " +
                                       "[3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα");
             }
 
@@ -319,7 +318,7 @@ namespace CinemaStore.Business
             bool containsWhiteSpaces = username.Any(char.IsWhiteSpace);
             if (containsWhiteSpaces)
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη\n" +
+                throw new MyException("Λανθασμένο όνομα χρήστη " +
                                       "[4] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής");
             }
 
@@ -334,7 +333,7 @@ namespace CinemaStore.Business
                     isLatinLetter = (usernameArray[i] >= 'A' && usernameArray[i] <= 'Z') || (usernameArray[i] >= 'a' && usernameArray[i] <= 'z');
                     if (!isLatinLetter)
                     {
-                        throw new MyException("Λανθασμένο email\n" +
+                        throw new MyException("Λανθασμένο όνομα χρήστη " +
                                               "[5] Τα γράμματα πρέπει να είναι όλα λατινικά");
                     }
                 }
@@ -358,14 +357,14 @@ namespace CinemaStore.Business
             // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
             if (password.Length < 8)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
+                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
                                      "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8");
             }
 
             // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
             if (password.Length > 15)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
+                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
                                      "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
             }
 
@@ -373,7 +372,7 @@ namespace CinemaStore.Business
             bool containsUpperLetter = password.Any(char.IsUpper);
             if (!containsUpperLetter)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
+                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
                                       "[3] Πρέπει να περιέχει τουλάχιστον 1 κεφαλαίο γράμμα");
             }
 
@@ -381,7 +380,7 @@ namespace CinemaStore.Business
             bool containsLowerLetter = password.Any(char.IsLower);
             if (!containsLowerLetter)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
+                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
                                       "[4] Πρέπει να περιέχει τουλάχιστον 1 πεζό γράμμα");
             }
 
@@ -389,7 +388,7 @@ namespace CinemaStore.Business
             bool containsDigit = password.Any(char.IsDigit);
             if (!containsDigit)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
+                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
                                       "[5] Πρέπει να περιέχει τουλάχιστον 1 ψηφίο");
             }
 
@@ -398,7 +397,7 @@ namespace CinemaStore.Business
                || password.Contains("$") || password.Contains("%") || password.Contains("^") || password.Contains("_");
             if (!containsSpecialChar)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
+                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
                                       "[6] Πρέπει να περιέχει τουλάχιστον 1 ειδικό σύμβολο ('@', '#', '$', '%', '^', '&', '_')");
             }
 
@@ -406,7 +405,7 @@ namespace CinemaStore.Business
             bool containsWhiteSpaces = password.Any(char.IsWhiteSpace);
             if (containsWhiteSpaces)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
+                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
                                       "[7] Δεν μπορεί να περιέχει χαρακτήρες διαφυγής");
             }
 
@@ -421,7 +420,7 @@ namespace CinemaStore.Business
                     isLatinLetter = (passwordArray[i] >= 'A' && passwordArray[i] <= 'Z') || (passwordArray[i] >= 'a' && passwordArray[i] <= 'z');
                     if (!isLatinLetter)
                     {
-                        throw new MyException("Λανθασμένος κωδικός πρόσβασης\n" +
+                        throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
                                               "[8] Τα γράμματα πρέπει να είναι όλα λατινικά");
                     }
                 }

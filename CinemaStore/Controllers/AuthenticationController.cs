@@ -27,37 +27,62 @@ namespace CinemaStore.Controllers
         [Route("Register-User")]
         public ActionResult<RegisterUserDTO> AddUser(RegisterUserDTO model)
         {
-            var user = _userService.FindUserByUsername(model.Username);
-            if (user != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Error", Message = "User already exists!" });
+            try
+            {
+                var user = _userService.FindUserByUsername(model.Username);
+                if (user != null)
+                    return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = "Το όνομα χρήστη " + model.Username + " δεν είναι διαθέσιμο" });
 
-            var result = _userService.Register(model);
-            if (result != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
-            return Ok(new ApiResponseDTO { Status = "Success", Message = "User created successfully!" });
+                var result = _userService.Register(model);
+               
+                return Ok(new ApiResponseDTO { Status = "Επιτυχία", Message = "Ο χρήστης με όνομα χρήστη " + model.Username + " δημιουργήθηκε με επιτυχία"  });
+                }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+            }
+            catch (MyException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+            }
         }
 
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<LoginUserDTO>> ValidateUser(LoginUserDTO model)
         {
-            var userExists = _userService.FindUserByUsername(model.Username);
-            if (userExists != null)
+            try
             {
-                var matchPassword = _userService.Login(model);
-                if (matchPassword)
+                var userExists = _userService.FindUserByUsername(model.Username);
+                if (userExists != null)
                 {
-                    var token = GetToken();
-
-                    return Ok(new
+                    var matchPassword = _userService.Login(model);
+                    if (matchPassword)
                     {
-                        token = new JwtSecurityTokenHandler().WriteToken(token),
-                        expiration = token.ValidTo
-                    }); 
+                        var token = GetToken();
+
+                        return Ok(new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        });
+                    }
                 }
+                return Unauthorized();
             }
-            return Unauthorized();
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+            }
+       
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+            }
         }
 
         private JwtSecurityToken GetToken()
@@ -74,8 +99,6 @@ namespace CinemaStore.Controllers
 
             return token;
         }
-
-
 
     }
 }
