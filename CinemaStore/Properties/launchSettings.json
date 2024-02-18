@@ -25,9 +25,7 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7236;http://localhost:5139",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging",
-        "ASPNETCORE_DETAILEDERRORS": "1",
-        "ASPNETCORE_SHUTDOWNTIMEOUTSECONDS": "3"
+        "ASPNETCORE_ENVIRONMENT": "Staging"
       }
     },
     "CinemaStore-Production": {
