@@ -17,32 +17,43 @@ namespace CinemaData
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
             if (!optionsBuilder.IsConfigured)
             {
-                // Ath Server
-                optionsBuilder.UseSqlServer(
-                    "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +
-                    "database=CinemaDatabase_Production;" +
-                    "Integrated Security=True;" +
-                    "MultipleActiveResultSets=True;" +
-                    "TrustServerCertificate=True");
+                string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-                // Panos Server
-                /*optionsBuilder.UseSqlServer(
-                    "server=DESKTOP-611K8P1\\SQLEXPRESS;" +
-                    "database=CinemaDatabase;" +
-                    "Integrated Security=True;" +
-                    "MultipleActiveResultSets=True;" +
-                    "TrustServerCertificate=True");*/
-
-                // Spyros Server
-                /*optionsBuilder.UseSqlServer(
-                    "server=DESKTOP-4S64V8A\\SQLEXPRESS;" +
-                    "database=CinemaDatabase;" +
-                    "Integrated Security=True;" +
-                    "MultipleActiveResultSets=True;" +
-                    "TrustServerCertificate=True");*/
+                if (environment == "Development")
+                {
+                    optionsBuilder.UseSqlServer(
+                        //"server=DESKTOP-4S64V8A\\SQLEXPRESS;" + // Spyros Server
+                        //"server=DESKTOP-611K8P1\\SQLEXPRESS;" + // Panos Server
+                        "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +   // Ath Server
+                        "database=CinemaDatabase_Development;" +
+                        "Integrated Security=True;" +
+                        "MultipleActiveResultSets=True;" +
+                        "TrustServerCertificate=True");
+                }
+                else if (environment == "Production")
+                {
+                    optionsBuilder.UseSqlServer(
+                        //"server=DESKTOP-4S64V8A\\SQLEXPRESS;" + // Spyros Server
+                        //"server=DESKTOP-611K8P1\\SQLEXPRESS;" + // Panos Server
+                        "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +   // Ath Server
+                        "database=CinemaDatabase_Production;" +
+                        "Integrated Security=True;" +
+                        "MultipleActiveResultSets=True;" +
+                        "TrustServerCertificate=True");
+                }
+                else if (environment == "Staging")
+                {
+                    optionsBuilder.UseSqlServer(
+                        //"server=DESKTOP-4S64V8A\\SQLEXPRESS;" + // Spyros Server
+                        //"server=DESKTOP-611K8P1\\SQLEXPRESS;" + // Panos Server
+                        "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +   // Ath Server
+                        "database=CinemaDatabase_Staging;" +
+                        "Integrated Security=True;" +
+                        "MultipleActiveResultSets=True;" +
+                        "TrustServerCertificate=True");
+                }
             }
         }
     }
