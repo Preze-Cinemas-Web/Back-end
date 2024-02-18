@@ -35,9 +35,7 @@ namespace CinemaStore
         {
             services.AddMvc();
             /****** [1] DatabaseContext ******/
-            services.AddDbContext<CinemaDevelopmentContext>();
-            services.AddDbContext<CinemaProductionContext>();
-            services.AddDbContext<CinemaStagingContext>();
+            services.AddDbContext<CinemaContext>();
             /****** [2] Services & BL ******/
             services.AddScoped(
                 typeof(IUserService), typeof(UserService));

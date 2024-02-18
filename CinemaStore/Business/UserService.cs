@@ -8,10 +8,10 @@ namespace CinemaStore.Business
 {
     public class UserService : IUserService
     {
-        private CinemaDevelopmentContext _context;
+        private CinemaContext _context;
         private IMapper _mapper;
         
-        public UserService(CinemaDevelopmentContext context, IMapper mapper)
+        public UserService(CinemaContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
