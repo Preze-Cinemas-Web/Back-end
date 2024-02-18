@@ -2,13 +2,13 @@
 
 namespace CinemaData
 {
-    public class CinemaContext : DbContext
+    public class CinemaProductionContext : DbContext
     {
-        public CinemaContext()
+        public CinemaProductionContext()
         {
         }
 
-        public CinemaContext(DbContextOptions<CinemaContext> options)
+        public CinemaProductionContext(DbContextOptions<CinemaProductionContext> options)
             : base(options)
         {
         }
