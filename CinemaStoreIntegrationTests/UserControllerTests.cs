@@ -20,7 +20,7 @@ namespace CinemaStoreIntegrationTests
         [Fact]
         public async Task Register()
         {
-            var route = "https://localhost:7236/API/1.0/User/Register";
+            var route = "https://localhost:7236/API/Authentication/Register-User";
             var client = _factory.CreateClient();
 
             RegisterUserDTO userDTO = new RegisterUserDTO()
