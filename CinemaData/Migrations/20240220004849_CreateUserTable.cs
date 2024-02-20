@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace CinemaData.Migrations.Development
+namespace CinemaData.Migrations
 {
     /// <inheritdoc />
     public partial class CreateUserTable : Migration

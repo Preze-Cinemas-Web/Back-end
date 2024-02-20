@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CinemaData.Migrations.Development
+namespace CinemaData.Migrations
 {
     [DbContext(typeof(CinemaContext))]
     partial class CinemaContextModelSnapshot : ModelSnapshot
