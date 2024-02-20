@@ -1,11 +1,7 @@
 using Cinema.Models;
 using CinemaStore;
-using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Newtonsoft.Json;
-using System.Runtime.ConstrainedExecution;
-using Xunit;
 
 namespace CinemaStoreIntegrationTests
 {
@@ -34,14 +30,15 @@ namespace CinemaStoreIntegrationTests
                 LastName = "Alafouzos",
                 Email = "alafou@gmail.com",
                 PhoneNumber = "6944556563",
-                Birthdate = "2000/03/01",
-                Username = "ioannisPaparas",
+                Birthdate = "1995-03-01",
+                Username = "ioannisPipa",
                 Password = "Alafouzos_123",
                 Role = "User"
             };
            
             var result = await TestUtilities.Post(client, route, userDTO);
             var userDTO2 = await ReadUser(result);
+            
             Assert.True(userDTO2.FirstName == userDTO.FirstName);
             Assert.True(userDTO2.LastName == userDTO.LastName);
             Assert.True(userDTO2.Email == userDTO.Email);
