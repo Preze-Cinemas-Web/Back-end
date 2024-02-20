@@ -4,6 +4,7 @@ using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Newtonsoft.Json;
+using System.Runtime.ConstrainedExecution;
 using Xunit;
 
 namespace CinemaStoreIntegrationTests
@@ -11,10 +12,13 @@ namespace CinemaStoreIntegrationTests
     public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private WebApplicationFactory<Program> _factory;
+        private const string EnvironmentVariable = "ASPNETCORE_ENVIRONMENT";
 
         public UserControllerTests(WebApplicationFactory<Program> factory)
         {
             _factory = factory;
+            Environment.SetEnvironmentVariable(EnvironmentVariable, "Staging");
+
         }
 
         [Fact]
@@ -26,13 +30,14 @@ namespace CinemaStoreIntegrationTests
             RegisterUserDTO userDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Theodosis",
-                LastName = "Pavlidis",
-                Email = "thpav13@gmail.com",
-                PhoneNumber = "6971234345",
-                Birthdate = "1962-02-01",
-                Username = "thpav123",
-                Password = "Wiki_123"
+                FirstName = "Yannis",
+                LastName = "Alafouzos",
+                Email = "alafou@gmail.com",
+                PhoneNumber = "6944556563",
+                Birthdate = "2000/03/01",
+                Username = "ioannis12345",
+                Password = "Alafouzos_123",
+                Role = "User"
             };
            
             var result = await TestUtilities.Post(client, route, userDTO);
@@ -45,6 +50,7 @@ namespace CinemaStoreIntegrationTests
             Assert.True(userDTO2.Birthdate == userDTO.Birthdate);
             Assert.True(userDTO2.Username == userDTO.Username);
             Assert.True(userDTO2.Password == userDTO.Password);
+            Assert.True(userDTO2.Role == userDTO.Role);
         }
 
         [Fact]
