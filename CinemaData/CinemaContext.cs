@@ -23,9 +23,10 @@ namespace CinemaData
 
                 if (environment == "Development")
                 {
-                    connectionString = 
+                    connectionString =
                         //"server=DESKTOP-4S64V8A\\SQLEXPRESS;" + // Spyros Server
                         //"server=DESKTOP-611K8P1\\SQLEXPRESS;" + // Panos Server
+                        //"server=WIN-HNG469634LR;" +             // Stelios Server
                         "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +   // Ath Server
                         "database=CinemaDatabase_Development;" +
                         "Integrated Security=True;" +
@@ -37,6 +38,7 @@ namespace CinemaData
                     connectionString =
                         //"server=DESKTOP-4S64V8A\\SQLEXPRESS;" + // Spyros Server
                         //"server=DESKTOP-611K8P1\\SQLEXPRESS;" + // Panos Server
+                        //"server=WIN-HNG469634LR;" +             // Stelios Server
                         "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +   // Ath Server
                         "database=CinemaDatabase_Production;" +
                         "Integrated Security=True;" +
@@ -49,6 +51,7 @@ namespace CinemaData
                     connectionString =
                         //"server=DESKTOP-4S64V8A\\SQLEXPRESS;" + // Spyros Server
                         //"server=DESKTOP-611K8P1\\SQLEXPRESS;" + // Panos Server
+                        //"server=WIN-HNG469634LR;" +             // Stelios Server
                         "server=DESKTOP-FG9B3DG\\SQLEXPRESS;" +   // Ath Server
                         "database=CinemaDatabase_Staging;" +
                         "Integrated Security=True;" +
