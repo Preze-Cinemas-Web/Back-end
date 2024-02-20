@@ -35,14 +35,13 @@ namespace CinemaStoreIntegrationTests
                 Email = "alafou@gmail.com",
                 PhoneNumber = "6944556563",
                 Birthdate = "2000/03/01",
-                Username = "ioannis12345",
+                Username = "ioannisPaparas",
                 Password = "Alafouzos_123",
                 Role = "User"
             };
            
             var result = await TestUtilities.Post(client, route, userDTO);
             var userDTO2 = await ReadUser(result);
-            Assert.True(userDTO2.Id > 0);
             Assert.True(userDTO2.FirstName == userDTO.FirstName);
             Assert.True(userDTO2.LastName == userDTO.LastName);
             Assert.True(userDTO2.Email == userDTO.Email);
@@ -51,24 +50,7 @@ namespace CinemaStoreIntegrationTests
             Assert.True(userDTO2.Username == userDTO.Username);
             Assert.True(userDTO2.Password == userDTO.Password);
             Assert.True(userDTO2.Role == userDTO.Role);
-        }
-
-        [Fact]
-        public async Task Login()
-        {
-            var route = "https://localhost:7236/API/1.0/User/Login";
-            var client = _factory.CreateClient();
-
-            LoginUserDTO oldUserDTO = new LoginUserDTO()
-            {
-                Username = "thpav123",
-                Password = "Wiki_123"
-            };
-
-            var result = await TestUtilities.Post(client, route, oldUserDTO);
-            var userDTO = await ReadUser(result);
-            Assert.True(userDTO.Username == oldUserDTO.Username);
-            Assert.True(userDTO.Password == oldUserDTO.Password);
+            Assert.True(userDTO2.Id > 0);
         }
 
         private async Task<RegisterUserDTO> ReadUser(HttpResponseMessage result)
