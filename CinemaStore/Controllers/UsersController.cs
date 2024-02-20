@@ -24,5 +24,58 @@ namespace CinemaStore.Controllers
             var users = _userService.FindAllUsers();
             return Ok(users);
         }
+
+        [HttpPut("Update/{id}")]
+        public IActionResult UpdateUser(int id, [FromBody] RegisterUserDTO UpdateduserDTO)
+        {
+            try
+            {
+                if (id != UpdateduserDTO.Id)
+                {
+                    return BadRequest("Error!");
+                }
+
+                var existingUser = _userService.FindUserById(id);
+                if (existingUser == null)
+                {
+                    return NotFound();
+                }
+
+                var updatedUser = _userService.UpdateUser(UpdateduserDTO);
+                return Ok(updatedUser);
+            }
+            catch (ArgumentNullException ex1)
+            {
+                return BadRequest(ex1.Message);
+            }
+            catch (MyException ex2)
+            {
+                return BadRequest(ex2.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteUser(int id)
+        {
+            try
+            {
+                var existingUser = _userService.FindUserById(id);
+                if (existingUser == null)
+                {
+                    return NotFound();
+                }
+
+                _userService.DeleteUserById(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

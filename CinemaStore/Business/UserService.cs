@@ -3,6 +3,7 @@ using Cinema.Models;
 using CinemaData;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace CinemaStore.Business
 {
@@ -20,6 +21,14 @@ namespace CinemaStore.Business
         public IEnumerable<RegisterUserDTO> FindAllUsers()
         {
             return this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+        }
+
+        public RegisterUserDTO FindUserById(int id)
+        {
+            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var user = usersList.FirstOrDefault(x => x.Id == id);
+
+            return user;
         }
 
         public RegisterUserDTO FindUserByUsername(string username)
@@ -89,14 +98,89 @@ namespace CinemaStore.Business
             return user.Password == oldUserDTO.Password;
         }
 
-        public RegisterUserDTO UpdateUser(RegisterUserDTO user)
+        public RegisterUserDTO UpdateUser(RegisterUserDTO UpdateduserDTO)
         {
-            throw new NotImplementedException();
+            UserBusinessLogic.DefineNullObjectBL(UpdateduserDTO);
+
+            int userId = UpdateduserDTO.Id;
+
+            string firstName = UpdateduserDTO.FirstName;
+            UserBusinessLogic.DefineNameBL(firstName, "First Name");
+
+            string lastName = UpdateduserDTO.LastName;
+            UserBusinessLogic.DefineNameBL(lastName, "Last Name");
+
+            string email = UpdateduserDTO.Email;
+            UserBusinessLogic.DefineEmailBL(email);
+
+            string phoneNumber = UpdateduserDTO.PhoneNumber;
+            UserBusinessLogic.DefinePhoneNumberBL(phoneNumber);
+
+            string birthdate = UpdateduserDTO.Birthdate;
+            UserBusinessLogic.DefineBirthdateBL(birthdate);
+
+            string username = UpdateduserDTO.Username;
+            UserBusinessLogic.DefineUsernameBL(username);
+
+            string password = UpdateduserDTO.Password;
+            UserBusinessLogic.DefinePasswordBL(password);
+
+            User existingUser = _context.User.Find(UpdateduserDTO.Id);
+            if (existingUser == null)
+            {
+                throw new Exception("Δεν βρέθηκε ο χρήστης.");
+            }
+
+
+
+
+            if (UpdateduserDTO.FirstName != null)
+            {
+                existingUser.FirstName = UpdateduserDTO.FirstName;
+            }
+
+            if (UpdateduserDTO.LastName != null)
+            {
+                existingUser.LastName = UpdateduserDTO.LastName;
+            }
+
+            if (UpdateduserDTO.Email != null)
+            {
+                existingUser.Email = UpdateduserDTO.Email;
+            }
+
+            if (UpdateduserDTO.PhoneNumber != null)
+            {
+                existingUser.PhoneNumber = UpdateduserDTO.PhoneNumber;
+            }
+
+            if (UpdateduserDTO.Birthdate != null)
+            {
+                existingUser.Birthdate = UpdateduserDTO.Birthdate;
+            }
+
+            if (UpdateduserDTO.Username != null)
+            {
+                existingUser.Username = UpdateduserDTO.Username;
+            }
+
+            if (UpdateduserDTO.Password != null)
+            {
+                existingUser.Password = UpdateduserDTO.Password;
+            }
+
+            _context.SaveChanges();
+
+            return _mapper.Map<RegisterUserDTO>(existingUser);
         }
 
         public void DeleteUserById(int id)
         {
-            throw new NotImplementedException();
+            var userToDelete = _context.User.FirstOrDefault(u => u.Id == id);
+
+            _context.User.Remove(userToDelete);
+            _context.SaveChanges();
+
         }
     }
 }
