@@ -33,8 +33,8 @@ namespace CinemaStoreIntegrationTests
                 Username = "thpav123",
                 Password = "Wiki_123"
             };
-           
-            var result = await client.PostAsync(route, new StringContent(JsonConvert.SerializeObject(userDTO), System.Text.Encoding.UTF8, "application/json"));
+
+            var result = await TestUtilities.Post(client, route, userDTO);
             var userDTO2 = await ReadUser(result);
             Assert.True(userDTO2.Id > 0);
             Assert.True(userDTO2.FirstName == userDTO.FirstName);
