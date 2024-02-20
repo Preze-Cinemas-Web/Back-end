@@ -11,7 +11,7 @@ namespace CinemaStoreIntegrationTests
         internal static async Task<HttpResponseMessage> Post(HttpClient client, string route, Object obj)
         {
             using var textContent = new ByteArrayContent(Encoding.UTF8.GetBytes(
-                JsonConvert.SerializeObject(obj)));
+                     JsonConvert.SerializeObject(obj)));
             textContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             return await client.PostAsync(new Uri(route), textContent);

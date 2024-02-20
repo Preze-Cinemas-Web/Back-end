@@ -26,13 +26,13 @@ namespace CinemaStoreIntegrationTests
             RegisterUserDTO userDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Yannis",
-                LastName = "Alafouzos",
-                Email = "alafou@gmail.com",
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
                 PhoneNumber = "6944556563",
                 Birthdate = "1995-03-01",
-                Username = "ioannisPipa",
-                Password = "Alafouzos_123",
+                Username = "prezerak",
+                Password = "Prez_1234",
                 Role = "User"
             };
            
@@ -53,8 +53,10 @@ namespace CinemaStoreIntegrationTests
         private async Task<RegisterUserDTO> ReadUser(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
+            string responseContent = await result.Content.ReadAsStringAsync();
+
             return JsonConvert.DeserializeObject<RegisterUserDTO>(
-                await result.Content.ReadAsStringAsync());
+                    responseContent);
         }
     }
 }
