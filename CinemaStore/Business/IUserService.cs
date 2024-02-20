@@ -8,6 +8,8 @@ namespace CinemaStore.Business
     {
         // [HttpGet] 
         public IEnumerable<RegisterUserDTO> FindAllUsers();
+        // [HttpGet("{id:int}")]
+        public RegisterUserDTO FindUserById(int id);
         // [HttpGet("{username:string}")]
         public RegisterUserDTO FindUserByUsername(string username);
         // [HttpPost("Login")]
