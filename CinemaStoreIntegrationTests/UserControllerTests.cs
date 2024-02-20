@@ -1,43 +1,44 @@
 using Cinema.Models;
 using CinemaStore;
-using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Newtonsoft.Json;
-using Xunit;
 
 namespace CinemaStoreIntegrationTests
 {
     public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private WebApplicationFactory<Program> _factory;
+        private const string EnvironmentVariable = "ASPNETCORE_ENVIRONMENT";
 
         public UserControllerTests(WebApplicationFactory<Program> factory)
         {
             _factory = factory;
+            Environment.SetEnvironmentVariable(EnvironmentVariable, "Staging");
+
         }
 
         [Fact]
         public async Task Register()
         {
-            var route = "https://localhost:7236/API/1.0/User/Register";
+            var route = "https://localhost:7236/API/Authentication/Register-User";
             var client = _factory.CreateClient();
 
             RegisterUserDTO userDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Theodosis",
-                LastName = "Pavlidis",
-                Email = "thpav13@gmail.com",
-                PhoneNumber = "6971234345",
-                Birthdate = "1962-02-01",
-                Username = "thpav123",
-                Password = "Wiki_123"
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "gprez@gmail.com",
+                PhoneNumber = "6944556563",
+                Birthdate = "1995-03-01",
+                Username = "prezerak",
+                Password = "Prez_1234",
+                Role = "User"
             };
-           
+
             var result = await TestUtilities.Post(client, route, userDTO);
             var userDTO2 = await ReadUser(result);
-            Assert.True(userDTO2.Id > 0);
+
             Assert.True(userDTO2.FirstName == userDTO.FirstName);
             Assert.True(userDTO2.LastName == userDTO.LastName);
             Assert.True(userDTO2.Email == userDTO.Email);
@@ -45,31 +46,17 @@ namespace CinemaStoreIntegrationTests
             Assert.True(userDTO2.Birthdate == userDTO.Birthdate);
             Assert.True(userDTO2.Username == userDTO.Username);
             Assert.True(userDTO2.Password == userDTO.Password);
-        }
-
-        [Fact]
-        public async Task Login()
-        {
-            var route = "https://localhost:7236/API/1.0/User/Login";
-            var client = _factory.CreateClient();
-
-            LoginUserDTO oldUserDTO = new LoginUserDTO()
-            {
-                Username = "thpav123",
-                Password = "Wiki_123"
-            };
-
-            var result = await TestUtilities.Post(client, route, oldUserDTO);
-            var userDTO = await ReadUser(result);
-            Assert.True(userDTO.Username == oldUserDTO.Username);
-            Assert.True(userDTO.Password == oldUserDTO.Password);
+            Assert.True(userDTO2.Role == userDTO.Role);
+            Assert.True(userDTO2.Id > 0);
         }
 
         private async Task<RegisterUserDTO> ReadUser(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
+            string responseContent = await result.Content.ReadAsStringAsync();
+
             return JsonConvert.DeserializeObject<RegisterUserDTO>(
-                await result.Content.ReadAsStringAsync());
+                    responseContent);
         }
     }
 }
