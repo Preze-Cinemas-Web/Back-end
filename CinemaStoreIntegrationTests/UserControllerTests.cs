@@ -35,10 +35,10 @@ namespace CinemaStoreIntegrationTests
                 Password = "Prez_1234",
                 Role = "User"
             };
-           
+
             var result = await TestUtilities.Post(client, route, userDTO);
             var userDTO2 = await ReadUser(result);
-            
+
             Assert.True(userDTO2.FirstName == userDTO.FirstName);
             Assert.True(userDTO2.LastName == userDTO.LastName);
             Assert.True(userDTO2.Email == userDTO.Email);
