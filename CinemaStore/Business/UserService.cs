@@ -2,6 +2,8 @@
 using Cinema.Models;
 using CinemaData;
 using CinemaStore.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 
 namespace CinemaStore.Business
@@ -43,43 +45,43 @@ namespace CinemaStore.Business
          *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
          *  τα πεδία του User (π.χ. το email να έχει το format email @gmail.com).
          */
-        public RegisterUserDTO Register(RegisterUserDTO userDTO)
+        public RegisterUserDTO Register(RegisterUserDTO registerUserDTO)
         {
             // Business Logic User
 
-            UserBusinessLogic.DefineNullObjectBL(userDTO);
+            UserBusinessLogic.DefineNullObjectBL(registerUserDTO);
 
-            int id = userDTO.Id;
+            int id = registerUserDTO.Id;
             UserBusinessLogic.DefineIdBL(id);
 
-            string firstName = userDTO.FirstName;
+            string firstName = registerUserDTO.FirstName;
             UserBusinessLogic.DefineNameBL(firstName, "όνομα");
 
-            string lastName = userDTO.LastName;
+            string lastName = registerUserDTO.LastName;
             UserBusinessLogic.DefineNameBL(lastName, "επώνυμο");
 
-            string email = userDTO.Email;
+            string email = registerUserDTO.Email;
             UserBusinessLogic.DefineEmailBL(email);
 
-            string phoneNumber = userDTO.PhoneNumber;
+            string phoneNumber = registerUserDTO.PhoneNumber;
             UserBusinessLogic.DefinePhoneNumberBL(phoneNumber);
 
-            string birthdate = userDTO.Birthdate;
+            string birthdate = registerUserDTO.Birthdate;
             UserBusinessLogic.DefineBirthdateBL(birthdate);
 
-            string username = userDTO.Username;
+            string username = registerUserDTO.Username;
             UserBusinessLogic.DefineUsernameBL(username);
 
-            string password = userDTO.Password;
+            string password = registerUserDTO.Password;
             UserBusinessLogic.DefinePasswordBL(password);
 
             string hashedPassword = "";
-            this.EncryptPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
-            userDTO.Password = hashedPassword;
+            this.HashPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            registerUserDTO.Password = hashedPassword;
 
             // Mapping to User & Insert into database
 
-            User user = this._mapper.Map<User>(userDTO);
+            User user = this._mapper.Map<User>(registerUserDTO);
 
             _context.User.Add(user);
             _context.SaveChanges();
@@ -87,33 +89,32 @@ namespace CinemaStore.Business
             return _mapper.Map<RegisterUserDTO>(user);
         }
 
-        public bool Login(LoginUserDTO oldUserDTO)
+        public bool Login(LoginUserDTO loginUserDTO)
         {
-            var userDTO = this.FindUserByUsername(oldUserDTO.Username);
+            var userDTO = this.FindUserByUsername(loginUserDTO.Username);
 
             if (userDTO == null)
             {
                 return false;
             }
 
-            string hashedPassword = "";
-            this.EncryptPassword(oldUserDTO.Password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
-
             User user = this._mapper.Map<User>(userDTO);
+
+            string hashedPassword = "";
+            this.HashPassword(loginUserDTO.Password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
 
             return user.Password == hashedPassword;
         }
 
-        // Cipher's Encryption
-        private void EncryptPassword(string password, ref string hashedPassword)
+        // SHA256 Encryption
+        private void HashPassword(string password, ref string hashedPassword)
         {
-            int alphabetSize = 128;
-            int shift = 5;
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
 
-            foreach (char character in password)
+            using (SHA256 sha256 = SHA256.Create())
             {
-                char encryptedChar = (char)((character + shift) % alphabetSize);
-                hashedPassword += encryptedChar;
+                byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
+                hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "");
             }
         }
 
@@ -145,7 +146,7 @@ namespace CinemaStore.Business
             UserBusinessLogic.DefinePasswordBL(password);
 
             string hashedPassword = "";
-            this.EncryptPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            this.HashPassword(password, ref hashedPassword); // Encrypt Password (SHA256 Encryption)
             UpdateduserDTO.Password = hashedPassword;
 
             User existingUser = _context.User.Find(UpdateduserDTO.Id);
