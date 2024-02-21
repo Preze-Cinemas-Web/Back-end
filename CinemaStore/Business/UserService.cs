@@ -33,8 +33,8 @@ namespace CinemaStore.Business
 
         public RegisterUserDTO FindUserByUsername(string username)
         {
-            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User); // Μετατροπή από List<User> (Data) -> List<UserDTO> (Store)
-            var user = usersList.FirstOrDefault(x => x.Username == username);      // Βρες τον user με user.Username == username
+            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var user = usersList.FirstOrDefault(x => x.Username == username);      
 
             return user;
         }
@@ -73,6 +73,10 @@ namespace CinemaStore.Business
 
             string password = userDTO.Password;
             UserBusinessLogic.DefinePasswordBL(password);
+
+            string hashedPassword = "";
+            this.EncryptPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            userDTO.Password = hashedPassword;
             
             // Mapping to User & Insert into database
 
@@ -93,9 +97,25 @@ namespace CinemaStore.Business
                 return false;
             }
 
+            string hashedPassword = "";
+            this.EncryptPassword(oldUserDTO.Password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+
             User user = this._mapper.Map<User>(userDTO);
 
-            return user.Password == oldUserDTO.Password;
+            return user.Password == hashedPassword;
+        }
+
+        // Cipher's Encryption
+        private void EncryptPassword(string password, ref string hashedPassword)
+        {
+            int alphabetSize = 128;
+            int shift = 5;
+
+            foreach (char character in password)
+            {
+                char encryptedChar = (char)((character + shift) % alphabetSize);
+                hashedPassword += encryptedChar;
+            }
         }
 
         public RegisterUserDTO UpdateUser(RegisterUserDTO UpdateduserDTO)
