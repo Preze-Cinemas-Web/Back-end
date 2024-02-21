@@ -4,6 +4,8 @@ using CinemaData;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
 
 namespace CinemaStore.Business
 {
@@ -108,14 +110,15 @@ namespace CinemaStore.Business
         // Cipher's Encryption
         private void EncryptPassword(string password, ref string hashedPassword)
         {
-            int alphabetSize = 128;
-            int shift = 5;
+            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); // divide by 8 to convert bits to bytes
 
-            foreach (char character in password)
-            {
-                char encryptedChar = (char)((character + shift) % alphabetSize);
-                hashedPassword += encryptedChar;
-            }
+            // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
+            hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password!,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
         }
 
         public RegisterUserDTO UpdateUser(RegisterUserDTO UpdateduserDTO)
