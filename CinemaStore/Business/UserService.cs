@@ -2,10 +2,7 @@
 using Cinema.Models;
 using CinemaData;
 using CinemaStore.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System.Security.Cryptography;
+
 
 namespace CinemaStore.Business
 {
@@ -13,7 +10,7 @@ namespace CinemaStore.Business
     {
         private CinemaContext _context;
         private IMapper _mapper;
-        
+
         public UserService(CinemaContext context, IMapper mapper)
         {
             _context = context;
@@ -36,16 +33,16 @@ namespace CinemaStore.Business
         public RegisterUserDTO FindUserByUsername(string username)
         {
             var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
-            var user = usersList.FirstOrDefault(x => x.Username == username);      
+            var user = usersList.FirstOrDefault(x => x.Username == username);
 
             return user;
         }
 
-       /*  HTTP POST - User
-        *  
-        *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
-        *  τα πεδία του User (π.χ. το email να έχει το format email @gmail.com).
-        */
+        /*  HTTP POST - User
+         *  
+         *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
+         *  τα πεδία του User (π.χ. το email να έχει το format email @gmail.com).
+         */
         public RegisterUserDTO Register(RegisterUserDTO userDTO)
         {
             // Business Logic User
@@ -79,10 +76,10 @@ namespace CinemaStore.Business
             string hashedPassword = "";
             this.EncryptPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
             userDTO.Password = hashedPassword;
-            
+
             // Mapping to User & Insert into database
 
-            User user = this._mapper.Map<User>(userDTO); 
+            User user = this._mapper.Map<User>(userDTO);
 
             _context.User.Add(user);
             _context.SaveChanges();
@@ -92,8 +89,8 @@ namespace CinemaStore.Business
 
         public bool Login(LoginUserDTO oldUserDTO)
         {
-            var userDTO = this.FindUserByUsername(oldUserDTO.Username); 
-            
+            var userDTO = this.FindUserByUsername(oldUserDTO.Username);
+
             if (userDTO == null)
             {
                 return false;
@@ -110,14 +107,13 @@ namespace CinemaStore.Business
         // Cipher's Encryption
         private void EncryptPassword(string password, ref string hashedPassword)
         {
-            // ----- Έγκυρος κωδικός πρόσβασης -----
             int alphabetSize = 128;
             int shift = 5;
 
-            foreach (char character in Password)
+            foreach (char character in password)
             {
                 char encryptedChar = (char)((character + shift) % alphabetSize);
-                EncryptedPW += encryptedChar;
+                hashedPassword += encryptedChar;
             }
         }
 
@@ -148,14 +144,16 @@ namespace CinemaStore.Business
             string password = UpdateduserDTO.Password;
             UserBusinessLogic.DefinePasswordBL(password);
 
+            string hashedPassword = "";
+            this.EncryptPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            UpdateduserDTO.Password = hashedPassword;
+
             User existingUser = _context.User.Find(UpdateduserDTO.Id);
+            
             if (existingUser == null)
             {
                 throw new Exception("Δεν βρέθηκε ο χρήστης.");
             }
-
-
-
 
             if (UpdateduserDTO.FirstName != null)
             {
