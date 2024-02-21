@@ -110,15 +110,15 @@ namespace CinemaStore.Business
         // Cipher's Encryption
         private void EncryptPassword(string password, ref string hashedPassword)
         {
-            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); // divide by 8 to convert bits to bytes
+            // ----- Έγκυρος κωδικός πρόσβασης -----
+            int alphabetSize = 128;
+            int shift = 5;
 
-            // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
-            hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password!,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
+            foreach (char character in Password)
+            {
+                char encryptedChar = (char)((character + shift) % alphabetSize);
+                EncryptedPW += encryptedChar;
+            }
         }
 
         public RegisterUserDTO UpdateUser(RegisterUserDTO UpdateduserDTO)
