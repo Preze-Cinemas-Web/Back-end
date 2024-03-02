@@ -1,5 +1,6 @@
 using Cinema.Models;
 using CinemaStore;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 
@@ -46,6 +47,20 @@ namespace CinemaStoreIntegrationTests
             Assert.True(userDTO2.Username == userDTO.Username);
             Assert.True(userDTO2.Password == userDTO.Password);
             Assert.True(userDTO2.Id > 0);
+        }
+
+        [Fact]
+        public async Task Login()
+        {
+            var route = "https://localhost:7236/API/Authentication/Login";
+            var client = _factory.CreateClient();
+            
+            // Admin Login
+            LoginUserDTO userDTO = new LoginUserDTO()
+            {
+                Username = "prezerak",
+                Password = "GPrez_123"
+            }; 
         }
 
         private async Task<RegisterUserDTO> ReadUser(HttpResponseMessage result)
