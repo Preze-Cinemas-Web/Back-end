@@ -82,6 +82,7 @@ namespace CinemaStore.Business
             // Mapping to User & Insert into database
 
             User user = this._mapper.Map<User>(registerUserDTO);
+            user.Role = "User";
 
             _context.User.Add(user);
             _context.SaveChanges();

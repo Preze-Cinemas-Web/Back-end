@@ -32,8 +32,7 @@ namespace CinemaStoreIntegrationTests
                 PhoneNumber = "6944556563",
                 Birthdate = "1995-03-01",
                 Username = "prezerak",
-                Password = "Prez_1234",
-                Role = "User"
+                Password = "Prez_1234"
             };
 
             var result = await TestUtilities.Post(client, route, userDTO);
@@ -46,7 +45,6 @@ namespace CinemaStoreIntegrationTests
             Assert.True(userDTO2.Birthdate == userDTO.Birthdate);
             Assert.True(userDTO2.Username == userDTO.Username);
             Assert.True(userDTO2.Password == userDTO.Password);
-            Assert.True(userDTO2.Role == userDTO.Role);
             Assert.True(userDTO2.Id > 0);
         }
 
