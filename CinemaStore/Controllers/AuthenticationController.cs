@@ -4,6 +4,7 @@ using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace CinemaStore.Controllers
@@ -63,7 +64,7 @@ namespace CinemaStore.Controllers
                     var matchPassword = _userService.Login(model);
                     if (matchPassword)
                     {
-                        var token = GetToken();
+                        var token = GetToken(userExists.Id, "User"); // Pass user id and role to GetToken method
 
                         return Ok(new
                         {
@@ -78,14 +79,14 @@ namespace CinemaStore.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
             }
-       
+
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
             }
         }
 
-        private JwtSecurityToken GetToken()
+        private JwtSecurityToken GetToken(int userId, string role) // Add userId and role parameters
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
 
@@ -93,7 +94,11 @@ namespace CinemaStore.Controllers
                                issuer: _configuration["JWT:Issuer"],
                                audience: _configuration["JWT:Audience"],
                                expires: DateTime.Now.AddHours(3),
-                               claims: null,
+                               claims: new[]
+                               {
+                                   new Claim("userId", userId.ToString()), // Add userId claim
+                                   new Claim("role", role) // Add role claim
+                               },
                                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                                );
 

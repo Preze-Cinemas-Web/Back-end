@@ -13,6 +13,11 @@ namespace CinemaStoreIntegrationTests
             using var textContent = new ByteArrayContent(Encoding.UTF8.GetBytes(
                      JsonConvert.SerializeObject(obj)));
             textContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            if (!String.IsNullOrEmpty(Setup.token))
+            {
+                client.DefaultRequestHeaders.Authorization = 
+                    new AuthenticationHeaderValue("Bearer", Setup.token);
+            }
 
             return await client.PostAsync(new Uri(route), textContent);
         }

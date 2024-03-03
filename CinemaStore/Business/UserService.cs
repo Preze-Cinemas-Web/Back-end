@@ -96,7 +96,7 @@ namespace CinemaStore.Business
 
             if (userDTO == null)
             {
-                return false;
+               return false;
             }
 
             User user = this._mapper.Map<User>(userDTO);
