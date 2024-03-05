@@ -32,7 +32,7 @@ namespace CinemaStore.Controllers
             {
                 var user = _userService.FindUserByUsername(model.Username);
                 if (user != null)
-                    return StatusCode(StatusCodes.Status400BadRequest, new ApiResponseDTO { Status = "Σφάλμα", Message = "Το όνομα χρήστη " + model.Username + " δεν είναι διαθέσιμο" });
+                    return StatusCode(StatusCodes.Status400BadRequest, new ApiResponse { Status = "Σφάλμα", Message = "Το όνομα χρήστη " + model.Username + " δεν είναι διαθέσιμο" });
 
                 var result = _userService.Register(model);
                
@@ -40,15 +40,15 @@ namespace CinemaStore.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
             }
             catch (MyException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
             }
         }
 
@@ -65,24 +65,22 @@ namespace CinemaStore.Controllers
                     if (matchPassword)
                     {
                         var token = GetToken(userExists.Id, "User"); // Pass user id and role to GetToken method
+                        var jwtHandler = new JwtSecurityTokenHandler();
+                        var tokenString = jwtHandler.WriteToken(token);
 
-                        return Ok(new
-                        {
-                            token = new JwtSecurityTokenHandler().WriteToken(token),
-                            expiration = token.ValidTo
-                        });
+                        return Ok(tokenString);
                     }
                 }
                 return Unauthorized();
             }
             catch (ArgumentNullException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
             }
 
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseDTO { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
             }
         }
 

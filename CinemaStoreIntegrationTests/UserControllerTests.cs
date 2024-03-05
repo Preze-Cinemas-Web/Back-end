@@ -4,6 +4,9 @@ using CinemaStore.Business;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -56,7 +59,7 @@ namespace CinemaStoreIntegrationTests
             Assert.True(registerUserDTO.Password == user.Password);
         }
 
-        
+
         [Fact]
         public async Task Login()
         {
@@ -71,9 +74,31 @@ namespace CinemaStoreIntegrationTests
             };
 
             var result = await TestUtilities.Post(client, route, loginUserDTO);
-            var userToken = await ValidateUser(result);
 
-            Assert.True(userToken != null);
+            var token = await ValidateUser(result);
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+            var claims = jsonToken.Claims;
+
+            Assert.NotNull(claims);
+
+            int userId = 0;
+            string role = " ";
+
+            foreach (var claim in claims)
+            {
+                if (claim.Type == "userId")
+                {
+                    userId = int.Parse(claim.Value);
+                }
+                else if (claim.Type == "role")
+                {
+                    role = claim.Value;
+                }
+            }
+
+            Assert.True(userId > 1);
+            Assert.True(role == "User");    
         }
 
         private void HashPassword(string password, ref string hashedPassword)
@@ -92,15 +117,14 @@ namespace CinemaStoreIntegrationTests
             Assert.True(result.IsSuccessStatusCode);
             string responseContent = await result.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<RegisterUserDTO>(
-                    responseContent);
+            return JsonConvert.DeserializeObject<RegisterUserDTO>(responseContent);
         }
 
         private async Task<string> ValidateUser(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
-            
-            return await result.Content.ReadAsStringAsync();
+
+            return await result.Content.ReadAsStringAsync();   
         }
 
     }
