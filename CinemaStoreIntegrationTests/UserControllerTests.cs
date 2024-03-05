@@ -1,6 +1,7 @@
 using Cinema.Models;
 using CinemaStore;
 using CinemaStore.Business;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
@@ -26,7 +27,7 @@ namespace CinemaStoreIntegrationTests
             var route = "https://localhost:7236/API/Authentication/Register-User";
             var client = _factory.CreateClient();
 
-            RegisterUserDTO userDTO = new RegisterUserDTO()
+            RegisterUserDTO registerUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
                 FirstName = "George",
@@ -34,41 +35,46 @@ namespace CinemaStoreIntegrationTests
                 Email = "gprez@gmail.com",
                 PhoneNumber = "6944556563",
                 Birthdate = "1995-03-01",
-                Username = "paparaskaimisos",
+                Username = "dengamiesaileo",
                 Password = "Prez_1234"
             };
 
-            var result = await TestUtilities.Post(client, route, userDTO);
-            var userDTO2 = await ReadUser(result);
+            var result = await TestUtilities.Post(client, route, registerUserDTO);
+            var user = await ReadUser(result);
 
             var hashedPassword = "";
-            HashPassword(userDTO.Password, ref hashedPassword);
-            userDTO.Password = hashedPassword;
+            HashPassword(registerUserDTO.Password, ref hashedPassword);
+            registerUserDTO.Password = hashedPassword;
 
-            Assert.True(userDTO2.FirstName == userDTO.FirstName);
-            Assert.True(userDTO2.LastName == userDTO.LastName);
-            Assert.True(userDTO2.Email == userDTO.Email);
-            Assert.True(userDTO2.PhoneNumber == userDTO.PhoneNumber);
-            Assert.True(userDTO2.Birthdate == userDTO.Birthdate);
-            Assert.True(userDTO2.Username == userDTO.Username);
-            Assert.True(userDTO2.Password == userDTO.Password);
-            Assert.True(userDTO2.Id > 0);
+            Assert.True(user.Id > 0);
+            Assert.True(registerUserDTO.FirstName == user.FirstName);
+            Assert.True(registerUserDTO.LastName == user.LastName);
+            Assert.True(registerUserDTO.Email == user.Email);
+            Assert.True(registerUserDTO.PhoneNumber == user.PhoneNumber);
+            Assert.True(registerUserDTO.Birthdate == user.Birthdate);
+            Assert.True(registerUserDTO.Username == user.Username);
+            Assert.True(registerUserDTO.Password == user.Password);
         }
 
-        /*
+        
         [Fact]
         public async Task Login()
         {
             var route = "https://localhost:7236/API/Authentication/Login";
             var client = _factory.CreateClient();
-            
+
             // Admin Login
-            LoginUserDTO userDTO = new LoginUserDTO()
+            LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
-                Username = "prezerak",
-                Password = "GPrez_123"
-            }; 
-        }  */
+                Username = "prezerakus",
+                Password = "Prez_1234"
+            };
+
+            var result = await TestUtilities.Post(client, route, loginUserDTO);
+            var userToken = await ValidateUser(result);
+
+            Assert.True(userToken != null);
+        }
 
         private void HashPassword(string password, ref string hashedPassword)
         {
@@ -89,5 +95,13 @@ namespace CinemaStoreIntegrationTests
             return JsonConvert.DeserializeObject<RegisterUserDTO>(
                     responseContent);
         }
+
+        private async Task<string> ValidateUser(HttpResponseMessage result)
+        {
+            Assert.True(result.IsSuccessStatusCode);
+            
+            return await result.Content.ReadAsStringAsync();
+        }
+
     }
 }
