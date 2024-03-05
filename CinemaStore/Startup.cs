@@ -1,20 +1,17 @@
 ﻿using CinemaData;
 using CinemaStore.Business;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace CinemaStore
 {
     public class Startup
     {
-        public IConfiguration configRoot
-        {
-            get;
-        }
-
+        public IConfiguration configRoot { get; }
         public string MyAllowSpecificOrigins { get; }
 
         public Startup(IConfiguration configuration)
@@ -71,8 +68,13 @@ namespace CinemaStore
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configRoot["JWT:Key"]))
                 };
             });
+            /****** [8] Admin Login ******/
+            Setup.configRoot = configRoot;
+            Setup.AdminLogin();
+
             services.AddControllers();
             services.AddEndpointsApiExplorer();
+            /****** [9] Swagger Authorization UI ******/
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CinemaStore", Version = "v1" });
