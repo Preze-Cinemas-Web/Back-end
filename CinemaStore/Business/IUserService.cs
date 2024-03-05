@@ -1,6 +1,5 @@
 ﻿using Cinema.Models;
 using CinemaStore.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Business
 {

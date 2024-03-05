@@ -68,8 +68,13 @@ namespace CinemaStore
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configRoot["JWT:Key"]))
                 };
             });
+            /****** [8] Admin Login ******/
+            Setup.configRoot = configRoot;
+            Setup.AdminLogin();
+
             services.AddControllers();
             services.AddEndpointsApiExplorer();
+            /****** [9] Swagger Authorization UI ******/
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CinemaStore", Version = "v1" });
@@ -97,30 +102,6 @@ namespace CinemaStore
                     }
                 });
             });
-        }
-
-        public void AdminLogin()
-        {
-            
-        }
-
-        private JwtSecurityToken GetToken(int userId, string role) // Add userId and role parameters
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configRoot["JWT:Key"]));
-
-            var token = new JwtSecurityToken(
-                               issuer: configRoot["JWT:Issuer"],
-                               audience: configRoot["JWT:Audience"],
-                               expires: DateTime.Now.AddHours(3),
-                               claims: new[]
-                               {
-                                   new Claim("userId", userId.ToString()), // Add userId claim
-                                   new Claim("role", role) // Add role claim
-                               },
-                               signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                               );
-
-            return token;
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)

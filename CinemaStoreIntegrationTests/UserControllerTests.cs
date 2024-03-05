@@ -1,8 +1,10 @@
 using Cinema.Models;
 using CinemaStore;
-using CinemaStore.Models;
+using CinemaStore.Business;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace CinemaStoreIntegrationTests
 {
@@ -32,12 +34,16 @@ namespace CinemaStoreIntegrationTests
                 Email = "gprez@gmail.com",
                 PhoneNumber = "6944556563",
                 Birthdate = "1995-03-01",
-                Username = "prezerak",
+                Username = "paparaskaimisos",
                 Password = "Prez_1234"
             };
 
             var result = await TestUtilities.Post(client, route, userDTO);
             var userDTO2 = await ReadUser(result);
+
+            var hashedPassword = "";
+            HashPassword(userDTO.Password, ref hashedPassword);
+            userDTO.Password = hashedPassword;
 
             Assert.True(userDTO2.FirstName == userDTO.FirstName);
             Assert.True(userDTO2.LastName == userDTO.LastName);
@@ -49,6 +55,7 @@ namespace CinemaStoreIntegrationTests
             Assert.True(userDTO2.Id > 0);
         }
 
+        /*
         [Fact]
         public async Task Login()
         {
@@ -61,6 +68,17 @@ namespace CinemaStoreIntegrationTests
                 Username = "prezerak",
                 Password = "GPrez_123"
             }; 
+        }  */
+
+        private void HashPassword(string password, ref string hashedPassword)
+        {
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
+                hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "");
+            }
         }
 
         private async Task<RegisterUserDTO> ReadUser(HttpResponseMessage result)
