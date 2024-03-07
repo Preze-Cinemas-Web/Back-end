@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("API/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
