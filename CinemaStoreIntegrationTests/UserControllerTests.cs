@@ -96,7 +96,8 @@ namespace CinemaStoreIntegrationTests
                     role = claim.Value;
                 }
             }
-
+            
+            Assert.NotNull(Setup.token); // Check Admin's token
             Assert.True(userId > 1);
             Assert.True(role == "User");    
         }

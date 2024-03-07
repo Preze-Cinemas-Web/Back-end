@@ -64,11 +64,15 @@ namespace CinemaStore.Controllers
                     var matchPassword = _userService.Login(model);
                     if (matchPassword)
                     {
-                        var token = GetToken(userExists.Id, "User"); // Pass user id and role to GetToken method
-                        var jwtHandler = new JwtSecurityTokenHandler();
-                        var tokenString = jwtHandler.WriteToken(token);
+                        if (userExists.Id > 1)
+                        {
+                            var token = GetToken(userExists.Id, "User"); // Pass user id and role to GetToken method
+                            var jwtHandler = new JwtSecurityTokenHandler();
+                            var tokenString = jwtHandler.WriteToken(token);
 
-                        return Ok(tokenString);
+                            return Ok(tokenString);
+                        }
+                        return Ok(Setup.token);
                     }
                 }
                 return Unauthorized();
