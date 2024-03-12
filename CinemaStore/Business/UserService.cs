@@ -23,39 +23,16 @@ namespace CinemaStore.Business
             _mapper = mapper;
         }
 
+        /*
+         * HTTP GET - Get All Users 
+         */
         public IEnumerable<RegisterUserDTO> FindAllUsers()
         {
             return this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
         }
 
-        public RegisterUserDTO FindUserById(int id)
-        {
-            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
-            var user = usersList.FirstOrDefault(x => x.Id == id);
-
-            return user;
-        }
-
-        public RegisterUserDTO FindUserByUsername(string username)
-        {
-            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
-            var user = usersList.FirstOrDefault(x => x.Username == username);
-
-            return user;
-        }
-
-        public RegisterUserDTO FindUserByEmailVerificationToken(string token)
-        {
-            var user = _context.User.FirstOrDefault(u => u.EmailVerificationToken == token);
-            var userDTO = _mapper.Map<RegisterUserDTO>(user);
-
-            return userDTO;
-        }
-
-        /*  HTTP POST - User
-         *  
-         *  Εδώ δημιουργούμε μία εγγραφή και θα γράψουμε τους περιορισμούς που συμφωνήσαμε να έχουν
-         *  τα πεδία του User (π.χ. το email να έχει το format email @gmail.com).
+        /*
+         * HTTP POST - Register
          */
         public RegisterUserDTO Register(RegisterUserDTO registerUserDTO)
         {
@@ -90,6 +67,7 @@ namespace CinemaStore.Business
             string hashedPassword = "";
             this.HashPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
             registerUserDTO.Password = hashedPassword;
+            registerUserDTO.ConfirmPassword = hashedPassword;
 
             // Mapping to User & Insert into database
 
@@ -103,6 +81,7 @@ namespace CinemaStore.Business
                 emailVerificationToken = GenerateRandomToken();
             }
             user.EmailVerificationToken = emailVerificationToken;
+            user.EmailVerifiedAt = "";
 
             _context.User.Add(user);
             _context.SaveChanges();
@@ -115,25 +94,79 @@ namespace CinemaStore.Business
             return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
         }
 
-        public void SendEmailVerification(string email, string username, string password)
+        // SHA256 Encryption
+        private void HashPassword(string password, ref string hashedPassword)
         {
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
+                hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "");
+            }
+        }
+
+        /*
+         * HTTP PUT - Verify Email
+         */
+        public void UpdateVerificationDate(RegisterUserDTO userDTO)
+        {
+            var user = _context.User.Find(userDTO.Id);
+            user.EmailVerifiedAt = DateTime.Now.ToString();
+            _context.SaveChanges();
+        }
+
+        public string SendEmailVerification(string username, string password)
+        {
+            var user = _context.User.FirstOrDefault(u => u.Username == username);
+
+            if (!user.EmailVerifiedAt.Equals(""))
+            {
+                return "Email already verified";
+            }
+
             var emailMime = new MimeMessage();
-            emailMime.From.Add(MailboxAddress.Parse(email));
-            emailMime.To.Add(MailboxAddress.Parse(email));
+            emailMime.From.Add(MailboxAddress.Parse(user.Email));
+            emailMime.To.Add(MailboxAddress.Parse(user.Email));
             emailMime.Subject = "Email Verification";
             emailMime.Body = new TextPart(TextFormat.Plain)
             {
-                Text = "Please verify your email."
+                Text = "Please verify your email by clicking the link " + "https://localhost:7236/API/Authentication/Verify?token=" + user.EmailVerificationToken
             };
 
             using var smtp = new SmtpClient();
-            
-            smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate(username, password);
+
+            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate(user.Email, password);
             smtp.Send(emailMime);
             smtp.Disconnect(true);
+
+            return "Email sent for verification";
         }
 
+        public RegisterUserDTO FindUserByEmailVerificationToken(string token)
+        {
+            var user = _context.User.FirstOrDefault(u => u.EmailVerificationToken == token);
+            var userDTO = _mapper.Map<RegisterUserDTO>(user);
+
+            return userDTO;
+        }
+
+        public bool isEmailVerified(string token)
+        {
+            var user = _context.User.FirstOrDefault(u => u.EmailVerificationToken == token);
+
+            if (user.EmailVerifiedAt.Equals(""))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /*
+         * HTTP POST - Login
+         */
         public string Login(LoginUserDTO loginUserDTO)
         {
             var userDTO = this.FindUserByUsername(loginUserDTO.Username);
@@ -158,18 +191,17 @@ namespace CinemaStore.Business
             }
         }
 
-        // SHA256 Encryption
-        private void HashPassword(string password, ref string hashedPassword)
+        public RegisterUserDTO FindUserByUsername(string username)
         {
-            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var user = usersList.FirstOrDefault(x => x.Username == username);
 
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
-                hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "");
-            }
+            return user;
         }
 
+        /*
+         * HTTP PUT - Update User
+         */
         public RegisterUserDTO UpdateUser(RegisterUserDTO UpdateduserDTO)
         {
             UserBusinessLogic.DefineNullObjectBL(UpdateduserDTO);
@@ -248,6 +280,17 @@ namespace CinemaStore.Business
             return _mapper.Map<RegisterUserDTO>(existingUser);
         }
 
+        public RegisterUserDTO FindUserById(int id)
+        {
+            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var user = usersList.FirstOrDefault(x => x.Id == id);
+
+            return user;
+        }
+
+        /*
+         * HTTP DELETE - Delete User
+         */
         public void DeleteUserById(int id)
         {
             var userToDelete = _context.User.FirstOrDefault(u => u.Id == id);

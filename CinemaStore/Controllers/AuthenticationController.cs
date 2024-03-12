@@ -28,38 +28,38 @@ namespace CinemaStore.Controllers
         {
             try
             {
-                var user = _userService.FindUserByUsername(model.Username);
+                var userDTO = _userService.FindUserByUsername(model.Username);
 
-                if (user != null)
-                    return BadRequest("Ο χρήστης ήδη υπάρχει.");
+                if (userDTO != null)
+                    return BadRequest("User already exists");
 
-                var result = _userService.Register(model);
+                var originalPassword = model.Password;
+                var user = _userService.Register(model);
+
+                var userStatus = _userService.SendEmailVerification(user.Username, originalPassword);
                
-                return result;
+                if (userStatus.Equals("Invalid email verification token"))
+                {
+                    return BadRequest(userStatus);
+                }
+                if (userStatus.Equals("Email already verified"))
+                {
+                    return Ok(userStatus);
+                }
+                if (userStatus.Equals("Email sent for verification"))
+                {
+                    return user;
+                }
+
+                return BadRequest("Another error occured");
             }
             catch (ArgumentNullException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
             }
             catch (MyException ex)
             {
-                return StatusCode(StatusCodes.Status400BadRequest, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
-            }
-        }
-
-        [HttpPost]
-        [Route("Verify")] 
-        public IActionResult VerifyEmail(string token)
-        {
-            try
-            {
-               // _userService.SendEmailVerification();
-
-                return Ok("Email sent for verification.");
+                return StatusCode(StatusCodes.Status400BadRequest, new ApiResponse { Status = "Error", Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -67,9 +67,24 @@ namespace CinemaStore.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("Verify")]
+        public IActionResult VerifyEmail(string token)
+        {
+            var user = _userService.FindUserByEmailVerificationToken(token);
+            var isVerified = _userService.isEmailVerified(token);
+            if (isVerified)
+            {
+                return Ok("Email already verified");
+            }
+            _userService.UpdateVerificationDate(user);
+
+            return Ok("Email verified successfully");
+        }
+
         [HttpPost]
         [Route("Login")]
-        public ActionResult<string> ValidateUser([FromBody] LoginUserDTO model)
+        public IActionResult ValidateUser([FromBody] LoginUserDTO model)
         {
             try
             {
@@ -105,12 +120,12 @@ namespace CinemaStore.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
             }
 
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
             }
         }
 

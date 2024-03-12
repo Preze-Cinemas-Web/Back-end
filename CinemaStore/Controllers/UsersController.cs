@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("API/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -18,32 +18,33 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
-        [Route("Get-All-Users")]
-        public ActionResult<IEnumerable<RegisterUserDTO>> GetAllUsers()
+        [Route("Get-All-Users"), Authorize(Roles = "Admin")]
+        public IActionResult GetAllUsers()
         {
             var users = _userService.FindAllUsers();
             
             return Ok(users);
         }
 
-        [HttpPut("Update/{id}")]
+        [HttpPut("Update")]
         public IActionResult UpdateUser(int id, [FromBody] RegisterUserDTO UpdateduserDTO)
         {
             try
             {
                 if (id != UpdateduserDTO.Id)
                 {
-                    return BadRequest("Error!");
+                    return BadRequest("Invalid user id");
                 }
 
                 var existingUser = _userService.FindUserById(id);
                 
                 if (existingUser == null)
                 {
-                    return NotFound("Ο χρήστης δεν βρέθηκε");
+                    return NotFound("User not found");
                 }
 
                 var updatedUser = _userService.UpdateUser(UpdateduserDTO);
+                
                 return Ok(updatedUser);
             }
             catch (ArgumentNullException ex1)
@@ -60,7 +61,7 @@ namespace CinemaStore.Controllers
             }
         }
 
-        [HttpDelete("Delete/{id}"), Authorize]
+        [HttpDelete("Delete"), Authorize(Roles = "Admin")]
         public IActionResult DeleteUser(int id)
         {
             try
