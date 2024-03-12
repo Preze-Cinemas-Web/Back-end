@@ -2,6 +2,10 @@
 using Cinema.Models;
 using CinemaData;
 using CinemaStore.Models;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using MimeKit.Text;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -38,6 +42,14 @@ namespace CinemaStore.Business
             var user = usersList.FirstOrDefault(x => x.Username == username);
 
             return user;
+        }
+
+        public RegisterUserDTO FindUserByEmailVerificationToken(string token)
+        {
+            var user = _context.User.FirstOrDefault(u => u.EmailVerificationToken == token);
+            var userDTO = _mapper.Map<RegisterUserDTO>(user);
+
+            return userDTO;
         }
 
         /*  HTTP POST - User
@@ -83,11 +95,43 @@ namespace CinemaStore.Business
 
             User user = this._mapper.Map<User>(registerUserDTO);
             user.Role = "User";
+            var emailVerificationToken = GenerateRandomToken();
+
+            // In case the token already exists, generate a new one
+            while (_context.User.Any(u => u.EmailVerificationToken == emailVerificationToken))
+            {
+                emailVerificationToken = GenerateRandomToken();
+            }
+            user.EmailVerificationToken = emailVerificationToken;
 
             _context.User.Add(user);
             _context.SaveChanges();
 
             return _mapper.Map<RegisterUserDTO>(user);
+        }
+
+        private string GenerateRandomToken()
+        {
+            return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+        }
+
+        public void SendEmailVerification(string email, string username, string password)
+        {
+            var emailMime = new MimeMessage();
+            emailMime.From.Add(MailboxAddress.Parse(email));
+            emailMime.To.Add(MailboxAddress.Parse(email));
+            emailMime.Subject = "Email Verification";
+            emailMime.Body = new TextPart(TextFormat.Plain)
+            {
+                Text = "Please verify your email."
+            };
+
+            using var smtp = new SmtpClient();
+            
+            smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate(username, password);
+            smtp.Send(emailMime);
+            smtp.Disconnect(true);
         }
 
         public string Login(LoginUserDTO loginUserDTO)

@@ -11,10 +11,12 @@ namespace CinemaStore.Business
         public RegisterUserDTO FindUserById(int id);
         // [HttpGet("{username:string}")]
         public RegisterUserDTO FindUserByUsername(string username);
+        public RegisterUserDTO FindUserByEmailVerificationToken(string token);
         // [HttpPost("Login")]
         public string Login(LoginUserDTO oldUserDTO);
         // [HttpPost("Register")]
         public RegisterUserDTO Register(RegisterUserDTO user);
+        public void SendEmailVerification(string email, string username, string password);
         // [HttpPut("{id:int}")]
         public RegisterUserDTO UpdateUser(RegisterUserDTO user);
         // [HttpDelete("{id:int}")]

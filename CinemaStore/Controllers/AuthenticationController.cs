@@ -52,8 +52,24 @@ namespace CinemaStore.Controllers
         }
 
         [HttpPost]
+        [Route("Verify")] 
+        public IActionResult VerifyEmail(string token)
+        {
+            try
+            {
+               // _userService.SendEmailVerification();
+
+                return Ok("Email sent for verification.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+        }
+
+        [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult<LoginUserDTO>> ValidateUser([FromBody] LoginUserDTO model)
+        public ActionResult<string> ValidateUser([FromBody] LoginUserDTO model)
         {
             try
             {
