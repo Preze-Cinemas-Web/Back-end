@@ -102,7 +102,7 @@ namespace CinemaStore.Business
         }
 
         /*
-         * HTTP PUT - Verify Email
+         * HTTP GET - Verify Email
          */
         public void UpdateVerificationDate(RegisterUserDTO userDTO)
         {

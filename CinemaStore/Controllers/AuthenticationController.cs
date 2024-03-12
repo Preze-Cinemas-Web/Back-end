@@ -67,7 +67,7 @@ namespace CinemaStore.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpGet]
         [Route("Verify")]
         public IActionResult VerifyEmail(string token)
         {
