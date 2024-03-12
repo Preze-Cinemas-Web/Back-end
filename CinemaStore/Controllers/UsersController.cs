@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("API/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -18,7 +18,7 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
-        [Route("Get-All-Users")]
+        [Route("Get-All-Users"), Authorize(Roles = "Admin")]
         public ActionResult<IEnumerable<RegisterUserDTO>> GetAllUsers()
         {
             var users = _userService.FindAllUsers();
@@ -58,7 +58,7 @@ namespace CinemaStore.Controllers
             }
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("Delete/{id}"), Authorize(Roles = "Admin")]
         public IActionResult DeleteUser(int id)
         {
             try
