@@ -38,16 +38,11 @@ namespace CinemaStore.Business
         {
             // Business Logic User
 
-            UserBusinessLogic.DefineNullObjectBL(registerUserDTO);
-
-            int id = registerUserDTO.Id;
-            UserBusinessLogic.DefineIdBL(id);
-
             string firstName = registerUserDTO.FirstName;
-            UserBusinessLogic.DefineNameBL(firstName, "όνομα");
+            UserBusinessLogic.DefineNameBL(firstName, "First Name");
 
             string lastName = registerUserDTO.LastName;
-            UserBusinessLogic.DefineNameBL(lastName, "επώνυμο");
+            UserBusinessLogic.DefineNameBL(lastName, "Last Name");
 
             string email = registerUserDTO.Email;
             UserBusinessLogic.DefineEmailBL(email);
@@ -126,12 +121,13 @@ namespace CinemaStore.Business
             }
 
             var emailMime = new MimeMessage();
-            emailMime.From.Add(MailboxAddress.Parse(user.Email));
+            emailMime.From.Add(MailboxAddress.Parse("prezecinems@ethereal.email"));
             emailMime.To.Add(MailboxAddress.Parse(user.Email));
             emailMime.Subject = "Email Verification";
             emailMime.Body = new TextPart(TextFormat.Plain)
             {
-                Text = "Please verify your email by clicking the link " + "https://localhost:7236/API/Authentication/Verify?token=" + user.EmailVerificationToken
+                Text = "Please verify your email by clicking the link below: \n\n" + "https://localhost:7236/API/Authentication/Verify?token=" + user.EmailVerificationToken
+                + "\n\n" + "Preze Cinems Development Team"
             };
 
             using var smtp = new SmtpClient();
@@ -204,10 +200,6 @@ namespace CinemaStore.Business
          */
         public RegisterUserDTO UpdateUser(RegisterUserDTO UpdateduserDTO)
         {
-            UserBusinessLogic.DefineNullObjectBL(UpdateduserDTO);
-
-            int userId = UpdateduserDTO.Id;
-
             string firstName = UpdateduserDTO.FirstName;
             UserBusinessLogic.DefineNameBL(firstName, "First Name");
 
@@ -273,6 +265,13 @@ namespace CinemaStore.Business
             if (UpdateduserDTO.Password != null)
             {
                 existingUser.Password = UpdateduserDTO.Password;
+            }
+
+            if (!UpdateduserDTO.Equals(existingUser.Email))
+            {
+                existingUser.EmailVerifiedAt = "";
+                _context.SaveChanges();
+                SendEmailVerification(username, password);
             }
 
             _context.SaveChanges();

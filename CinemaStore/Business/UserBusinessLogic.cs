@@ -5,84 +5,58 @@ namespace CinemaStore.Business
 {
     public static class UserBusinessLogic
     {
-        /*
-         *  Null Object :
-         */
-        public static void DefineNullObjectBL(RegisterUserDTO userDTO)
-        {
-            if (userDTO == null)
-            {
-                throw new ArgumentNullException(nameof(userDTO));
-            }
-        }
-
-        /* Id :
-         * 
-         * [1] To id πρέπει να είναι ίσο με 0
-         * 
-         */
-        public static void DefineIdBL(int id)
-        {
-            // [1] To id πρέπει να είναι ίσο με 0
-            if (id != 0)
-            {
-                throw new MyException("Λανθασμένο id " +
-                                      "[1] To id πρέπει να είναι ίσο με 0");
-            }
-        }
-
         /* FirstName & LastName :
          * 
-         * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3
-         * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
-         * [3] Πρέπει να περιέχει μόνο γράμματα
-         * [4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο
-         * [5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά
-         * [6] Τα γράμματα πρέπει να είναι όλα λατινικά
+         * [1] The number of characters must be at least 3
+         * [2] Number of characters must be at most 15
+         * [3] Must contain only letters
+         * [4] The 1st letter must be capitalized
+         * [5] All letters except the 1st letter must be in lower case
+         * [6] Letters must be all Latin letters
          * 
          */
         public static void DefineNameBL(string name, string type)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3
+            // [1] The number of characters must be at least 3
             if (name.Length < 3)
             {
-                throw new MyException("Λανθασμένο " + type + " " +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 3");
+                throw new MyException("Error in " + type + " " +
+                                     "[1] The number of characters must be at least 3");
             }
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
+            // [2] Number of characters must be at most 15
             if (name.Length > 15)
             {
-                throw new MyException("Λανθασμένο " + type + " " +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
+                throw new MyException("Error in " + type + " " +
+                                     "[2] Number of characters must be at most 15");
             }
 
-            // [3] Πρέπει να περιέχει μόνο γράμματα
+            // [3] Must contain only letters
             bool containsLetters = name.All(char.IsLetter);
             if (!containsLetters)
             {
-                throw new MyException("Λανθασμένο " + type + " " +
-                                      "[3] Πρέπει να περιέχει μόνο γράμματα");
+                throw new MyException("Error in " + type + " " +
+                                      "[3] Must contain only letters");
             }
 
-            // [4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο
+            // [4] The 1st letter must be capitalized
             char[] nameArray = name.ToCharArray();
             bool isUpperFirstLetter = char.IsUpper(nameArray[0]);
             if (!isUpperFirstLetter)
             {
-                throw new MyException("Λανθασμένο " + type + " " +
-                                      "[4] Το 1ο γράμμα πρέπει να είναι κεφαλαίο");
+                throw new MyException(" " + type + " " +
+                                      "[4] The 1st letter must be capitalized");
             }
 
-            // [5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά
+            // [5] All letters except the 1st letter must be in lower case
             bool areLowerRestLetters = name.Substring(1).All(char.IsLower);
             if (!areLowerRestLetters)
             {
-                throw new MyException("Λανθασμένο " + type + " " +
-                                      "[5] Τα γράμματα εκτός από το 1ο, πρέπει να είναι πεζά");
+                throw new MyException("Error in " + type + " " +
+                                      "[5] All letters except the 1st letter must be in lower case");
             }
 
-            // [6] Τα γράμματα πρέπει να είναι όλα λατινικά
+            // [6] Letters must be all Latin letters
             bool isLatinLetter = true;
             int i;
             for (i = 0; i < nameArray.Length; i++)
@@ -90,56 +64,56 @@ namespace CinemaStore.Business
                 isLatinLetter = (nameArray[i] >= 'A' && nameArray[i] <= 'Z') || (nameArray[i] >= 'a' && nameArray[i] <= 'z');
                 if (!isLatinLetter)
                 {
-                    throw new MyException("Λανθασμένο " + type + " " +
-                                          "[6] Τα γράμματα πρέπει να είναι όλα λατινικά");
+                    throw new MyException("Error in " + type + " " +
+                                          "[6] Letters must be all Latin letters");
                 }
             }
         }
 
         /* Email :
          * 
-         * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
-         * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 40
-         * [3] Πρέπει να τελειώνει σε "@ethereal.email
-         * [4] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
-         * [5] Τα γράμματα πρέπει να είναι όλα λατινικά 
+         * [1] The number of characters must be at least 10
+         * [2] The number of characters must be at most 40
+         * [3] Must end in "@ethereal.email
+         * [4] Must contain at least 1 letter
+         * [5] Letters must be all Latin letters 
          * 
          */
         public static void DefineEmailBL(string email)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
+            // [1] The number of characters must be at least 10
             if (email.Length < 10)
             {
-                throw new MyException("Λανθασμένο email " +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
+                throw new MyException("Error in email " +
+                                     "[1] The number of characters must be at least 10");
             }
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 40
+            // [2] The number of characters must be at most 40
             if (email.Length > 40)
             {
-                throw new MyException("Λανθασμένο email " +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 25");
+                throw new MyException("Error in email " +
+                                     "[2] The number of characters must be at most 40);");
             }
 
-            // [3] Πρέπει να τελειώνει σε "@gmail.com" ή "@hotmail.com" ή "@outlook.com"
+            // [3] Must end in "@ethereal.email"
             bool isEmailFormat = email.EndsWith("@gmail.com") || email.EndsWith("@hotmail.com") || email.EndsWith("@outlook.com") || email.EndsWith("@ethereal.email");
             if (!isEmailFormat)
             {
-                throw new MyException("Λανθασμένο email " +
-                                      "[3] Πρέπει να τελειώνει σε \"@gmail.com\" ή \"@hotmail.com\" ή \"@outlook.com\"");
+                throw new MyException("Error in email " +
+                                      "[3] Must end in \"@ethereal.email");
             }
 
-            // [4] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
+            // [4] Must contain at least 1 lette
             string[] subEmails = email.Split('@');
             string emailUsername = subEmails[0];
             bool containsLetters = emailUsername.Any(char.IsLetter);
             if (!containsLetters)
             {
-                throw new MyException("Λανθασμένο email " +
-                                      "[4] Πρέπει να περιέχει τουλάχιστον 1 γράμμα");
+                throw new MyException("Error in email " +
+                                      "[4] Must contain at least 1 letter");
             }
 
-            // [5] Τα γράμματα πρέπει να είναι όλα λατινικά
+            // [5] Letters must be all Latin letters
             char[] emailNameArray = emailUsername.ToCharArray();
             bool isLatinLetter = true;
             int i;
@@ -150,8 +124,8 @@ namespace CinemaStore.Business
                     isLatinLetter = (emailUsername[i] >= 'A' && emailUsername[i] <= 'Z') || (emailUsername[i] >= 'a' && emailUsername[i] <= 'z');
                     if (!isLatinLetter)
                     {
-                        throw new MyException("Λανθασμένο email " +
-                                              "[5] Τα γράμματα πρέπει να είναι όλα λατινικά");
+                        throw new MyException("Error in email " +
+                                              "[5] Letters must be all Latin letters");
                     }
                 }
             }
@@ -159,160 +133,160 @@ namespace CinemaStore.Business
 
         /* PhoneNumber :
          * 
-         * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
-         * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
-         * [3] Πρέπει να περιέχει μόνο ψηφία
-         * [4] Πρέπει να ξεκινάει από τα ψηφία 69
-              [4.1] Ο αριθμός τηλεφώνου πρέπει να είναι κινητό νούμερο και από ελληνική εταιρία κινητής τηλεφωνίας)
+         * [1] The number of characters must be at least 10
+         * [2] Number of characters must be at most 10
+         * [3] Must contain only digits
+         * [4] Must start with the digits 69
+         *    [4.1] The telephone number must be a mobile number and from a Greek mobile phone company)
          * 
          */
         public static void DefinePhoneNumberBL(string phoneNumber)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
+            // [1] The number of characters must be at least 10
             if (phoneNumber.Length < 10)
             {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου " +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
+                throw new MyException("Error in phone number " +
+                                     "[1] The number of characters must be at least 10");
             }
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
+            // [2] Number of characters must be at most 10
             if (phoneNumber.Length > 10)
             {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου " +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10");
+                throw new MyException("Error in phone number " +
+                                     "[2] Number of characters must be at most 10");
             }
 
-            // [3] Πρέπει να περιέχει μόνο ψηφία
+            // [3] Must contain only digits
             bool containsDigits = phoneNumber.All(char.IsDigit);
             if (!containsDigits)
             {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου " +
-                                      "[3] Πρέπει να περιέχει μόνο ψηφία");
+                throw new MyException("Error in phone number " +
+                                      "[3] Must contain only digits");
             }
 
-            // [4] Πρέπει να ξεκινάει από τα ψηφία 69
+            // [4] Must start with the digits 69
             bool startsWith69 = phoneNumber.StartsWith("69");
             if (!startsWith69)
             {
-                throw new MyException("Λανθασμένος αριθμός τηλεφώνου " +
-                                      "[4] Πρέπει να ξεκινάει από τα ψηφία 69 " +
-                                      "[4.1] Ο αριθμός τηλεφώνου πρέπει να είναι κινητό νούμερο και από ελληνική εταιρία κινητής τηλεφωνίας");
+                throw new MyException("Error in phone number " +
+                                      "[4] Must start with the digits 69 " +
+                                      "[4.1] The telephone number must be a mobile number and from a Greek mobile phone company)");
             }
         }
 
         /* Birthdate :
          *
-         *  [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
-         *  [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10 
-         *  [3] Η ημερομηνία πρέπει να είναι έγκυρη
-         *      [3.1] Η ημερομηνία πρέπει να περιλαμβάνει τον χαρακτήρα '-' ή '\' ακριβώς 3 φορές
-         *      [3.2] Η ημερομηνία πρέπει να περιλαμβάνει μόνο ψηφία
-         *      [3.3] Το μορφότυπο της ημερομηνίας πρέπει να είναι "ΧΧΧΧ-ΜΜ-ΗΗ"
-         *      [3.4] Η ημερομηνία γέννησης θα πρέπει να είναι έγκυρη ως προς την αντιστοιχία χρόνων, ημερών και μήνα
-         *      [3.4.1] Η εισαγωγή χρονιάς μεγαλύτερης του 2024 δεν είναι επιτρεπτή
-         *      [3.4.2] Με εισαγωγή 04 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 30, καθώς ο μήνας Απρίλιος διαρκεί 30 μέρες
-         *      [3.4.3] Με εισαγωγή 2003 στο πεδίο "ΧΧΧΧ" και 02 στο πεδίο "ΜΜ", οι έγκυρες εισαγωγές στο πεδίο "ΗΗ" είναι από 1 εώς 28, 
-         *              καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη-δίσεκτα έτη
-         *  [4] Το όριο ηλικίας ξεκινάει από 15 χρονών
-         *      [4.1] Η τελευταία επιτρεπτή ημερομηνία γέννησης πρέπει να είναι 2009-ΤρέχωνΜήνας-ΤρέχωνΗμέρα
-         *  [5] Το όριο ηλικίας τελειώνει σε 90 χρονών
-         *      [5.1] Η πρώτη ημερομηνία γέννησης πρέπει να είναι 1933-ΤρέχωνΜήνας-(ΤρέχωνΗμέρα-1)
+         * [1] The number of characters must be at least 10
+         * [2] Number of characters must be at least 10 
+         * [3] The date must be valid
+         *      [3.1] The date must contain the character '-' or '\' exactly 3 times
+         *      [3.2] The date must contain only digits
+         *      [3.3] The format of the date must be "XXX-MM-DD-HH"
+         *      [3.4] The date of birth should be valid in terms of time, day and month correspondence
+         *          [3.4.1] The entry of a year older than 2024 is not allowed
+         *          [3.4.2] By entering 04 in the field 'MM', valid entries in the field 'HH' are from 1 to 30, as the month April lasts 30 days
+         *          [3.4.3] By entering 2003 in field "XXX" and 02 in field "MM", valid entries in field "EH" are from 1 to 28, 
+         *                  as February lasts 28 days in non-consecutive years
+         * [4] The age limit starts from 15 years old
+         *      [4.1] The last allowed date of birth must be 2009-CurrentMonth-CurrentDay
+         * [5] The age limit ends at 90 years old
+         *      [5.1] The first date of birth must be 1933-CurrentMonth-(CurrentDay-1)
          */
         public static void DefineBirthdateBL(string birthdate)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10
+            // [1] The number of characters must be at least 10
             if (birthdate.Length < 10)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 10");
+                throw new MyException("Error in birthdate " +
+                                     "[1] The number of characters must be at least 10");
             }
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10
+            // [2] Number of characters must be at least 10
             if (birthdate.Length > 10)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 10");
+                throw new MyException("Error in birthdate " +
+                                     "[2] Number of characters must be at least 10");
             }
 
-            // [3] Η ημερομηνία πρέπει να είναι έγκυρη
+            // [3] The date must be valid
             bool isValidDate = DateTime.TryParse(birthdate, out DateTime BirthDate);
             if (!isValidDate)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
-                                      "[3] Η ημερομηνία πρέπει να είναι έγκυρη " +
-                                      "[3.1] Η ημερομηνία πρέπει να περιλαμβάνει τον χαρακτήρα - ή \\ ακριβώς 3 φορές " +
-                                      "[3.2] Η ημερομηνία πρέπει να περιλαμβάνει μόνο ψηφία " +
-                                      "[3.3] Το μορφότυπο της ημερομηνίας πρέπει να είναι ΧΧΧΧ-ΜΜ-ΗΗ " +
-                                      "[3.4] Η ημερομηνία γέννησης θα πρέπει να είναι έγκυρη ως προς την αντιστοιχία ημερών και μήνα " +
-                                      "[3.4.1] Η εισαγωγή χρονιάς μεγαλύτερης του 2024 δεν είναι επιτρεπτή " +
-                                      "[3.4.2] Με εισαγωγή 04 στο πεδίο ΜΜ, οι έγκυρες εισαγωγές στο πεδίο ΗΗ είναι από 1 εώς 30, καθώς ο μήνας Απρίλιος διαρκεί 30 μέρες " +
-                                      "[3.4.3] Με εισαγωγή 2003 στο πεδίο ΧΧΧΧ και 02 στο πεδίο ΜΜ, οι έγκυρες εισαγωγές στο πεδίο ΗΗ είναι από 1 εώς 28, καθώς ο Φεβρουάριος διαρκεί 28 μέρες στα μη - δίσεκτα έτη");
+                throw new MyException("Error in birthdate " +
+                                      "[3] The date must be valid " +
+                                      "[3.1] The date must contain the character '-' or '\' exactly 3 times " +
+                                      "[3.2] The date must contain only digits " +
+                                      "[3.3] The format of the date must be \"XXX-MM-DD-HH\" " +
+                                      "[3.4] The date of birth should be valid in terms of time, day and month correspondence " +
+                                      "[3.4.1] The entry of a year older than 2024 is not allowed " +
+                                      "[3.4.2] By entering 04 in the field 'MM', valid entries in the field 'HH' are from 1 to 30, as the month April lasts 30 days " +
+                                      "[3.4.3] By entering 2003 in field \"XXX\" and 02 in field \"MM\", valid entries in field \"EH\" are from 1 to 28, as February lasts 28 days in non-consecutive years");
             }
 
 
-            // [4] Το απόρρητο ηλικίας είναι από 15 χρονών και πάνω
+            // [4] The age limit starts from 15 years old
             bool is15yearsOld = (BirthDate.Year == 2009) && (BirthDate.Month <= DateTime.Today.Month) && (BirthDate.Day <= DateTime.Today.Day);
             bool is15yearsOldplus = (BirthDate.Year < 2009);
             if (!is15yearsOld && !is15yearsOldplus)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
-                                      "[4] Το όριο ηλικίας ξεκινάει από 15 χρονών " +
-                                      "[4.1] Η τελευταία επιτρεπτή ημερομηνία γέννησης πρέπει να είναι 2009 - ΤρέχωνΜήνας - ΤρέχωνΗμέρα9");
+                throw new MyException("Error in birthdate " +
+                                      "[4] The age limit starts from 15 years old " +
+                                      "[4.1] The last allowed date of birth must be 2009-CurrentMonth-CurrentDay");
             }
 
-            //  [5] Το όριο ηλικίας τελειώνει σε 90 χρονών
+            // [5] The age limit ends at 90 years old
             bool is90yearsOld = (BirthDate.Year == 1934) && (BirthDate.Month > DateTime.Today.Month) && (BirthDate.Day > DateTime.Today.Day);
             bool is90yearsOldminus = (BirthDate.Year > 1934);
             if (!is90yearsOld && !is90yearsOldminus)
             {
-                throw new MyException("Λανθασμένη ημερομηνία γέννησης " +
-                      "[5] Το όριο ηλικίας τελειώνει σε 90 χρονών " +
-                      "[5.1] Η πρώτη ημερομηνία γέννησης πρέπει να είναι 1933 - ΤρέχωνΜήνας - (ΤρέχωνΗμέρα - 1)");
+                throw new MyException("Error in birthdate " +
+                      "[5] The age limit ends at 90 years old " +
+                      "[5.1] The first date of birth must be 1933-CurrentMonth-(CurrentDay-1)");
             }
         }
 
         /* Username :
          * 
-         * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
-         * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 30
-         * [3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
-         * [4] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής 
-         * [5] Τα γράμματα πρέπει να είναι όλα λατινικά
+         * [1] The number of characters must be at least 8
+         * [2] The number of characters must be at most 30
+         * [3] Must contain at least 1 letter
+         * [4] Must not contain escape characters 
+         * [5] The letters must all be in Latin
          * 
          */
         public static void DefineUsernameBL(string username)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
+            // [1] The number of characters must be at least 8
             if (username.Length < 8)
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη " +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8");
+                throw new MyException("Error in username " +
+                                     "[1] The number of characters must be at least 8");
             }
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 30
+            // [2] The number of characters must be at most 30
             if (username.Length > 30)
             {
-                throw new MyException("Λανθασμένη όνομα χρήστη " +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
+                throw new MyException("Error in username " +
+                                     "[2] The number of characters must be at most 30");
             }
 
-            // [3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα
+            // [3] Must contain at least 1 letter
             bool containsLetters = username.Any(char.IsLetter);
             if (!containsLetters)
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη " +
-                                      "[3] Πρέπει να περιέχει τουλάχιστον 1 γράμμα");
+                throw new MyException("Error in username " +
+                                      "[3] Must contain at least 1 letter");
             }
 
-            // [4] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής
+            // [4] Must not contain escape characters
             bool containsWhiteSpaces = username.Any(char.IsWhiteSpace);
             if (containsWhiteSpaces)
             {
-                throw new MyException("Λανθασμένο όνομα χρήστη " +
-                                      "[4] Δεν πρέπει να περιέχει χαρακτήρες διαφυγής");
+                throw new MyException("Error in username " +
+                                      "[4] Must not contain escape characters");
             }
 
-            // [5] Τα γράμματα πρέπει να είναι όλα λατινικά
+            // [5] The letters must all be in Latin
             char[] usernameArray = username.ToCharArray();
             bool isLatinLetter = true;
             int i;
@@ -323,8 +297,8 @@ namespace CinemaStore.Business
                     isLatinLetter = (usernameArray[i] >= 'A' && usernameArray[i] <= 'Z') || (usernameArray[i] >= 'a' && usernameArray[i] <= 'z');
                     if (!isLatinLetter)
                     {
-                        throw new MyException("Λανθασμένο όνομα χρήστη " +
-                                              "[5] Τα γράμματα πρέπει να είναι όλα λατινικά");
+                        throw new MyException("Error in username " +
+                                              "[5] The letters must all be in Latin");
                     }
                 }
             }
@@ -332,64 +306,64 @@ namespace CinemaStore.Business
 
         /* Password :
          * 
-         * [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
-         * [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 30
-         * [3] Πρέπει να περιέχει τουλάχιστον 1 κεφαλαίο γράμμα
-         * [4] Πρέπει να περιέχει τουλάχιστον 1 πεζό γράμμα
-         * [5] Πρέπει να περιέχει τουλάχιστον 1 ψηφίο
-         * [6] Δεν μπορεί να περιέχει χαρακτήρες διαφυγής
-         * [7] Τα γράμματα πρέπει να είναι όλα λατινικά
+         * [1] The number of characters must be at least 8
+         * [2] Number of characters must be at most 30
+         * [3] Must contain at least 1 capital letter
+         * [4] Must contain at least 1 lower case letter
+         * [5] Must contain at least 1 digit
+         * [6] May not contain escape characters
+         * [7] All letters must be in Latin
          * 
          */
         public static void DefinePasswordBL(string password)
         {
-            // [1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8
+            // [1] The number of characters must be at least 8
             if (password.Length < 8)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
-                                     "[1] Το πλήθος των χαρακτήρων πρέπει να είναι τουλάχιστον 8");
+                throw new MyException("Error in password " +
+                                     "[1] The number of characters must be at least 8");
             }
 
-            // [2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15
+            // [2] Number of characters must be at most 30
             if (password.Length > 30)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
-                                     "[2] Το πλήθος των χαρακτήρων πρέπει να είναι το πολύ 15");
+                throw new MyException("Error in password " +
+                                     "[2] Number of characters must be at most 30");
             }
 
-            // [3] Πρέπει να περιέχει τουλάχιστον 1 κεφαλαίο γράμμα
+            // [3] Must contain at least 1 capital letter
             bool containsUpperLetter = password.Any(char.IsUpper);
             if (!containsUpperLetter)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
-                                      "[3] Πρέπει να περιέχει τουλάχιστον 1 κεφαλαίο γράμμα");
+                throw new MyException("Error in password " +
+                                      "[3] Must contain at least 1 capital letter");
             }
 
-            // [4] Πρέπει να περιέχει τουλάχιστον 1 πεζό γράμμα
+            // [4] Must contain at least 1 lower case letter
             bool containsLowerLetter = password.Any(char.IsLower);
             if (!containsLowerLetter)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
-                                      "[4] Πρέπει να περιέχει τουλάχιστον 1 πεζό γράμμα");
+                throw new MyException("Error in password " +
+                                      "[4] Must contain at least 1 lower case letter");
             }
 
-            // [5] Πρέπει να περιέχει τουλάχιστον 1 ψηφίο
+            // [5] Must contain at least 1 digit
             bool containsDigit = password.Any(char.IsDigit);
             if (!containsDigit)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
-                                      "[5] Πρέπει να περιέχει τουλάχιστον 1 ψηφίο");
+                throw new MyException("Error in password " +
+                                      "[5] Must contain at least 1 digit");
             }
 
-            // [7] Δεν μπορεί να περιέχει χαρακτήρες διαφυγής
+            // [6] May not contain escape characters
             bool containsWhiteSpaces = password.Any(char.IsWhiteSpace);
             if (containsWhiteSpaces)
             {
-                throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
-                                      "[7] Δεν μπορεί να περιέχει χαρακτήρες διαφυγής");
+                throw new MyException("Error in password " +
+                                      "[6] May not contain escape characters");
             }
 
-            // [8] Τα γράμματα πρέπει να είναι όλα λατινικά
+            // [7] All letters must be in Latin
             char[] passwordArray = password.ToCharArray();
             bool isLatinLetter = true;
             int i;
@@ -400,7 +374,7 @@ namespace CinemaStore.Business
                     isLatinLetter = (passwordArray[i] >= 'A' && passwordArray[i] <= 'Z') || (passwordArray[i] >= 'a' && passwordArray[i] <= 'z');
                     if (!isLatinLetter)
                     {
-                        throw new MyException("Λανθασμένος κωδικός πρόσβασης " +
+                        throw new MyException("Error in password " +
                                               "[8] Τα γράμματα πρέπει να είναι όλα λατινικά");
                     }
                 }
