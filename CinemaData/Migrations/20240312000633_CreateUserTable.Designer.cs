@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaData.Migrations
 {
     [DbContext(typeof(CinemaContext))]
-    [Migration("20240220184557_CreateUserTable")]
+    [Migration("20240312000633_CreateUserTable")]
     partial class CreateUserTable
     {
         /// <inheritdoc />
