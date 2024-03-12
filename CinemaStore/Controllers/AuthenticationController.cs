@@ -31,7 +31,7 @@ namespace CinemaStore.Controllers
                 var userDTO = _userService.FindUserByUsername(model.Username);
 
                 if (userDTO != null)
-                    return BadRequest("User already exists");
+                    return BadRequest(model.Username + " is not available");
 
                 var originalPassword = model.Password;
                 var user = _userService.Register(model);
