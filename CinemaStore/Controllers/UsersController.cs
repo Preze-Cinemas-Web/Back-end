@@ -22,6 +22,7 @@ namespace CinemaStore.Controllers
         public ActionResult<IEnumerable<RegisterUserDTO>> GetAllUsers()
         {
             var users = _userService.FindAllUsers();
+            
             return Ok(users);
         }
 
@@ -36,9 +37,10 @@ namespace CinemaStore.Controllers
                 }
 
                 var existingUser = _userService.FindUserById(id);
+                
                 if (existingUser == null)
                 {
-                    return NotFound();
+                    return NotFound("Ο χρήστης δεν βρέθηκε");
                 }
 
                 var updatedUser = _userService.UpdateUser(UpdateduserDTO);
@@ -58,7 +60,7 @@ namespace CinemaStore.Controllers
             }
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("Delete/{id}"), Authorize]
         public IActionResult DeleteUser(int id)
         {
             try

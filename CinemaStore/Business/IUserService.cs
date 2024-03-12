@@ -12,7 +12,7 @@ namespace CinemaStore.Business
         // [HttpGet("{username:string}")]
         public RegisterUserDTO FindUserByUsername(string username);
         // [HttpPost("Login")]
-        public bool Login(LoginUserDTO oldUserDTO);
+        public string Login(LoginUserDTO oldUserDTO);
         // [HttpPost("Register")]
         public RegisterUserDTO Register(RegisterUserDTO user);
         // [HttpPut("{id:int}")]

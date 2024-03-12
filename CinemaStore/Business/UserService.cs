@@ -90,13 +90,13 @@ namespace CinemaStore.Business
             return _mapper.Map<RegisterUserDTO>(user);
         }
 
-        public bool Login(LoginUserDTO loginUserDTO)
+        public string Login(LoginUserDTO loginUserDTO)
         {
             var userDTO = this.FindUserByUsername(loginUserDTO.Username);
 
             if (userDTO == null)
             {
-               return false;
+               return "Ο χρήστης δεν βρέθηκε";
             }
 
             User user = this._mapper.Map<User>(userDTO);
@@ -104,7 +104,14 @@ namespace CinemaStore.Business
             string hashedPassword = "";
             this.HashPassword(loginUserDTO.Password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
 
-            return user.Password == hashedPassword;
+            if (user.Password == hashedPassword)
+            {
+                return "Επιτυχής σύνδεση";
+            }
+            else
+            {
+                return "Λάθος κωδικός";
+            }
         }
 
         // SHA256 Encryption

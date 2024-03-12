@@ -16,23 +16,22 @@ namespace CinemaStore.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
 
-        public AuthenticationController( 
-            IConfiguration configuration,  
-            IUserService userService)
+        public AuthenticationController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
             _userService = userService;
         }
 
         [HttpPost]
-        [Route("Register-User")]
-        public ActionResult<RegisterUserDTO> AddUser(RegisterUserDTO model)
+        [Route("Register")]
+        public ActionResult<RegisterUserDTO> AddUser([FromBody] RegisterUserDTO model)
         {
             try
             {
                 var user = _userService.FindUserByUsername(model.Username);
+
                 if (user != null)
-                    return StatusCode(StatusCodes.Status400BadRequest, new ApiResponse { Status = "Σφάλμα", Message = "Το όνομα χρήστη " + model.Username + " δεν είναι διαθέσιμο" });
+                    return BadRequest("Ο χρήστης ήδη υπάρχει.");
 
                 var result = _userService.Register(model);
                
@@ -44,7 +43,7 @@ namespace CinemaStore.Controllers
             }
             catch (MyException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
+                return StatusCode(StatusCodes.Status400BadRequest, new ApiResponse { Status = "Σφάλμα", Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -54,27 +53,38 @@ namespace CinemaStore.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult<LoginUserDTO>> ValidateUser(LoginUserDTO model)
+        public async Task<ActionResult<LoginUserDTO>> ValidateUser([FromBody] LoginUserDTO model)
         {
             try
             {
-                var userExists = _userService.FindUserByUsername(model.Username);
-                if (userExists != null)
+                var userStatus = _userService.Login(model);
+                
+                if (userStatus.Equals("Ο χρήστης δεν βρέθηκε"))
                 {
-                    var matchPassword = _userService.Login(model);
-                    if (matchPassword)
-                    {
-                        if (userExists.Id > 1)
-                        {
-                            var token = GetToken(userExists.Id, "User"); // Pass user id and role to GetToken method
-                            var jwtHandler = new JwtSecurityTokenHandler();
-                            var tokenString = jwtHandler.WriteToken(token);
-
-                            return Ok(tokenString);
-                        }
-                        return Ok(Setup.token);
-                    }
+                    return NotFound(userStatus);
                 }
+                
+                if (userStatus.Equals("Λάθος κωδικός"))
+                {
+                    return Unauthorized(userStatus);
+                }
+                
+                if (userStatus.Equals("Επιτυχής σύνδεση"))
+                {
+                    var user = _userService.FindUserByUsername(model.Username);
+                    
+                    if (user.Id > 1)
+                    {
+                        var token = GetToken(user.Id, "User"); // Pass user id and role to GetToken method
+                        var jwtHandler = new JwtSecurityTokenHandler();
+                        var tokenString = jwtHandler.WriteToken(token);
+
+                        return Ok(tokenString); // User Token
+                    }
+
+                    return Ok(Setup.token); // Admin Token
+                }
+
                 return Unauthorized();
             }
             catch (ArgumentNullException ex)
