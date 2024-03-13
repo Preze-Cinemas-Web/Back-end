@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaData.Migrations
 {
     [DbContext(typeof(CinemaContext))]
-    [Migration("20240220184557_CreateUserTable")]
+    [Migration("20240312144657_CreateUserTable")]
     partial class CreateUserTable
     {
         /// <inheritdoc />
@@ -37,6 +37,14 @@ namespace CinemaData.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailVerificationToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailVerifiedAt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

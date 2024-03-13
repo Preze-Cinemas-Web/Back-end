@@ -33,13 +33,13 @@ namespace CinemaStoreIntegrationTests
             RegisterUserDTO registerUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "George",
-                LastName = "Prezerakos",
-                Email = "gprez@gmail.com",
+                FirstName = "Theodosis",
+                LastName = "Pavlidis",
+                Email = "thpav@gmail.com",
                 PhoneNumber = "6944556563",
                 Birthdate = "1995-03-01",
-                Username = "dengamiesaileo",
-                Password = "Prez_1234"
+                Username = "pavlidis",
+                Password = "Plumber_1234"
             };
 
             var result = await TestUtilities.Post(client, route, registerUserDTO);
