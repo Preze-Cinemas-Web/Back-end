@@ -126,7 +126,7 @@ namespace CinemaStore.Business
             emailMime.Subject = "Email Verification";
             emailMime.Body = new TextPart(TextFormat.Plain)
             {
-                Text = "Please verify your email by clicking the link below: \n\n" + "https://localhost:7236/API/Authentication/Verify?token=" + user.EmailVerificationToken
+                Text = "Please verify your email by clicking the link below: \n\n" + "https://localhost:7236/API/Authentication/Verify-Email?token=" + user.EmailVerificationToken
                 + "\n\n" + "Preze Cinems Development Team"
             };
 

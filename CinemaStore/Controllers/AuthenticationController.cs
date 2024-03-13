@@ -68,7 +68,7 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
-        [Route("Verify")]
+        [Route("Verify-Email")]
         public IActionResult VerifyEmail(string token)
         {
             var user = _userService.FindUserByEmailVerificationToken(token);
