@@ -1,4 +1,4 @@
-﻿using Cinema.Models;
+using Cinema.Models;
 using CinemaStore.Business;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
