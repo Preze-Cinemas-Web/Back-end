@@ -60,7 +60,7 @@ namespace CinemaStore.Business
             UserBusinessLogic.DefinePasswordBL(password);
 
             string hashedPassword = "";
-            this.HashPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            this.HashPassword(password, ref hashedPassword); // Encrypt Password (SHA 256)
             registerUserDTO.Password = hashedPassword;
             registerUserDTO.ConfirmPassword = hashedPassword;
 
