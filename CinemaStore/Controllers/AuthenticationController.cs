@@ -69,7 +69,7 @@ namespace CinemaStore.Controllers
 
         [HttpGet]
         [Route("Verify-Email")]
-        public IActionResult VerifyEmail(string token)
+        public ActionResult<string> VerifyEmail(string token)
         {
             var user = _userService.FindUserByEmailVerificationToken(token);
             var isVerified = _userService.isEmailVerified(token);
@@ -79,7 +79,7 @@ namespace CinemaStore.Controllers
             }
             _userService.UpdateVerificationDate(user);
 
-            return Ok("Email verified successfully");
+            return "Email verified successfully";
         }
 
         [HttpPost]

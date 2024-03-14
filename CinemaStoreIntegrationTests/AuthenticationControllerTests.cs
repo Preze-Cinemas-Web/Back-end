@@ -63,13 +63,14 @@ namespace CinemaStoreIntegrationTests
         [Fact]
         public async Task VerifyEmail()
         {
-            var verifyRoute = "https://localhost:7236/API/Authentication/Verify-Email?token=";
+            var route = "https://localhost:7236/API/Authentication/Verify-Email?token=";
             var client = _factory.CreateClient();
 
-            
 
-            var verifyResult = await TestUtilities.Get(client, verifyRoute);
-            var token = await ReadEmailVerificationToken(verifyResult);
+                      
+            var verifyResult = await TestUtilities.Get<string>(client, route);
+            
+            Assert.True(verifyResult == "Email verified successfully");
         }
 
 
