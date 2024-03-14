@@ -20,7 +20,7 @@ namespace CinemaStore.Business
         public string SendEmailVerification(string username, string password);
         public void UpdateVerificationDate(RegisterUserDTO userDTO);
         // [HttpPut("{id:int}")]
-        public RegisterUserDTO UpdateUser(RegisterUserDTO user);
+        public UpdateUserDTO UpdateUser(UpdateUserDTO user);
         // [HttpDelete("{id:int}")]
         public void DeleteUserById(int id);
     }
