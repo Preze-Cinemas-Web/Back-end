@@ -44,7 +44,7 @@ namespace CinemaStore.Controllers
                     return NotFound("User not found");
                 }
 
-                var updatedUser = _userService.UpdateUser(updatedUserDTO);
+                var updatedUser = _userService.ModifyUser(updatedUserDTO);
                 
                 return updatedUser;
             }
@@ -54,7 +54,7 @@ namespace CinemaStore.Controllers
             }
             catch (MyException ex2)
             {
-                return BadRequest(ex2.Message);
+                return NotFound(ex2.Message);
             }
             catch (Exception)
             {

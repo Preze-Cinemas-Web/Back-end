@@ -198,7 +198,7 @@ namespace CinemaStore.Business
         /*
          * HTTP PUT - Update User
          */
-        public UpdateUserDTO UpdateUser(UpdateUserDTO updatedUserDTO)
+        public UpdateUserDTO ModifyUser(UpdateUserDTO updatedUserDTO)
         {
             string firstName = updatedUserDTO.FirstName;
             UserBusinessLogic.DefineNameBL(firstName, "First Name");
@@ -229,7 +229,7 @@ namespace CinemaStore.Business
             
             if (existingUser == null)
             {
-                throw new Exception("Δεν βρέθηκε ο χρήστης.");
+                throw new MyException("User not found");
             }
 
             if (updatedUserDTO.FirstName != null)
