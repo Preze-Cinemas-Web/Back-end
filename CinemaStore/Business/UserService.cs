@@ -198,93 +198,85 @@ namespace CinemaStore.Business
         /*
          * HTTP PUT - Update User
          */
-        public RegisterUserDTO UpdateUser(RegisterUserDTO UpdateduserDTO)
+        public UpdateUserDTO ModifyUser(UpdateUserDTO updatedUserDTO)
         {
-            string firstName = UpdateduserDTO.FirstName;
+            string firstName = updatedUserDTO.FirstName;
             UserBusinessLogic.DefineNameBL(firstName, "First Name");
 
-            string lastName = UpdateduserDTO.LastName;
+            string lastName = updatedUserDTO.LastName;
             UserBusinessLogic.DefineNameBL(lastName, "Last Name");
 
-            string email = UpdateduserDTO.Email;
+            string email = updatedUserDTO.Email;
             UserBusinessLogic.DefineEmailBL(email);
 
-            string phoneNumber = UpdateduserDTO.PhoneNumber;
+            string phoneNumber = updatedUserDTO.PhoneNumber;
             UserBusinessLogic.DefinePhoneNumberBL(phoneNumber);
 
-            string birthdate = UpdateduserDTO.Birthdate;
+            string birthdate = updatedUserDTO.Birthdate;
             UserBusinessLogic.DefineBirthdateBL(birthdate);
 
-            string username = UpdateduserDTO.Username;
+            string username = updatedUserDTO.Username;
             UserBusinessLogic.DefineUsernameBL(username);
 
-            string password = UpdateduserDTO.Password;
+            string password = updatedUserDTO.Password;
             UserBusinessLogic.DefinePasswordBL(password);
 
             string hashedPassword = "";
             this.HashPassword(password, ref hashedPassword); // Encrypt Password (SHA256 Encryption)
-            UpdateduserDTO.Password = hashedPassword;
+            updatedUserDTO.Password = hashedPassword;
 
-            User existingUser = _context.User.Find(UpdateduserDTO.Id);
+            User existingUser = _context.User.FirstOrDefault(u => u.Username == username);
             
             if (existingUser == null)
             {
-                throw new Exception("Δεν βρέθηκε ο χρήστης.");
+                throw new MyException("User not found");
             }
 
-            if (UpdateduserDTO.FirstName != null)
+            if (updatedUserDTO.FirstName != null)
             {
-                existingUser.FirstName = UpdateduserDTO.FirstName;
+                existingUser.FirstName = updatedUserDTO.FirstName;
             }
 
-            if (UpdateduserDTO.LastName != null)
+            if (updatedUserDTO.LastName != null)
             {
-                existingUser.LastName = UpdateduserDTO.LastName;
+                existingUser.LastName = updatedUserDTO.LastName;
             }
 
-            if (UpdateduserDTO.Email != null)
+            if (updatedUserDTO.Email != null)
             {
-                existingUser.Email = UpdateduserDTO.Email;
+                existingUser.Email = updatedUserDTO.Email;
             }
 
-            if (UpdateduserDTO.PhoneNumber != null)
+            if (updatedUserDTO.PhoneNumber != null)
             {
-                existingUser.PhoneNumber = UpdateduserDTO.PhoneNumber;
+                existingUser.PhoneNumber = updatedUserDTO.PhoneNumber;
             }
 
-            if (UpdateduserDTO.Birthdate != null)
+            if (updatedUserDTO.Birthdate != null)
             {
-                existingUser.Birthdate = UpdateduserDTO.Birthdate;
+                existingUser.Birthdate = updatedUserDTO.Birthdate;
             }
 
-            if (UpdateduserDTO.Username != null)
+            if (updatedUserDTO.Username != null)
             {
-                existingUser.Username = UpdateduserDTO.Username;
+                existingUser.Username = updatedUserDTO.Username;
             }
 
-            if (UpdateduserDTO.Password != null)
+            if (updatedUserDTO.Password != null)
             {
-                existingUser.Password = UpdateduserDTO.Password;
+                existingUser.Password = updatedUserDTO.Password;
             }
 
-            if (!UpdateduserDTO.Equals(existingUser.Email))
+            if (!updatedUserDTO.Equals(existingUser.Email))
             {
                 existingUser.EmailVerifiedAt = "";
                 _context.SaveChanges();
                 SendEmailVerification(username, password);
             }
 
-            _context.SaveChanges();
+            _context.SaveChanges();;
 
-            return _mapper.Map<RegisterUserDTO>(existingUser);
-        }
-
-        public RegisterUserDTO FindUserById(int id)
-        {
-            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
-            var user = usersList.FirstOrDefault(x => x.Id == id);
-
-            return user;
+            return this._mapper.Map<UpdateUserDTO>(existingUser);
         }
 
         /*
@@ -296,7 +288,14 @@ namespace CinemaStore.Business
 
             _context.User.Remove(userToDelete);
             _context.SaveChanges();
+        }
 
+        public RegisterUserDTO FindUserById(int id)
+        {
+            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var user = usersList.FirstOrDefault(x => x.Id == id);
+
+            return user;
         }
     }
 }

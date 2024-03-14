@@ -5,23 +5,16 @@ namespace CinemaStore.Business
 {
     public interface IUserService
     {
-        // [HttpGet] 
         public IEnumerable<RegisterUserDTO> FindAllUsers();
-        // [HttpGet("{id:int}")]
-        public RegisterUserDTO FindUserById(int id);
-        // [HttpGet("{username:string}")]
-        public RegisterUserDTO FindUserByUsername(string username);
+        public RegisterUserDTO Register(RegisterUserDTO user);
+        public void UpdateVerificationDate(RegisterUserDTO userDTO);
+        public string SendEmailVerification(string username, string password);
         public RegisterUserDTO FindUserByEmailVerificationToken(string token);
         public bool isEmailVerified(string token);
-        // [HttpPost("Login")]
         public string Login(LoginUserDTO oldUserDTO);
-        // [HttpPost("Register")]
-        public RegisterUserDTO Register(RegisterUserDTO user);
-        public string SendEmailVerification(string username, string password);
-        public void UpdateVerificationDate(RegisterUserDTO userDTO);
-        // [HttpPut("{id:int}")]
-        public RegisterUserDTO UpdateUser(RegisterUserDTO user);
-        // [HttpDelete("{id:int}")]
+        public RegisterUserDTO FindUserByUsername(string username);
+        public UpdateUserDTO ModifyUser(UpdateUserDTO user);
         public void DeleteUserById(int id);
+        public RegisterUserDTO FindUserById(int id);
     }
 }

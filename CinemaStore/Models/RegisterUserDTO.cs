@@ -23,7 +23,7 @@ namespace Cinema.Models
         public string? Username { get; set; }
         [Required]
         public string? Password { get; set; }
-        [Required, Compare("Password", ErrorMessage = "Οι κωδικοί δεν ταιριάζουν.")]
+        [Required, Compare("Password", ErrorMessage = "Error! Passwords do not match")]
         public string? ConfirmPassword { get; set; }
     }
 }

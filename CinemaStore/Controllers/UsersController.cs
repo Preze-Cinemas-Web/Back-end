@@ -1,5 +1,6 @@
 ﻿using Cinema.Models;
 using CinemaStore.Business;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,25 +28,25 @@ namespace CinemaStore.Controllers
         }
 
         [HttpPut("Update")]
-        public IActionResult UpdateUser(int id, [FromBody] RegisterUserDTO UpdateduserDTO)
+        public ActionResult<UpdateUserDTO> UpdateUser(string username, [FromBody] UpdateUserDTO updatedUserDTO)
         {
             try
             {
-                if (id != UpdateduserDTO.Id)
+                if (username != updatedUserDTO.Username)
                 {
-                    return BadRequest("Invalid user id");
+                    return BadRequest("Invalid username");
                 }
 
-                var existingUser = _userService.FindUserById(id);
+                var existingUser = _userService.FindUserByUsername(username);
                 
                 if (existingUser == null)
                 {
                     return NotFound("User not found");
                 }
 
-                var updatedUser = _userService.UpdateUser(UpdateduserDTO);
+                var updatedUser = _userService.ModifyUser(updatedUserDTO);
                 
-                return Ok(updatedUser);
+                return updatedUser;
             }
             catch (ArgumentNullException ex1)
             {
@@ -53,13 +54,19 @@ namespace CinemaStore.Controllers
             }
             catch (MyException ex2)
             {
-                return BadRequest(ex2.Message);
+                return NotFound(ex2.Message);
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+      /*  [HttpPost("Delete-Request")]
+        public IActionResult DeleteRequest(string username)
+        {
+            
+        }  */
 
         [HttpDelete("Delete"), Authorize(Roles = "Admin")]
         public IActionResult DeleteUser(int id)
