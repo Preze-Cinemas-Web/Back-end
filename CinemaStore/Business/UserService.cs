@@ -279,14 +279,6 @@ namespace CinemaStore.Business
             return this._mapper.Map<UpdateUserDTO>(existingUser);
         }
 
-        public RegisterUserDTO FindUserById(int id)
-        {
-            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
-            var user = usersList.FirstOrDefault(x => x.Id == id);
-
-            return user;
-        }
-
         /*
          * HTTP DELETE - Delete User
          */
@@ -296,7 +288,14 @@ namespace CinemaStore.Business
 
             _context.User.Remove(userToDelete);
             _context.SaveChanges();
+        }
 
+        public RegisterUserDTO FindUserById(int id)
+        {
+            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var user = usersList.FirstOrDefault(x => x.Id == id);
+
+            return user;
         }
     }
 }
