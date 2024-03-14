@@ -12,12 +12,12 @@ using System.Text;
 
 namespace CinemaStoreIntegrationTests
 {
-    public class UserControllerTests : IClassFixture<WebApplicationFactory<Program>>
+    public class AuthenticationControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private WebApplicationFactory<Program> _factory;
         private const string EnvironmentVariable = "ASPNETCORE_ENVIRONMENT";
 
-        public UserControllerTests(WebApplicationFactory<Program> factory)
+        public AuthenticationControllerTests(WebApplicationFactory<Program> factory)
         {
             _factory = factory;
             Environment.SetEnvironmentVariable(EnvironmentVariable, "Staging");
@@ -27,19 +27,20 @@ namespace CinemaStoreIntegrationTests
         [Fact]
         public async Task Register()
         {
-            var route = "https://localhost:7236/API/Authentication/Register-User";
+            var route = "https://localhost:7236/API/Authentication/Register";
             var client = _factory.CreateClient();
 
             RegisterUserDTO registerUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Theodosis",
-                LastName = "Pavlidis",
-                Email = "thpav@gmail.com",
-                PhoneNumber = "6944556563",
-                Birthdate = "1995-03-01",
-                Username = "pavlidis",
-                Password = "Plumber_1234"
+                FirstName = "Meda",
+                LastName = "Lemke",
+                Email = "meda.lemke@ethereal.email",
+                PhoneNumber = "6971654543",
+                Birthdate = "1987-11-01",
+                Username = "MedaLemke",
+                Password = "gcVgrUDjhrescXmZ2s",
+                ConfirmPassword = "gcVgrUDjhrescXmZ2s"
             };
 
             var result = await TestUtilities.Post(client, route, registerUserDTO);
@@ -57,6 +58,18 @@ namespace CinemaStoreIntegrationTests
             Assert.True(registerUserDTO.Birthdate == user.Birthdate);
             Assert.True(registerUserDTO.Username == user.Username);
             Assert.True(registerUserDTO.Password == user.Password);
+        }
+
+        [Fact]
+        public async Task VerifyEmail()
+        {
+            var verifyRoute = "https://localhost:7236/API/Authentication/Verify-Email?token=";
+            var client = _factory.CreateClient();
+
+            
+
+            var verifyResult = await TestUtilities.Get(client, verifyRoute);
+            var token = await ReadEmailVerificationToken(verifyResult);
         }
 
 
@@ -119,6 +132,14 @@ namespace CinemaStoreIntegrationTests
             string responseContent = await result.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<RegisterUserDTO>(responseContent);
+        }
+
+        private async Task<string> ReadEmailVerificationToken(HttpResponseMessage result)
+        {
+            Assert.True(result.IsSuccessStatusCode);
+            string responseContent = await result.Content.ReadAsStringAsync();
+
+            return responseContent;
         }
 
         private async Task<string> ValidateUser(HttpResponseMessage result)

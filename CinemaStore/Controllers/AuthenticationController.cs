@@ -48,7 +48,7 @@ namespace CinemaStore.Controllers
                 }
                 if (userStatus.Equals("Email sent for verification"))
                 {
-                    return user;
+                    return Ok(user);
                 }
 
                 return BadRequest("Another error occured");
