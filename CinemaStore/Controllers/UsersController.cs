@@ -87,5 +87,37 @@ namespace CinemaStore.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+
+        [HttpPost("Forgot-Password")]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword(string email)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    return BadRequest("Email is required");
+                }
+
+                // Generate a new random password
+                string newPassword = _userService.GenerateAndSetNewPassword(email);
+
+                // You may send the new password via email here if needed
+
+                return Ok("If the email exists in our system, your new password has been sent.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
+        // Helper function to send the new password via email
+        private void SendNewPasswordEmail(string email, string newPassword)
+        {
+            // Implement email sending logic here
+        }
     }
 }
