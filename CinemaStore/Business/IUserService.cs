@@ -16,5 +16,7 @@ namespace CinemaStore.Business
         public UpdateUserDTO ModifyUser(UpdateUserDTO user);
         public void DeleteUserById(int id);
         public RegisterUserDTO FindUserById(int id);
+        public RegisterUserDTO FindUserByEmail(string email);
+        public string GenerateAndSetNewPassword(string email);
     }
 }

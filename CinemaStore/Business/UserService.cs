@@ -297,5 +297,106 @@ namespace CinemaStore.Business
 
             return user;
         }
+
+        public RegisterUserDTO FindUserByEmail(string email)
+        {
+            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var user = usersList.FirstOrDefault(x => x.Email == email);
+
+            return user;
+        }
+
+        public string GenerateAndSetNewPassword(string email)
+        {
+            var user = _context.User.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            string newPassword = GenerateRandomPassword();
+            string newHashedPassword = string.Empty;
+
+            HashPassword(newPassword, ref newHashedPassword);
+
+            SendNewPasswordEmail(email, newPassword);
+            user.Password = newHashedPassword;
+            
+
+            _context.SaveChanges();
+
+            return newPassword;
+        }
+
+        public string SendNewPasswordEmail(string email, string password)
+        {
+            var user = _context.User.FirstOrDefault(u => u.Email == email);
+
+            
+
+            var emailMime = new MimeMessage();
+            emailMime.From.Add(MailboxAddress.Parse("prezecinems@ethereal.email"));
+            emailMime.To.Add(MailboxAddress.Parse(user.Email));
+            emailMime.Subject = "Password Change";
+            emailMime.Body = new TextPart(TextFormat.Plain)
+            {
+                Text = "Your new password is: " + password
+                + "\n\n" + "If you did not request this password change please contact us!"
+                + "\n\n" + "Preze Cinems Development Team"
+            };
+
+            using var smtp = new SmtpClient();
+
+            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate(user.Email, password);
+            smtp.Send(emailMime);
+            smtp.Disconnect(true);
+
+            return "Email has been sent!" ;
+        }
+
+
+
+
+        private static readonly Random random = new Random();
+        private string GenerateRandomPassword()
+        {
+            const string capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+            const string digits = "0123456789";
+
+            const int minLength = 8;
+            const int maxLength = 15;
+            int totalCharacters = minLength + random.Next(maxLength - minLength + 1);
+
+            var pool = new StringBuilder(capitalLetters)
+            .Append(lowercaseLetters)
+            .Append(digits);
+
+            var password = new StringBuilder()
+            .Append(GetRandomCharacter(capitalLetters))
+            .Append(GetRandomCharacter(lowercaseLetters))
+            .Append(GetRandomCharacter(digits));
+
+
+            for (int i = 4; i < totalCharacters; i++)
+            {
+                password.Append(pool[random.Next(pool.Length)]);
+            }
+
+            for (int i = 0; i < password.Length; i++)
+            {
+                int index = random.Next(password.Length);
+                char temp = password[i];
+                password[i] = password[index];
+                password[index] = temp;
+            }
+
+            return password.ToString();
+        }
+
+        private static char GetRandomCharacter(string source)
+        {
+            return source[random.Next(source.Length)];
+        }
     }
 }

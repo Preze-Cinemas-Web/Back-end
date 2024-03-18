@@ -62,11 +62,32 @@ namespace CinemaStore.Controllers
             }
         }
 
-      /*  [HttpPost("Delete-Request")]
-        public IActionResult DeleteRequest(string username)
+        /*  [HttpPost("Delete-Request")]
+          public IActionResult DeleteRequest(string username)
+          {
+
+          }  */
+
+        [HttpPost("Forgot-Password")]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword(string email)
         {
-            
-        }  */
+            try
+            {
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    return BadRequest("Email is required");
+                }
+
+                string newPassword = _userService.GenerateAndSetNewPassword(email);
+
+                return Ok("If the email exists in our system, a password reset link has been sent.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
 
         [HttpDelete("Delete"), Authorize(Roles = "Admin")]
         public IActionResult DeleteUser(int id)
@@ -87,5 +108,7 @@ namespace CinemaStore.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+
     }
 }
