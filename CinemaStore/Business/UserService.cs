@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Cinema.Models;
 using CinemaData;
+using CinemaData.Entities;
 using CinemaStore.Models;
 using MailKit.Net.Smtp;
 using MailKit.Security;

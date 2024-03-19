@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CinemaStoreIntegrationTests
+namespace CinemaStoreIntegrationTests.Tests
 {
     public class AuthenticationControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
@@ -111,10 +111,10 @@ namespace CinemaStoreIntegrationTests
                     role = claim.Value;
                 }
             }
-            
+
             Assert.NotNull(Setup.token); // Check Admin's token
             Assert.True(userId > 1);
-            Assert.True(role == "User");    
+            Assert.True(role == "User");
         }
 
         private void HashPassword(string password, ref string hashedPassword)
@@ -161,7 +161,7 @@ namespace CinemaStoreIntegrationTests
         {
             Assert.True(result.IsSuccessStatusCode);
 
-            return await result.Content.ReadAsStringAsync();   
+            return await result.Content.ReadAsStringAsync();
         }
 
     }

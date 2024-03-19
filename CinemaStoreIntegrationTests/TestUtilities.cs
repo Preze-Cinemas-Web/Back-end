@@ -26,7 +26,6 @@ namespace CinemaStoreIntegrationTests
 
         internal static async Task<HttpResponseMessage> Get(HttpClient client, string route)
         {
-            
             if (!String.IsNullOrEmpty(Setup.token))
             {
                 client.DefaultRequestHeaders.Authorization =

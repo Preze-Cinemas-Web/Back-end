@@ -90,17 +90,17 @@ namespace CinemaStore.Controllers
             {
                 var userStatus = _userService.Login(model);
                 
-                if (userStatus.Equals("Ο χρήστης δεν βρέθηκε"))
+                if (userStatus.Equals("User not found"))
                 {
                     return NotFound(userStatus);
                 }
                 
-                if (userStatus.Equals("Λάθος κωδικός"))
+                if (userStatus.Equals("Incorrect password"))
                 {
                     return Unauthorized(userStatus);
                 }
                 
-                if (userStatus.Equals("Επιτυχής σύνδεση"))
+                if (userStatus.Equals("Successfull login"))
                 {
                     var user = _userService.FindUserByUsername(model.Username);
                     

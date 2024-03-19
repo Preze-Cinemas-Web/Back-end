@@ -1,4 +1,4 @@
-﻿namespace CinemaData
+﻿namespace CinemaData.Entities
 {
     public class User
     {

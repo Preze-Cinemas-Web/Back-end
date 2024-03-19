@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using CinemaData;
 using Cinema.Models;
 using CinemaStore.Models;
+using CinemaData.Entities;
 
 namespace CinemaStore
 {
