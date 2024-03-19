@@ -62,12 +62,6 @@ namespace CinemaStore.Controllers
             }
         }
 
-      /*  [HttpPost("Delete-Request")]
-        public IActionResult DeleteRequest(string username)
-        {
-            
-        }  */
-
         [HttpDelete("Delete"), Authorize(Roles = "Admin")]
         public IActionResult DeleteUser(int id)
         {

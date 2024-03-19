@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CinemaData.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaData
 {
