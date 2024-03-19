@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using CinemaData;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,8 +13,8 @@ namespace CinemaStore
 
         public static void AdminLogin()
         {
-            var userId = 1; // Add userId
-            var role = "Admin"; // Add role
+            var userId = 1;
+            var role = "Admin";
             var tokenJWT = GetToken(userId, role);
             var tokenHandler = new JwtSecurityTokenHandler();
             token = tokenHandler.WriteToken(tokenJWT);

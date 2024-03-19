@@ -48,7 +48,7 @@ namespace CinemaStore.Controllers
                 }
                 if (userStatus.Equals("Email sent for verification"))
                 {
-                    return user;
+                    return Ok(user);
                 }
 
                 return BadRequest("Another error occured");
@@ -69,7 +69,7 @@ namespace CinemaStore.Controllers
 
         [HttpGet]
         [Route("Verify-Email")]
-        public IActionResult VerifyEmail(string token)
+        public ActionResult<string> VerifyEmail(string token)
         {
             var user = _userService.FindUserByEmailVerificationToken(token);
             var isVerified = _userService.isEmailVerified(token);

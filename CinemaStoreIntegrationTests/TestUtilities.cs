@@ -23,5 +23,20 @@ namespace CinemaStoreIntegrationTests
 
             return await client.PostAsync(new Uri(route), textContent);
         }
+
+        internal static async Task<HttpResponseMessage> Get(HttpClient client, string route)
+        {
+            
+            if (!String.IsNullOrEmpty(Setup.token))
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", Setup.token);
+            }
+           
+            return await client.GetAsync(new Uri(route));
+        }
+
+
+
     }
 }
