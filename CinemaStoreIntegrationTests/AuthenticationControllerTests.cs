@@ -1,12 +1,12 @@
 using Cinema.Models;
+using CinemaData;
 using CinemaStore;
-using CinemaStore.Business;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -33,14 +33,14 @@ namespace CinemaStoreIntegrationTests
             RegisterUserDTO registerUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Meda",
-                LastName = "Lemke",
-                Email = "meda.lemke@ethereal.email",
+                FirstName = "Lucas",
+                LastName = "Roberts",
+                Email = "arne39@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
-                Username = "MedaLemke",
-                Password = "gcVgrUDjhrescXmZ2s",
-                ConfirmPassword = "gcVgrUDjhrescXmZ2s"
+                Username = "ArnoldVal",
+                Password = "nsWP8EZeCuQtUSFkrd",
+                ConfirmPassword = "nsWP8EZeCuQtUSFkrd"
             };
 
             var result = await TestUtilities.Post(client, route, registerUserDTO);
@@ -51,13 +51,13 @@ namespace CinemaStoreIntegrationTests
             registerUserDTO.Password = hashedPassword;
 
             Assert.True(user.Id > 0);
-            Assert.True(registerUserDTO.FirstName == user.FirstName);
-            Assert.True(registerUserDTO.LastName == user.LastName);
-            Assert.True(registerUserDTO.Email == user.Email);
-            Assert.True(registerUserDTO.PhoneNumber == user.PhoneNumber);
-            Assert.True(registerUserDTO.Birthdate == user.Birthdate);
-            Assert.True(registerUserDTO.Username == user.Username);
-            Assert.True(registerUserDTO.Password == user.Password);
+            Assert.True(user.FirstName == registerUserDTO.FirstName);
+            Assert.True(user.LastName == registerUserDTO.LastName);
+            Assert.True(user.Email == registerUserDTO.Email);
+            Assert.True(user.PhoneNumber == registerUserDTO.PhoneNumber);
+            Assert.True(user.Birthdate == registerUserDTO.Birthdate);
+            Assert.True(user.Username == registerUserDTO.Username);
+            Assert.True(user.Password == registerUserDTO.Password);
         }
 
         [Fact]
@@ -66,13 +66,14 @@ namespace CinemaStoreIntegrationTests
             var route = "https://localhost:7236/API/Authentication/Verify-Email?token=";
             var client = _factory.CreateClient();
 
+            var token = await RetrieveTokenFromDatabase();
+            route += token;
 
-                      
-            var verifyResult = await TestUtilities.Get<string>(client, route);
-            
-            Assert.True(verifyResult == "Email verified successfully");
+            var result = await TestUtilities.Get(client, route);
+            var verifyResult = await ReadEmailVerificationToken(result);
+
+            Assert.True(verifyResult.Equals("Email verified successfully") || verifyResult.Equals("Email already verified"));
         }
-
 
         [Fact]
         public async Task Login()
@@ -83,8 +84,8 @@ namespace CinemaStoreIntegrationTests
             // Admin Login
             LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
-                Username = "prezerakus",
-                Password = "Prez_1234"
+                Username = "ArnoldVal",
+                Password = "nsWP8EZeCuQtUSFkrd"
             };
 
             var result = await TestUtilities.Post(client, route, loginUserDTO);
@@ -124,6 +125,19 @@ namespace CinemaStoreIntegrationTests
             {
                 byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
                 hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "");
+            }
+        }
+
+        private async Task<string> RetrieveTokenFromDatabase()
+        {
+            using (var dbContext = new CinemaContext())
+            {
+                var token = await dbContext.User
+                    .OrderByDescending(t => t.Id)
+                    .Select(t => t.EmailVerificationToken)
+                    .FirstOrDefaultAsync();
+
+                return token;
             }
         }
 

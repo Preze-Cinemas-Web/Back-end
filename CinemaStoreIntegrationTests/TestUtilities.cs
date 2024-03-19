@@ -24,7 +24,7 @@ namespace CinemaStoreIntegrationTests
             return await client.PostAsync(new Uri(route), textContent);
         }
 
-        internal static async Task<Y> Get<Y>(HttpClient client, string route)
+        internal static async Task<HttpResponseMessage> Get(HttpClient client, string route)
         {
             
             if (!String.IsNullOrEmpty(Setup.token))
@@ -33,12 +33,7 @@ namespace CinemaStoreIntegrationTests
                     new AuthenticationHeaderValue("Bearer", Setup.token);
             }
            
-            var result = await client.GetAsync(new Uri(route));
-           
-            Assert.True(result.IsSuccessStatusCode);
-            
-            return JsonConvert.DeserializeObject<Y>(
-                await result.Content.ReadAsStringAsync());
+            return await client.GetAsync(new Uri(route));
         }
 
 

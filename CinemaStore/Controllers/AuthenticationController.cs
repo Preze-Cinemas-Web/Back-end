@@ -79,7 +79,7 @@ namespace CinemaStore.Controllers
             }
             _userService.UpdateVerificationDate(user);
 
-            return "Email verified successfully";
+            return Ok("Email verified successfully");
         }
 
         [HttpPost]
