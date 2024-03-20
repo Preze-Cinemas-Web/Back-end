@@ -27,5 +27,5 @@ namespace Cinema.Models
         public string? ConfirmPassword { get; set; }
         [Required]
         public string? SecurityAnswer { get; set; }
-        }
+    }
 }

@@ -24,7 +24,7 @@ namespace CinemaStore.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public ActionResult<RegisterUserDTO> AddUser(RegisterUserDTO model)
+        public ActionResult<RegisterUserDTO> AddUser([FromBody] RegisterUserDTO model)
         {
             try
             {
