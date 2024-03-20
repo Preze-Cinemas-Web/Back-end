@@ -38,7 +38,7 @@ namespace CinemaStoreIntegrationTests.Tests
 
             UpdateUserDTO updateUserDTO = new UpdateUserDTO()
             {
-                FirstName = "Georgios",
+                FirstName = "Giorgaras",
                 LastName = "Prezerakos",
                 Email = "prezecinems@ethereal.email",
                 PhoneNumber = "6971366764",
