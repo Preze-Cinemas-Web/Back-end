@@ -60,6 +60,20 @@ namespace CinemaStoreIntegrationTests.Tests
             Assert.True(user.Username == updateUserDTO.Username);
             Assert.True(user.Password == updateUserDTO.Password);
         }
+
+        [Fact]
+        public async Task DeleteUser()
+        {
+            var route = "https://localhost:7236/API/Users/Delete?id=";
+            var client = _factory.CreateClient();
+
+            int userId = 7;
+            route += userId;
+
+            var result = await TestUtilities.Delete(client, route);
+
+            Assert.True(result.IsSuccessStatusCode);
+        }
       
         private async Task<IEnumerable<RegisterUserDTO>> ReadUsers(HttpResponseMessage result)
         {
