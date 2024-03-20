@@ -54,7 +54,7 @@ namespace CinemaStore.Controllers
             }
             catch (MyException ex2)
             {
-                return NotFound(ex2.Message);
+                return BadRequest(ex2.Message);
             }
             catch (Exception)
             {

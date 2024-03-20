@@ -35,6 +35,20 @@ namespace CinemaStoreIntegrationTests
             return await client.GetAsync(new Uri(route));
         }
 
+        internal static async Task<HttpResponseMessage> Put(HttpClient client, string route, Object obj)
+        {
+            using var textContent = new ByteArrayContent(Encoding.UTF8.GetBytes(
+               JsonConvert.SerializeObject(obj)));
+            textContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            
+            if (!String.IsNullOrEmpty(Setup.token))
+            {
+                client.DefaultRequestHeaders.Authorization =
+                   new AuthenticationHeaderValue("Bearer", Setup.token);
+            }
+            
+            return await client.PutAsync(new Uri(route), textContent);
+        }
 
 
     }
