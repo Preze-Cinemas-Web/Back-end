@@ -38,14 +38,14 @@ namespace CinemaStoreIntegrationTests.Tests
 
             UpdateUserDTO updateUserDTO = new UpdateUserDTO()
             {
-                FirstName = "Arnold",
-                LastName = "Valorant",
-                Email = "arne39@ethereal.email",
-                PhoneNumber = "6977777777",
-                Birthdate = "1987-11-01",
-                Username = "ArnoldVal",
-                Password = "Lucas_123",
-                ConfirmPassword = "Lucas_123"
+                FirstName = "Georgios",
+                LastName = "Prezerakos",
+                Email = "prezecinems@ethereal.email",
+                PhoneNumber = "6971366764",
+                Birthdate = "1970-07-29",
+                Username = "prezerak",
+                Password = "GPrez_123",
+                ConfirmPassword = "GPrez_123"
             };
 
             route += updateUserDTO.Username;
