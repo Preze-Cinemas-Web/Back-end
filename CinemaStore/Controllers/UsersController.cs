@@ -12,10 +12,12 @@ namespace CinemaStore.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IAuthenticationService authenticationService)
         {
             _userService = userService;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet]
@@ -37,7 +39,7 @@ namespace CinemaStore.Controllers
                     return BadRequest("Invalid username");
                 }
 
-                var existingUser = _userService.FindUserByUsername(username);
+                var existingUser = _authenticationService.FindUserByUsername(username);
                 
                 if (existingUser == null)
                 {
