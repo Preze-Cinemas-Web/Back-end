@@ -64,6 +64,34 @@ namespace CinemaStore.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("Get-User-by-Id"), Authorize] 
+        public ActionResult<RegisterUserDTO> GetUserById(int id)
+        {
+            var user = _userService.FindUserById(id);
+            
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        [HttpGet]
+        [Route("Get-User-by-Username"), Authorize]
+        public ActionResult<RegisterUserDTO> GetUserByUsername(string username)
+        {
+            var user = _authenticationService.FindUserByUsername(username);
+            
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
         [HttpDelete("Delete"), Authorize(Roles = "Admin")]
         public IActionResult DeleteUser(int id)
         {

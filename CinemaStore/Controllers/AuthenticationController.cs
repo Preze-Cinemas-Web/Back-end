@@ -100,7 +100,7 @@ namespace CinemaStore.Controllers
                     return Unauthorized(userStatus);
                 }
                 
-                if (userStatus.Equals("Successfull login"))
+                if (userStatus.Equals("Successful login"))
                 {
                     var user = _authenticationService.FindUserByUsername(model.Username);
                     
