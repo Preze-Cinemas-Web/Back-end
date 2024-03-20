@@ -375,7 +375,7 @@ namespace CinemaStore.Business
                     if (!isLatinLetter)
                     {
                         throw new MyException("Error in password " +
-                                              "[8] Τα γράμματα πρέπει να είναι όλα λατινικά");
+                                              "[8] All letters must be in Latin");
                     }
                 }
             }

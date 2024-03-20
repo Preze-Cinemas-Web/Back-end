@@ -14,12 +14,12 @@ namespace CinemaStore.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IUserService _userService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public AuthenticationController(IConfiguration configuration, IUserService userService)
+        public AuthenticationController(IConfiguration configuration, IAuthenticationService authenticationService)
         {
             _configuration = configuration;
-            _userService = userService;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost]
@@ -28,15 +28,15 @@ namespace CinemaStore.Controllers
         {
             try
             {
-                var userDTO = _userService.FindUserByUsername(model.Username);
+                var userDTO = _authenticationService.FindUserByUsername(model.Username);
 
                 if (userDTO != null)
                     return BadRequest(model.Username + " is not available");
 
                 var originalPassword = model.Password;
-                var user = _userService.Register(model);
+                var user = _authenticationService.Register(model);
 
-                var userStatus = _userService.SendEmailVerification(user.Username, originalPassword);
+                var userStatus = _authenticationService.SendEmailVerification(user.Username, originalPassword);
                
                 if (userStatus.Equals("Invalid email verification token"))
                 {
@@ -71,13 +71,13 @@ namespace CinemaStore.Controllers
         [Route("Verify-Email")]
         public ActionResult<string> VerifyEmail(string token)
         {
-            var user = _userService.FindUserByEmailVerificationToken(token);
-            var isVerified = _userService.isEmailVerified(token);
+            var user = _authenticationService.FindUserByEmailVerificationToken(token);
+            var isVerified = _authenticationService.isEmailVerified(token);
             if (isVerified)
             {
                 return Ok("Email already verified");
             }
-            _userService.UpdateVerificationDate(user);
+            _authenticationService.UpdateVerificationDate(user);
 
             return Ok("Email verified successfully");
         }
@@ -88,7 +88,7 @@ namespace CinemaStore.Controllers
         {
             try
             {
-                var userStatus = _userService.Login(model);
+                var userStatus = _authenticationService.Login(model);
                 
                 if (userStatus.Equals("User not found"))
                 {
@@ -102,7 +102,7 @@ namespace CinemaStore.Controllers
                 
                 if (userStatus.Equals("Successfull login"))
                 {
-                    var user = _userService.FindUserByUsername(model.Username);
+                    var user = _authenticationService.FindUserByUsername(model.Username);
                     
                     if (user.Id > 1)
                     {
@@ -147,6 +147,5 @@ namespace CinemaStore.Controllers
 
             return token;
         }
-
     }
 }

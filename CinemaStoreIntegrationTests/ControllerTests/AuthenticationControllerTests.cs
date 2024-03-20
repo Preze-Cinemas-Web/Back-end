@@ -3,7 +3,6 @@ using CinemaData;
 using CinemaStore;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
