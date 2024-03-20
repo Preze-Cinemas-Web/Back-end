@@ -30,7 +30,7 @@ namespace CinemaStore.Controllers
         }
 
         [HttpPut("Update")]
-        public ActionResult<UpdateUserDTO> UpdateUser(string username, [FromBody] UpdateUserDTO updatedUserDTO)
+        public ActionResult<RegisterUserDTO> UpdateUser(string username, [FromBody] RegisterUserDTO updatedUserDTO)
         {
             try
             {

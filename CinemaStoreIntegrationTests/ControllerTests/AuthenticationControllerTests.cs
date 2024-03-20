@@ -37,7 +37,7 @@ namespace CinemaStoreIntegrationTests.Tests
                 Email = "autumn.hodkiewicz93@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
-                Username = "ArnoldVal",
+                Username = "ArnoldPoustara",
                 Password = "FBwUDfQ7hzDEzNmKzJ",
                 ConfirmPassword = "FBwUDfQ7hzDEzNmKzJ",
                 SecurityAnswer = "Blue"
@@ -89,7 +89,7 @@ namespace CinemaStoreIntegrationTests.Tests
             // Admin Login
             LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
-                Username = "ArnoldVal",
+                Username = "ArnoldPoustara",
                 Password = "FBwUDfQ7hzDEzNmKzJ"
             };
 
@@ -125,7 +125,7 @@ namespace CinemaStoreIntegrationTests.Tests
             Assert.NotNull(Setup.token); // Check Admin's token
             Assert.True(userId > 1);
             Assert.True(role == "User");
-            Assert.True(username == "ArnoldVal");
+            Assert.True(username == "ArnoldPoustara");
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace CinemaStoreIntegrationTests.Tests
             // Admin Login
             ForgotPWUserDTO forgotPWUserDTO = new ForgotPWUserDTO()
             {
-                Username = "ArnoldVal",
+                Username = "ArnoldPoustara",
                 SecurityAnswer = "Blue"
             };
 
@@ -173,7 +173,7 @@ namespace CinemaStoreIntegrationTests.Tests
             Assert.NotNull(Setup.token); // Check Admin's token
             Assert.True(userId > 1);
             Assert.True(role == "User");
-            Assert.True(username == "ArnoldVal");
+            Assert.True(username == "ArnoldPoustara");
         }
 
         private void HashPassword(string password, ref string hashedPassword)

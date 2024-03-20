@@ -3,6 +3,8 @@ using CinemaStore;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace CinemaStoreIntegrationTests.Tests
 {
@@ -36,21 +38,31 @@ namespace CinemaStoreIntegrationTests.Tests
             var route = "https://localhost:7236/API/Users/Update?username=";
             var client = _factory.CreateClient();
 
-            UpdateUserDTO updateUserDTO = new UpdateUserDTO()
+            RegisterUserDTO updateUserDTO = new RegisterUserDTO()
             {
-                FirstName = "Giorgaras",
-                LastName = "Prezerakos",
-                Email = "prezecinems@ethereal.email",
-                PhoneNumber = "6971366764",
-                Birthdate = "1970-07-29",
-                Username = "prezerak",
-                Password = "GPrez_123",
-                ConfirmPassword = "GPrez_123"
+                Id = 0,
+                FirstName = "Kavloucas",
+                LastName = "Roberts",
+                Email = "autumn.hodkiewicz93@ethereal.email",
+                PhoneNumber = "6971654543",
+                Birthdate = "1987-11-01",
+                Username = "ArnoldVlakas",
+                Password = "FBwUDfQ7hzDEzNmKzJ",
+                ConfirmPassword = "FBwUDfQ7hzDEzNmKzJ",
+                SecurityAnswer = "Blue"
             };
 
             route += updateUserDTO.Username;
             var result = await TestUtilities.Put(client, route, updateUserDTO);
             var user = await ReadUser(result);
+
+            var hashedPassword = "";
+            HashPassword(updateUserDTO.Password, ref hashedPassword);
+            updateUserDTO.Password = hashedPassword;
+
+            var hashedAnswer = "";
+            HashPassword(updateUserDTO.SecurityAnswer, ref hashedAnswer);
+            updateUserDTO.SecurityAnswer = hashedAnswer;
 
             Assert.True(user.FirstName == updateUserDTO.FirstName);
             Assert.True(user.LastName == updateUserDTO.LastName);
@@ -59,6 +71,37 @@ namespace CinemaStoreIntegrationTests.Tests
             Assert.True(user.Birthdate == updateUserDTO.Birthdate);
             Assert.True(user.Username == updateUserDTO.Username);
             Assert.True(user.Password == updateUserDTO.Password);
+            Assert.True(user.SecurityAnswer == updateUserDTO.SecurityAnswer);
+        }
+
+        [Fact]
+        public async Task GerUserById()
+        {
+            var route = "https://localhost:7236/API/Users/Get-User-by-Id?id=";
+            var client = _factory.CreateClient();
+
+            int userId = 12;
+            route += userId;
+
+            var result = await TestUtilities.Get(client, route);
+            var user = await ReadUser(result);
+
+            Assert.True(user.Id == userId);
+        }
+
+        [Fact]
+        public async Task GerUserByUsername()
+        {
+            var route = "https://localhost:7236/API/Users/Get-User-by-Username?username=";
+            var client = _factory.CreateClient();
+
+            string username = "ArnoldVlakas";
+            route += username;
+
+            var result = await TestUtilities.Get(client, route);
+            var user = await ReadUser(result);
+
+            Assert.True(user.Username == username);
         }
 
         [Fact]
@@ -67,14 +110,25 @@ namespace CinemaStoreIntegrationTests.Tests
             var route = "https://localhost:7236/API/Users/Delete?id=";
             var client = _factory.CreateClient();
 
-            int userId = 7;
+            int userId = 8;
             route += userId;
 
             var result = await TestUtilities.Delete(client, route);
 
             Assert.True(result.IsSuccessStatusCode);
         }
-      
+
+        private void HashPassword(string password, ref string hashedPassword)
+        {
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
+                hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "");
+            }
+        }
+
         private async Task<IEnumerable<RegisterUserDTO>> ReadUsers(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
@@ -83,12 +137,12 @@ namespace CinemaStoreIntegrationTests.Tests
             return JsonConvert.DeserializeObject<IEnumerable<RegisterUserDTO>>(responseContent);
         }
 
-        private async Task<UpdateUserDTO> ReadUser(HttpResponseMessage result)
+        private async Task<RegisterUserDTO> ReadUser(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
             string responseContent = await result.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<UpdateUserDTO>(responseContent);
+            return JsonConvert.DeserializeObject<RegisterUserDTO>(responseContent);
         }
     }
 }

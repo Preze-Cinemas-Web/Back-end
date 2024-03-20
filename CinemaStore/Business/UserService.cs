@@ -37,7 +37,7 @@ namespace CinemaStore.Business
         /*
          * HTTP PUT - Update User
          */
-        public UpdateUserDTO ModifyUser(UpdateUserDTO updatedUserDTO)
+        public RegisterUserDTO ModifyUser(RegisterUserDTO updatedUserDTO)
         {
             string firstName = updatedUserDTO.FirstName;
             UserBusinessLogic.DefineNameBL(firstName, "First Name");
@@ -115,7 +115,7 @@ namespace CinemaStore.Business
 
             _context.SaveChanges();
 
-            return this._mapper.Map<UpdateUserDTO>(existingUser);
+            return this._mapper.Map<RegisterUserDTO>(existingUser);
         }
 
         /*
