@@ -68,8 +68,8 @@ namespace CinemaStore.Business
             updatedUserDTO.Password = hashedPassword;
 
             string hashedAnswer = "";
-            _authenticationService.HashPassword(password, ref hashedPassword); // Encrypt Password (SHA256 Encryption)
-            updatedUserDTO.Password = hashedPassword;
+            _authenticationService.HashPassword(answer, ref hashedAnswer); // Encrypt Password (SHA256 Encryption)
+            updatedUserDTO.SecurityAnswer = hashedAnswer;
 
             User existingUser = _context.User.FirstOrDefault(u => u.Username == username);
             
