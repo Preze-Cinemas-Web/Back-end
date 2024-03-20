@@ -195,5 +195,29 @@ namespace CinemaStore.Business
 
             return user;
         }
+
+        public string LoginWithAnswer(ForgotPWUserDTO forgotPWUserDTO)
+        {
+            var userDTO = this.FindUserByUsername(forgotPWUserDTO.Username);
+
+            if (userDTO == null)
+            {
+                return "User not found";
+            }
+
+            User user = this._mapper.Map<User>(userDTO);
+
+            string hashedAnswer = "";
+            this.HashPassword(forgotPWUserDTO.SecurityAnswer, ref hashedAnswer); // Encrypt Password (Cipher's Encryption)
+
+            if (user.SecurityAnswer == hashedAnswer)
+            {
+                return "Successful login";
+            }
+            else
+            {
+                return "Incorrect answer";
+            }
+        }
     }
 }
