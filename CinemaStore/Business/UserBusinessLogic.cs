@@ -380,5 +380,39 @@ namespace CinemaStore.Business
                 }
             }
         }
+
+        public static void DefineAnswerBL(string answer)
+        {
+            if (answer.Length < 3)
+            {
+                throw new MyException("Error in answer " +
+                                     "[1] The number of characters must be at least 3");
+            }
+
+            
+            if (answer.Length > 30)
+            {
+                throw new MyException("Error in answer " +
+                                     "[2] Number of characters must be at most 30");
+            }
+
+            // [3] All letters must be in Latin
+            char[] answerArray = answer.ToCharArray();
+            bool isLatinLetter = true;
+            int i;
+            for (i = 0; i < answerArray.Length; i++)
+            {
+                if (char.IsLetter(answerArray[i]))
+                {
+                    isLatinLetter = (answerArray[i] >= 'A' && answerArray[i] <= 'Z') || (answerArray[i] >= 'a' && answerArray[i] <= 'z');
+                    if (!isLatinLetter)
+                    {
+                        throw new MyException("Error in answer " +
+                                              "[3] All letters must be in Latin");
+                    }
+                }
+            }
+
+        }
     }
 }

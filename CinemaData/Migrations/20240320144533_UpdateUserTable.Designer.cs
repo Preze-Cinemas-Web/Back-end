@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaData.Migrations
 {
     [DbContext(typeof(CinemaContext))]
-    [Migration("20240312144657_CreateUserTable")]
-    partial class CreateUserTable
+    [Migration("20240320144533_UpdateUserTable")]
+    partial class UpdateUserTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace CinemaData.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CinemaData.User", b =>
+            modelBuilder.Entity("CinemaData.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,6 +65,10 @@ namespace CinemaData.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecurityAnswer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

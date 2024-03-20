@@ -25,5 +25,7 @@ namespace Cinema.Models
         public string? Password { get; set; }
         [Required, Compare("Password", ErrorMessage = "Error! Passwords do not match")]
         public string? ConfirmPassword { get; set; }
-    }
+        [Required]
+        public string? SecurityAnswer { get; set; }
+        }
 }

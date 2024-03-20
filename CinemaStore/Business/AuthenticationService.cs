@@ -51,10 +51,18 @@ namespace CinemaStore.Business
             string password = registerUserDTO.Password;
             UserBusinessLogic.DefinePasswordBL(password);
 
+            string answer = registerUserDTO.SecurityAnswer;
+            UserBusinessLogic.DefineAnswerBL(answer);
+
             string hashedPassword = "";
             this.HashPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
             registerUserDTO.Password = hashedPassword;
             registerUserDTO.ConfirmPassword = hashedPassword;
+
+            string hashedAnswer = "";
+            this.HashPassword(answer, ref hashedAnswer); // Encrypt Password (Cipher's Encryption)
+            registerUserDTO.SecurityAnswer = hashedAnswer;
+            
 
             // Mapping to User & Insert into database
 
@@ -76,6 +84,7 @@ namespace CinemaStore.Business
             return _mapper.Map<RegisterUserDTO>(user);
         }
 
+        
         // SHA256 Encryption
         public void HashPassword(string password, ref string hashedPassword)
         {
