@@ -34,12 +34,13 @@ namespace CinemaStoreIntegrationTests.Tests
                 Id = 0,
                 FirstName = "Lucas",
                 LastName = "Roberts",
-                Email = "arne39@ethereal.email",
+                Email = "autumn.hodkiewicz93@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
                 Username = "ArnoldVal",
-                Password = "nsWP8EZeCuQtUSFkrd",
-                ConfirmPassword = "nsWP8EZeCuQtUSFkrd"
+                Password = "FBwUDfQ7hzDEzNmKzJ",
+                ConfirmPassword = "FBwUDfQ7hzDEzNmKzJ",
+                SecurityAnswer = "Blue"
             };
 
             var result = await TestUtilities.Post(client, route, registerUserDTO);
@@ -49,6 +50,10 @@ namespace CinemaStoreIntegrationTests.Tests
             HashPassword(registerUserDTO.Password, ref hashedPassword);
             registerUserDTO.Password = hashedPassword;
 
+            var hashedAnswer = "";
+            HashPassword(registerUserDTO.SecurityAnswer, ref hashedAnswer);
+            registerUserDTO.SecurityAnswer = hashedAnswer;
+
             Assert.True(user.Id > 0);
             Assert.True(user.FirstName == registerUserDTO.FirstName);
             Assert.True(user.LastName == registerUserDTO.LastName);
@@ -57,6 +62,7 @@ namespace CinemaStoreIntegrationTests.Tests
             Assert.True(user.Birthdate == registerUserDTO.Birthdate);
             Assert.True(user.Username == registerUserDTO.Username);
             Assert.True(user.Password == registerUserDTO.Password);
+            Assert.True(user.SecurityAnswer == registerUserDTO.SecurityAnswer);
         }
 
         [Fact]
@@ -71,7 +77,7 @@ namespace CinemaStoreIntegrationTests.Tests
             var result = await TestUtilities.Get(client, route);
             var verifyResult = await ReadEmailVerificationToken(result);
 
-            Assert.True(verifyResult.Equals("Email verified successfully") || verifyResult.Equals("Email already verified"));
+            Assert.True(verifyResult == "Email verified successfully" || verifyResult == "Email already verified");
         }
 
         [Fact]
@@ -84,7 +90,7 @@ namespace CinemaStoreIntegrationTests.Tests
             LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
                 Username = "ArnoldVal",
-                Password = "nsWP8EZeCuQtUSFkrd"
+                Password = "FBwUDfQ7hzDEzNmKzJ"
             };
 
             var result = await TestUtilities.Post(client, route, loginUserDTO);
@@ -98,6 +104,7 @@ namespace CinemaStoreIntegrationTests.Tests
 
             int userId = 0;
             string role = " ";
+            string username = " ";
 
             foreach (var claim in claims)
             {
@@ -109,11 +116,64 @@ namespace CinemaStoreIntegrationTests.Tests
                 {
                     role = claim.Value;
                 }
+                else if (claim.Type == "username")
+                {
+                    username = claim.Value;
+                }
             }
 
             Assert.NotNull(Setup.token); // Check Admin's token
             Assert.True(userId > 1);
             Assert.True(role == "User");
+            Assert.True(username == "ArnoldVal");
+        }
+
+        [Fact]
+        public async Task ForgotPassword()
+        {
+            var route = "https://localhost:7236/API/Authentication/Forgot-Password";
+            var client = _factory.CreateClient();
+
+            // Admin Login
+            ForgotPWUserDTO forgotPWUserDTO = new ForgotPWUserDTO()
+            {
+                Username = "ArnoldVal",
+                SecurityAnswer = "Blue"
+            };
+
+            var result = await TestUtilities.Post(client, route, forgotPWUserDTO);
+
+            var token = await ValidateUser(result);
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+            var claims = jsonToken.Claims;
+
+            Assert.NotNull(claims);
+
+            int userId = 0;
+            string role = " ";
+            string username = " ";
+
+            foreach (var claim in claims)
+            {
+                if (claim.Type == "userId")
+                {
+                    userId = int.Parse(claim.Value);
+                }
+                else if (claim.Type == "role")
+                {
+                    role = claim.Value;
+                }
+                else if (claim.Type == "username")
+                {
+                    username = claim.Value;
+                }
+            }
+
+            Assert.NotNull(Setup.token); // Check Admin's token
+            Assert.True(userId > 1);
+            Assert.True(role == "User");
+            Assert.True(username == "ArnoldVal");
         }
 
         private void HashPassword(string password, ref string hashedPassword)
