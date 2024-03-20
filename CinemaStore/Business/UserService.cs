@@ -60,7 +60,14 @@ namespace CinemaStore.Business
             string password = updatedUserDTO.Password;
             UserBusinessLogic.DefinePasswordBL(password);
 
+            string answer = updatedUserDTO.SecurityAnswer;
+            UserBusinessLogic.DefineAnswerBL(answer);
+
             string hashedPassword = "";
+            _authenticationService.HashPassword(password, ref hashedPassword); // Encrypt Password (SHA256 Encryption)
+            updatedUserDTO.Password = hashedPassword;
+
+            string hashedAnswer = "";
             _authenticationService.HashPassword(password, ref hashedPassword); // Encrypt Password (SHA256 Encryption)
             updatedUserDTO.Password = hashedPassword;
 
@@ -104,6 +111,11 @@ namespace CinemaStore.Business
             if (updatedUserDTO.Password != null)
             {
                 existingUser.Password = updatedUserDTO.Password;
+            }
+
+            if (updatedUserDTO.SecurityAnswer != null)
+            {
+                existingUser.SecurityAnswer = updatedUserDTO.SecurityAnswer;
             }
 
             if (!updatedUserDTO.Equals(existingUser.Email))
