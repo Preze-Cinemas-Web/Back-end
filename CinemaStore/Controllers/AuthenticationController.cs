@@ -129,6 +129,53 @@ namespace CinemaStore.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("Forgot-Password")]
+        public IActionResult ValidateWithAnswer([FromBody] ForgotPWUserDTO model)
+        {
+            try
+            {
+                var userStatus = _authenticationService.LoginWithAnswer(model);
+
+                if (userStatus.Equals("User not found"))
+                {
+                    return NotFound(userStatus);
+                }
+
+                if (userStatus.Equals("Incorrect answer"))
+                {
+                    return Unauthorized(userStatus);
+                }
+
+                if (userStatus.Equals("Successful login"))
+                {
+                    var user = _authenticationService.FindUserByUsername(model.Username);
+
+                    if (user.Id > 1)
+                    {
+                        var token = GetToken(user.Id, user.Username, "User"); // Pass user id and role to GetToken method
+                        var jwtHandler = new JwtSecurityTokenHandler();
+                        var tokenString = jwtHandler.WriteToken(token);
+
+                        return Ok(tokenString); // User Token
+                    }
+
+                    return Ok(Setup.token); // Admin Token
+                }
+
+                return Unauthorized();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+        }
+
         private JwtSecurityToken GetToken(int userId, string username, string role) // Add userId and role parameters
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
