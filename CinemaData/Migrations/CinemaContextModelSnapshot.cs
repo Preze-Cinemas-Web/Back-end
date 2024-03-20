@@ -21,7 +21,7 @@ namespace CinemaData.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CinemaData.User", b =>
+            modelBuilder.Entity("CinemaData.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,6 +62,10 @@ namespace CinemaData.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecurityAnswer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
