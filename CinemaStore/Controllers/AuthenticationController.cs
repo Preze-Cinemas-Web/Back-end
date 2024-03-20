@@ -106,7 +106,7 @@ namespace CinemaStore.Controllers
                     
                     if (user.Id > 1)
                     {
-                        var token = GetToken(user.Id, "User"); // Pass user id and role to GetToken method
+                        var token = GetToken(user.Id, user.Username, "User"); // Pass user id and role to GetToken method
                         var jwtHandler = new JwtSecurityTokenHandler();
                         var tokenString = jwtHandler.WriteToken(token);
 
@@ -129,17 +129,18 @@ namespace CinemaStore.Controllers
             }
         }
 
-        private JwtSecurityToken GetToken(int userId, string role) // Add userId and role parameters
+        private JwtSecurityToken GetToken(int userId, string username, string role) // Add userId and role parameters
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
 
             var token = new JwtSecurityToken(
                                issuer: _configuration["JWT:Issuer"],
                                audience: _configuration["JWT:Audience"],
-                               expires: DateTime.Now.AddHours(3),
+                               expires: DateTime.Now.AddDays(1),
                                claims: new[]
                                {
                                    new Claim("userId", userId.ToString()), // Add userId claim
+                                   new Claim("username", username), // Add username claim
                                    new Claim("role", role) // Add role claim
                                },
                                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
