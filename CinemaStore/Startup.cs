@@ -36,6 +36,8 @@ namespace CinemaStore
             services.AddDbContext<CinemaContext>();
             /****** [2] Services & BL ******/
             services.AddScoped(
+                typeof(IAuthenticationService), typeof(AuthenticationService));
+            services.AddScoped(
                 typeof(IUserService), typeof(UserService));
             /****** [3] AutoMapper ******/
             services.AddAutoMapper(typeof(CinemaStoreProfile));
