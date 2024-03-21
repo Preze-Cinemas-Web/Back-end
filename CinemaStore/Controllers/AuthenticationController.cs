@@ -1,5 +1,6 @@
 using Cinema.Models;
 using CinemaStore.Business;
+using CinemaStore.Business.Authentication;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

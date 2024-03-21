@@ -1,5 +1,6 @@
 ﻿using CinemaData;
-using CinemaStore.Business;
+using CinemaStore.Business.Authentication;
+using CinemaStore.Business.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
