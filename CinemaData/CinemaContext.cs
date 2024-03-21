@@ -15,6 +15,7 @@ namespace CinemaData
         }
 
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Movie> Movie { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
