@@ -1,6 +1,7 @@
 ﻿using CinemaData;
 using CinemaStore.Business;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -31,6 +32,9 @@ namespace CinemaStore
          */
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<TMDBSettings>(configRoot.GetSection("TMDBSettings"));
+            services.AddHttpClient<TMDBService>();
+            services.AddControllersWithViews();
             services.AddMvc();
             /****** [1] DatabaseContext ******/
             services.AddDbContext<CinemaContext>();

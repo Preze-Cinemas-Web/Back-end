@@ -13,7 +13,7 @@ public class MovieController : Controller
     public async Task<IActionResult> Index()
     {
         var popularMovies = await _tmdbService.GetPopularMovies();
-        // Process popularMovies data as needed
+        // Επεξεργασία των popularMovies
         return View();
     }
 }
