@@ -29,30 +29,9 @@ namespace CinemaData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Overview")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Popularity")
-                        .HasColumnType("float");
-
-                    b.Property<string>("PosterPath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReleaseDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("VoteAverage")
-                        .HasColumnType("float");
-
-                    b.Property<int>("VoteCount")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

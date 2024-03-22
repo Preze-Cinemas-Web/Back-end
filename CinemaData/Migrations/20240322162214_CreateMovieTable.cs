@@ -16,13 +16,7 @@ namespace CinemaData.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReleaseDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Overview = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Popularity = table.Column<double>(type: "float", nullable: false),
-                    PosterPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VoteAverage = table.Column<double>(type: "float", nullable: false),
-                    VoteCount = table.Column<int>(type: "int", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

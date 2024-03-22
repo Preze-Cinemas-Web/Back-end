@@ -45,7 +45,7 @@ namespace CinemaStore
                 ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
             });
 
-            services.AddSingleton<TmdbService>(sp => new TmdbService(sp.GetRequiredService<IHttpClientFactory>().CreateClient("tmdb"), apiKey));
+            services.AddSingleton(sp => new TmdbService(sp.GetRequiredService<IHttpClientFactory>().CreateClient("tmdb"), apiKey));
 
 
             services.AddMvc();
@@ -91,9 +91,8 @@ namespace CinemaStore
             Setup.configRoot = configRoot;
             Setup.AdminLogin();
 
-            /****** [9] TMDB API ******/
-            services.Configure<TMDBSettings>(configRoot.GetSection("TMDBSettings"));
-            services.AddHttpClient<TmdbService>();
+            /****** [9] Tmdb API ******/
+            services.Configure<TmdbSettings>(configRoot.GetSection("TmdbSettings"));
             services.AddControllersWithViews();
 
             services.AddControllers();

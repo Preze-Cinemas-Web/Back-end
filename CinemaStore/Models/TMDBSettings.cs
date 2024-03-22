@@ -1,6 +1,6 @@
 ﻿namespace CinemaStore.Models
 {
-    public class TMDBSettings
+    public class TmdbSettings
     {
         public string ApiKey { get; set; }
     }
