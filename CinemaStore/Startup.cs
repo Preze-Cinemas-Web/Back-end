@@ -33,9 +33,6 @@ namespace CinemaStore
          */
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<TMDBSettings>(configRoot.GetSection("TMDBSettings"));
-            services.AddHttpClient<TmdbService>();
-
             var tmdbSettings = configRoot.GetSection("TmdbSettings");
             var apiKey = tmdbSettings.GetValue<string>("ApiKey");
 
