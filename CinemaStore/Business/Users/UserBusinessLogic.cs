@@ -1,7 +1,4 @@
-using Cinema.Models;
-using System.Text.RegularExpressions;
-
-namespace CinemaStore.Business
+namespace CinemaStore.Business.Users
 {
     public static class UserBusinessLogic
     {
@@ -61,7 +58,7 @@ namespace CinemaStore.Business
             int i;
             for (i = 0; i < nameArray.Length; i++)
             {
-                isLatinLetter = (nameArray[i] >= 'A' && nameArray[i] <= 'Z') || (nameArray[i] >= 'a' && nameArray[i] <= 'z');
+                isLatinLetter = nameArray[i] >= 'A' && nameArray[i] <= 'Z' || nameArray[i] >= 'a' && nameArray[i] <= 'z';
                 if (!isLatinLetter)
                 {
                     throw new MyException("Error in " + type + " " +
@@ -121,7 +118,7 @@ namespace CinemaStore.Business
             {
                 if (char.IsLetter(emailUsername[i]))
                 {
-                    isLatinLetter = (emailUsername[i] >= 'A' && emailUsername[i] <= 'Z') || (emailUsername[i] >= 'a' && emailUsername[i] <= 'z');
+                    isLatinLetter = emailUsername[i] >= 'A' && emailUsername[i] <= 'Z' || emailUsername[i] >= 'a' && emailUsername[i] <= 'z';
                     if (!isLatinLetter)
                     {
                         throw new MyException("Error in email " +
@@ -225,8 +222,8 @@ namespace CinemaStore.Business
 
 
             // [4] The age limit starts from 15 years old
-            bool is15yearsOld = (BirthDate.Year == 2009) && (BirthDate.Month <= DateTime.Today.Month) && (BirthDate.Day <= DateTime.Today.Day);
-            bool is15yearsOldplus = (BirthDate.Year < 2009);
+            bool is15yearsOld = BirthDate.Year == 2009 && BirthDate.Month <= DateTime.Today.Month && BirthDate.Day <= DateTime.Today.Day;
+            bool is15yearsOldplus = BirthDate.Year < 2009;
             if (!is15yearsOld && !is15yearsOldplus)
             {
                 throw new MyException("Error in birthdate " +
@@ -235,8 +232,8 @@ namespace CinemaStore.Business
             }
 
             // [5] The age limit ends at 90 years old
-            bool is90yearsOld = (BirthDate.Year == 1934) && (BirthDate.Month > DateTime.Today.Month) && (BirthDate.Day > DateTime.Today.Day);
-            bool is90yearsOldminus = (BirthDate.Year > 1934);
+            bool is90yearsOld = BirthDate.Year == 1934 && BirthDate.Month > DateTime.Today.Month && BirthDate.Day > DateTime.Today.Day;
+            bool is90yearsOldminus = BirthDate.Year > 1934;
             if (!is90yearsOld && !is90yearsOldminus)
             {
                 throw new MyException("Error in birthdate " +
@@ -294,7 +291,7 @@ namespace CinemaStore.Business
             {
                 if (char.IsLetter(usernameArray[i]))
                 {
-                    isLatinLetter = (usernameArray[i] >= 'A' && usernameArray[i] <= 'Z') || (usernameArray[i] >= 'a' && usernameArray[i] <= 'z');
+                    isLatinLetter = usernameArray[i] >= 'A' && usernameArray[i] <= 'Z' || usernameArray[i] >= 'a' && usernameArray[i] <= 'z';
                     if (!isLatinLetter)
                     {
                         throw new MyException("Error in username " +
@@ -371,7 +368,7 @@ namespace CinemaStore.Business
             {
                 if (char.IsLetter(passwordArray[i]))
                 {
-                    isLatinLetter = (passwordArray[i] >= 'A' && passwordArray[i] <= 'Z') || (passwordArray[i] >= 'a' && passwordArray[i] <= 'z');
+                    isLatinLetter = passwordArray[i] >= 'A' && passwordArray[i] <= 'Z' || passwordArray[i] >= 'a' && passwordArray[i] <= 'z';
                     if (!isLatinLetter)
                     {
                         throw new MyException("Error in password " +
@@ -389,7 +386,7 @@ namespace CinemaStore.Business
                                      "[1] The number of characters must be at least 3");
             }
 
-            
+
             if (answer.Length > 30)
             {
                 throw new MyException("Error in answer " +
@@ -404,7 +401,7 @@ namespace CinemaStore.Business
             {
                 if (char.IsLetter(answerArray[i]))
                 {
-                    isLatinLetter = (answerArray[i] >= 'A' && answerArray[i] <= 'Z') || (answerArray[i] >= 'a' && answerArray[i] <= 'z');
+                    isLatinLetter = answerArray[i] >= 'A' && answerArray[i] <= 'Z' || answerArray[i] >= 'a' && answerArray[i] <= 'z';
                     if (!isLatinLetter)
                     {
                         throw new MyException("Error in answer " +

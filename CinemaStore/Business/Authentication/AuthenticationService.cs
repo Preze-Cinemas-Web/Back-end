@@ -9,8 +9,9 @@ using System.Security.Cryptography;
 using System.Text;
 using MailKit.Net.Smtp;
 using CinemaStore.Models;
+using CinemaStore.Business.Users;
 
-namespace CinemaStore.Business
+namespace CinemaStore.Business.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {
@@ -23,9 +24,9 @@ namespace CinemaStore.Business
             _mapper = mapper;
         }
 
-       /*
-        * HTTP POST - Register
-        */
+        /*
+         * HTTP POST - Register
+         */
         public RegisterUserDTO Register(RegisterUserDTO registerUserDTO)
         {
             // Business Logic User
@@ -55,18 +56,18 @@ namespace CinemaStore.Business
             UserBusinessLogic.DefineAnswerBL(answer);
 
             string hashedPassword = "";
-            this.HashPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            HashPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
             registerUserDTO.Password = hashedPassword;
             registerUserDTO.ConfirmPassword = hashedPassword;
 
             string hashedAnswer = "";
-            this.HashPassword(answer, ref hashedAnswer); // Encrypt Password (Cipher's Encryption)
+            HashPassword(answer, ref hashedAnswer); // Encrypt Password (Cipher's Encryption)
             registerUserDTO.SecurityAnswer = hashedAnswer;
-            
+
 
             // Mapping to User & Insert into database
 
-            User user = this._mapper.Map<User>(registerUserDTO);
+            User user = _mapper.Map<User>(registerUserDTO);
             user.Role = "User";
             var emailVerificationToken = GenerateRandomToken();
 
@@ -84,7 +85,7 @@ namespace CinemaStore.Business
             return _mapper.Map<RegisterUserDTO>(user);
         }
 
-        
+
         // SHA256 Encryption
         public void HashPassword(string password, ref string hashedPassword)
         {
@@ -166,17 +167,17 @@ namespace CinemaStore.Business
          */
         public string Login(LoginUserDTO loginUserDTO)
         {
-            var userDTO = this.FindUserByUsername(loginUserDTO.Username);
+            var userDTO = FindUserByUsername(loginUserDTO.Username);
 
             if (userDTO == null)
             {
                 return "User not found";
             }
 
-            User user = this._mapper.Map<User>(userDTO);
+            User user = _mapper.Map<User>(userDTO);
 
             string hashedPassword = "";
-            this.HashPassword(loginUserDTO.Password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            HashPassword(loginUserDTO.Password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
 
             if (user.Password == hashedPassword)
             {
@@ -190,7 +191,7 @@ namespace CinemaStore.Business
 
         public RegisterUserDTO FindUserByUsername(string username)
         {
-            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var usersList = _mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
             var user = usersList.FirstOrDefault(x => x.Username == username);
 
             return user;
@@ -198,17 +199,17 @@ namespace CinemaStore.Business
 
         public string LoginWithAnswer(ForgotPWUserDTO forgotPWUserDTO)
         {
-            var userDTO = this.FindUserByUsername(forgotPWUserDTO.Username);
+            var userDTO = FindUserByUsername(forgotPWUserDTO.Username);
 
             if (userDTO == null)
             {
                 return "User not found";
             }
 
-            User user = this._mapper.Map<User>(userDTO);
+            User user = _mapper.Map<User>(userDTO);
 
             string hashedAnswer = "";
-            this.HashPassword(forgotPWUserDTO.SecurityAnswer, ref hashedAnswer); // Encrypt Password (Cipher's Encryption)
+            HashPassword(forgotPWUserDTO.SecurityAnswer, ref hashedAnswer); // Encrypt Password (Cipher's Encryption)
 
             if (user.SecurityAnswer == hashedAnswer)
             {

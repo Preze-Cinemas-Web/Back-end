@@ -1,10 +1,11 @@
 ﻿using CinemaData;
-using CinemaStore.Business;
+using CinemaStore.Business.Authentication;
+using CinemaStore.Business.Movies;
+using CinemaStore.Business.Users;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace CinemaStore
@@ -31,6 +32,22 @@ namespace CinemaStore
          */
         public void ConfigureServices(IServiceCollection services)
         {
+            var tmdbSettings = configRoot.GetSection("TmdbSettings");
+            var apiKey = tmdbSettings.GetValue<string>("ApiKey");
+
+            services.AddHttpClient<TmdbService>(client =>
+            {
+                client.BaseAddress = new Uri("https://api.themoviedb.org/3/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            });
+
+            services.AddSingleton(sp => new TmdbService(sp.GetRequiredService<IHttpClientFactory>().CreateClient("tmdb"), apiKey));
+
+
             services.AddMvc();
             /****** [1] DatabaseContext ******/
             services.AddDbContext<CinemaContext>();
@@ -38,7 +55,7 @@ namespace CinemaStore
             services.AddScoped(
                 typeof(IAuthenticationService), typeof(AuthenticationService));
             services.AddScoped(
-                typeof(IUserService), typeof(UserService));
+                typeof(IUserService), typeof(UserService));;
             /****** [3] AutoMapper ******/
             services.AddAutoMapper(typeof(CinemaStoreProfile));
             /****** [4] CORS ******/
@@ -74,9 +91,14 @@ namespace CinemaStore
             Setup.configRoot = configRoot;
             Setup.AdminLogin();
 
+            /****** [9] Tmdb API ******/
+            services.Configure<TmdbSettings>(configRoot.GetSection("TmdbSettings"));
+            services.AddControllersWithViews();
+
             services.AddControllers();
             services.AddEndpointsApiExplorer();
-            /****** [9] Swagger Authorization UI ******/
+            
+            /****** [10] Swagger Authorization UI ******/
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CinemaStore", Version = "v1" });
