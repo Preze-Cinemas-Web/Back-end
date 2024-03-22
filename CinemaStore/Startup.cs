@@ -4,9 +4,11 @@ using CinemaStore.Business.Movies;
 using CinemaStore.Business.Users;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Net.Http;
 
 namespace CinemaStore
 {
@@ -32,6 +34,22 @@ namespace CinemaStore
          */
         public void ConfigureServices(IServiceCollection services)
         {
+            var tmdbSettings = configRoot.GetSection("TmdbSettings");
+            var apiKey = tmdbSettings.GetValue<string>("ApiKey");
+
+            services.AddHttpClient<TmdbService>(client =>
+            {
+                client.BaseAddress = new Uri("https://api.themoviedb.org/3/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            });
+
+            services.AddSingleton<TmdbService>(sp => new TmdbService(sp.GetRequiredService<IHttpClientFactory>().CreateClient("tmdb"), apiKey));
+
+
             services.AddMvc();
             /****** [1] DatabaseContext ******/
             services.AddDbContext<CinemaContext>();
