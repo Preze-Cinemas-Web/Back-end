@@ -1,11 +1,12 @@
 ﻿using CinemaData;
-using CinemaStore.Business;
+using CinemaStore.Business.Authentication;
+using CinemaStore.Business.Movies;
+using CinemaStore.Business.Users;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using System.Net.Http;
 
@@ -56,7 +57,7 @@ namespace CinemaStore
             services.AddScoped(
                 typeof(IAuthenticationService), typeof(AuthenticationService));
             services.AddScoped(
-                typeof(IUserService), typeof(UserService));
+                typeof(IUserService), typeof(UserService));;
             /****** [3] AutoMapper ******/
             services.AddAutoMapper(typeof(CinemaStoreProfile));
             /****** [4] CORS ******/
@@ -92,9 +93,15 @@ namespace CinemaStore
             Setup.configRoot = configRoot;
             Setup.AdminLogin();
 
+            /****** [9] TMDB API ******/
+            services.Configure<TMDBSettings>(configRoot.GetSection("TMDBSettings"));
+            services.AddHttpClient<TMDBService>();
+            services.AddControllersWithViews();
+
             services.AddControllers();
             services.AddEndpointsApiExplorer();
-            /****** [9] Swagger Authorization UI ******/
+            
+            /****** [10] Swagger Authorization UI ******/
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CinemaStore", Version = "v1" });

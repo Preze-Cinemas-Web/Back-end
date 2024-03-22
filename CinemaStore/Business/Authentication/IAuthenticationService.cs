@@ -1,7 +1,7 @@
 ﻿using Cinema.Models;
 using CinemaStore.Models;
 
-namespace CinemaStore.Business
+namespace CinemaStore.Business.Authentication
 {
     public interface IAuthenticationService
     {

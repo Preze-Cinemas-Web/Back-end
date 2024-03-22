@@ -2,16 +2,9 @@
 using Cinema.Models;
 using CinemaData;
 using CinemaData.Entities;
-using CinemaStore.Models;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
-using MimeKit.Text;
-using System.Security.Cryptography;
-using System.Text;
+using CinemaStore.Business.Authentication;
 
-
-namespace CinemaStore.Business
+namespace CinemaStore.Business.Users
 {
     public class UserService : IUserService
     {
@@ -31,13 +24,13 @@ namespace CinemaStore.Business
          */
         public IEnumerable<RegisterUserDTO> FindAllUsers()
         {
-            return this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            return _mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
         }
 
         /*
          * HTTP PUT - Update User
          */
-        public UpdateUserDTO ModifyUser(UpdateUserDTO updatedUserDTO)
+        public RegisterUserDTO ModifyUser(RegisterUserDTO updatedUserDTO)
         {
             string firstName = updatedUserDTO.FirstName;
             UserBusinessLogic.DefineNameBL(firstName, "First Name");
@@ -60,12 +53,19 @@ namespace CinemaStore.Business
             string password = updatedUserDTO.Password;
             UserBusinessLogic.DefinePasswordBL(password);
 
+            string answer = updatedUserDTO.SecurityAnswer;
+            UserBusinessLogic.DefineAnswerBL(answer);
+
             string hashedPassword = "";
             _authenticationService.HashPassword(password, ref hashedPassword); // Encrypt Password (SHA256 Encryption)
             updatedUserDTO.Password = hashedPassword;
 
+            string hashedAnswer = "";
+            _authenticationService.HashPassword(answer, ref hashedAnswer); // Encrypt Password (SHA256 Encryption)
+            updatedUserDTO.SecurityAnswer = hashedAnswer;
+
             User existingUser = _context.User.FirstOrDefault(u => u.Username == username);
-            
+
             if (existingUser == null)
             {
                 throw new MyException("User not found");
@@ -106,6 +106,11 @@ namespace CinemaStore.Business
                 existingUser.Password = updatedUserDTO.Password;
             }
 
+            if (updatedUserDTO.SecurityAnswer != null)
+            {
+                existingUser.SecurityAnswer = updatedUserDTO.SecurityAnswer;
+            }
+
             if (!updatedUserDTO.Equals(existingUser.Email))
             {
                 existingUser.EmailVerifiedAt = "";
@@ -115,7 +120,7 @@ namespace CinemaStore.Business
 
             _context.SaveChanges();
 
-            return this._mapper.Map<UpdateUserDTO>(existingUser);
+            return _mapper.Map<RegisterUserDTO>(existingUser);
         }
 
         /*
@@ -131,7 +136,7 @@ namespace CinemaStore.Business
 
         public RegisterUserDTO FindUserById(int id)
         {
-            var usersList = this._mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
+            var usersList = _mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
             var user = usersList.FirstOrDefault(x => x.Id == id);
 
             return user;

@@ -1,5 +1,7 @@
 ﻿using Cinema.Models;
 using CinemaStore.Business;
+using CinemaStore.Business.Authentication;
+using CinemaStore.Business.Users;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +32,7 @@ namespace CinemaStore.Controllers
         }
 
         [HttpPut("Update")]
-        public ActionResult<UpdateUserDTO> UpdateUser(string username, [FromBody] UpdateUserDTO updatedUserDTO)
+        public ActionResult<RegisterUserDTO> UpdateUser(string username, [FromBody] RegisterUserDTO updatedUserDTO)
         {
             try
             {
