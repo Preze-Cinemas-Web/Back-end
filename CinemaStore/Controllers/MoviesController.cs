@@ -5,21 +5,20 @@ namespace CinemaStore.Controllers
 {
     [Route("API/[controller]")]
     [ApiController]
-    public class MoviesController : Controller
+    public class MoviesController : ControllerBase
     {
-        private readonly TMDBService _tmdbService;
+        private readonly TmdbService _tmdbService;
 
-        public MoviesController(TMDBService tmdbService)
+        public MoviesController(TmdbService tmdbService)
         {
             _tmdbService = tmdbService;
         }
 
-        [HttpGet("Index")]
-        public async Task<IActionResult> Index()
+        [HttpGet("Get-Popular-Movies")]
+        public async Task<IActionResult> GetPopularMovies()
         {
-           var popularMovies = await _tmdbService.GetPopularMovies();
-
-            return Ok(popularMovies);
+            var movies = await _tmdbService.GetPopularMoviesAsync();
+            return Ok(movies);
         }
     }
 }

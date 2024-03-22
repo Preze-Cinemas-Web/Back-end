@@ -1,6 +1,3 @@
-using Cinema.Models;
-using System.Text.RegularExpressions;
-
 namespace CinemaStore.Business.Users
 {
     public static class UserBusinessLogic

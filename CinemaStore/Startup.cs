@@ -4,11 +4,9 @@ using CinemaStore.Business.Movies;
 using CinemaStore.Business.Users;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Net.Http;
 
 namespace CinemaStore
 {
@@ -95,7 +93,7 @@ namespace CinemaStore
 
             /****** [9] TMDB API ******/
             services.Configure<TMDBSettings>(configRoot.GetSection("TMDBSettings"));
-            services.AddHttpClient<TMDBService>();
+            services.AddHttpClient<TmdbService>();
             services.AddControllersWithViews();
 
             services.AddControllers();

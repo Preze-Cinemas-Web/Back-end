@@ -1,25 +1,33 @@
-﻿using CinemaStore.Models;
-using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace CinemaStore.Business.Movies
 {
-    public class TMDBService
+    public class TmdbService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public TMDBService(HttpClient httpClient, IOptions<TMDBSettings> tmdbSettings)
+        public TmdbService(HttpClient httpClient, string apiKey)
         {
             _httpClient = httpClient;
+            _apiKey = apiKey;
             _httpClient.BaseAddress = new Uri("https://api.themoviedb.org/3/");
-            _apiKey = tmdbSettings.Value.ApiKey;
+            _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
-        public async Task<string> GetPopularMovies()
+        public async Task<dynamic> GetPopularMoviesAsync()
         {
-            var response = await _httpClient.GetAsync($"movie/popular?api_key={_apiKey}");
+            var requestUri = $"movie/popular?api_key={_apiKey}";
+
+            var response = await _httpClient.GetAsync(requestUri);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            var movies = await JsonSerializer.DeserializeAsync<dynamic>(contentStream);
+
+            return movies;
         }
     }
 }
+
+
