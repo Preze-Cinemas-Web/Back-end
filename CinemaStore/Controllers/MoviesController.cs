@@ -7,9 +7,9 @@ namespace CinemaStore.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly TMDBService _tmdbService;
+        private readonly ITMDBService _tmdbService;
 
-        public MoviesController(TMDBService tmdbService)
+        public MoviesController(ITMDBService tmdbService)
         {
             _tmdbService = tmdbService;
         }

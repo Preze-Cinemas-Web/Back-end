@@ -1,11 +1,10 @@
 ﻿using CinemaData;
 using CinemaStore.Business.Authentication;
+using CinemaStore.Business.Movies;
 using CinemaStore.Business.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace CinemaStore
@@ -32,6 +31,7 @@ namespace CinemaStore
          */
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddMvc();
             /****** [1] DatabaseContext ******/
             services.AddDbContext<CinemaContext>();
@@ -40,6 +40,8 @@ namespace CinemaStore
                 typeof(IAuthenticationService), typeof(AuthenticationService));
             services.AddScoped(
                 typeof(IUserService), typeof(UserService));
+            services.AddScoped(
+                typeof(ITMDBService), typeof(TMDBService));
             /****** [3] AutoMapper ******/
             services.AddAutoMapper(typeof(CinemaStoreProfile));
             /****** [4] CORS ******/

@@ -3,14 +3,6 @@ using Cinema.Models;
 using CinemaData;
 using CinemaData.Entities;
 using CinemaStore.Business.Authentication;
-using CinemaStore.Models;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
-using MimeKit.Text;
-using System.Security.Cryptography;
-using System.Text;
-
 
 namespace CinemaStore.Business.Users
 {

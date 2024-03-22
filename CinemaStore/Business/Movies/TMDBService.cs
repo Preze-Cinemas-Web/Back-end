@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace CinemaStore.Business.Movies
 {
-    public class TMDBService
+    public class TMDBService : ITMDBService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
