@@ -31,8 +31,4 @@
 		<ProjectReference Include="..\CinemaData\CinemaData.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Business\Movies\" />
-	</ItemGroup>
-
 </Project>
