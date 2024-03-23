@@ -18,6 +18,7 @@ namespace CinemaStore.Controllers
         public async Task<IActionResult> GetPopularMovies()
         {
             var movies = await _tmdbService.GetPopularMoviesAsync();
+            
             return Ok(movies);
         }
     }
