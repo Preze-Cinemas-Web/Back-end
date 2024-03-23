@@ -15,7 +15,15 @@ namespace CinemaData
         }
 
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Hall> Hall { get; set; }
         public virtual DbSet<Movie> Movie { get; set; }
+        public virtual DbSet<Reservation> Reservation { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Reservation>()
+                .HasKey(r => new { r.UserId, r.MovieId });
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
