@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaData.Migrations
 {
     [DbContext(typeof(CinemaContext))]
-    [Migration("20240322162214_CreateMovieTable")]
+    [Migration("20240323153749_CreateMovieTable")]
     partial class CreateMovieTable
     {
         /// <inheritdoc />
@@ -24,6 +24,29 @@ namespace CinemaData.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CinemaData.Entities.Hall", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TicketPrice")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Hall");
+                });
+
             modelBuilder.Entity("CinemaData.Entities.Movie", b =>
                 {
                     b.Property<int>("Id")
@@ -31,6 +54,20 @@ namespace CinemaData.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DateView")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HallId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TimeView")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
