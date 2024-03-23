@@ -1,8 +1,10 @@
 ﻿using CinemaStore.Business.Movies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("API/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
