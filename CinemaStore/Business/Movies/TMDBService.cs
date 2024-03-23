@@ -24,7 +24,7 @@ namespace CinemaStore.Business.Movies
 
             var contentStream = await response.Content.ReadAsStreamAsync();
             var movies = await JsonSerializer.DeserializeAsync<dynamic>(contentStream);
-
+           
             return movies;
         }
     }
