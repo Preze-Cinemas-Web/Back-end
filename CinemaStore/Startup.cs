@@ -1,6 +1,8 @@
 ﻿using CinemaData;
 using CinemaStore.Business.Authentication;
+using CinemaStore.Business.Halls;
 using CinemaStore.Business.Movies;
+using CinemaStore.Business.Reservations;
 using CinemaStore.Business.Users;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,7 +57,13 @@ namespace CinemaStore
             services.AddScoped(
                 typeof(IAuthenticationService), typeof(AuthenticationService));
             services.AddScoped(
-                typeof(IUserService), typeof(UserService));;
+                typeof(IUserService), typeof(UserService));
+            services.AddScoped(
+                typeof(IMovieService), typeof(MovieService));
+            services.AddScoped(
+                typeof(IHallService), typeof(HallService));
+            services.AddScoped(
+                typeof(IReservationService), typeof(ReservationService));
             /****** [3] AutoMapper ******/
             services.AddAutoMapper(typeof(CinemaStoreProfile));
             /****** [4] CORS ******/
