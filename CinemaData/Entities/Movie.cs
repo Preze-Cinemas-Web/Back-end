@@ -10,6 +10,7 @@ namespace CinemaData.Entities
         public string DateView { get; set; }
         [ForeignKey("Hall")]
         public int HallId { get; set; }
+        public Hall Hall { get; set; }
         public int AvailableSeats { get; set; }
     }
 }

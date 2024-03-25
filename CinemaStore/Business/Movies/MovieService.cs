@@ -26,26 +26,30 @@ namespace CinemaStore.Business.Movies
             return moviesDTO;
         }
 
-        public async Task<MovieAvailabilityDTO> GetMovieByTitleAsync(string title)
+        public async Task<ChooseTicketsDTO> GetMovieByTitleAsync(string title)
         {
             var movie = await _context.Movie
+                .Include(m => m.Hall) // Include Hall entity
                 .FirstOrDefaultAsync(m => m.Title == title);
 
             if (movie == null)
             {
-                return null; 
+                return null;
             }
 
-            var movieDto = new MovieAvailabilityDTO
+            var movieDto = new ChooseTicketsDTO
             {
                 Title = movie.Title,
                 TimeView = movie.TimeView,
                 DateView = movie.DateView,
-                HallId = movie.HallId,
+                HallName = movie.Hall.Name,
                 AvailableSeats = movie.AvailableSeats
             };
 
             return movieDto;
         }
+
+
+
     }
 }
