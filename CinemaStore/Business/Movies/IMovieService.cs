@@ -1,9 +1,12 @@
-﻿using CinemaStore.Models;
+﻿using System.Threading.Tasks;
+using System.Collections.Generic;
+using CinemaStore.Models;
 
 namespace CinemaStore.Business.Movies
 {
     public interface IMovieService
     {
-        public IEnumerable<MovieDTO> FindAllMovies();
+        IEnumerable<MovieDTO> FindAllMovies();
+        Task<MovieAvailabilityDTO> GetMovieByTitleAsync(string title);
     }
 }

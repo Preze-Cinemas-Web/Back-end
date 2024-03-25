@@ -1,6 +1,10 @@
 ﻿using CinemaStore.Business.Movies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using CinemaStore.Models;
+
+
 
 namespace CinemaStore.Controllers
 {
@@ -28,12 +32,28 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
-        [Route("Get-Movies-From-PrezeCinemsDB"), Authorize(Roles = "Admin")]
+        [AllowAnonymous]
+        [Route("Get-Movies-From-PrezeCinemsDB")]
         public IActionResult GetMoviesFromPrezeCinemsDB()
         {
             var movies = _movieService.FindAllMovies();
 
             return Ok(movies);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("Get-Movie-By-Title")]
+        public async Task<IActionResult> GetMovieAvailability(string movieTitle)
+        {
+            var movie = await _movieService.GetMovieByTitleAsync(movieTitle);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(movie);
         }
     }
 }
