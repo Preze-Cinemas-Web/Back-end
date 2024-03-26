@@ -1,4 +1,5 @@
 ﻿using CinemaStore.Business.Reservations;
+using CinemaStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("Get-All-Reservations")]
         public IActionResult GetAllReservations()
         {
@@ -24,6 +26,20 @@ namespace CinemaStore.Controllers
             
             return Ok(reservations);
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Reservation")]
+        public async Task<IActionResult> MakeReservation([FromBody] int numberOfTickets)
+        {
+            var success = await _reservationService.MakeReservationAsync(numberOfTickets);
+
+            if (success)
+                return Ok("Reservation successful.");
+            else
+                return BadRequest("Failed to make reservation.");
+        }
+
 
     }
 }
