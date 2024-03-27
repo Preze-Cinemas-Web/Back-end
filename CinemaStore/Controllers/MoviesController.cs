@@ -1,14 +1,9 @@
 ﻿using CinemaStore.Business.Movies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CinemaStore.Models;
-
-
 
 namespace CinemaStore.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("API/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
@@ -22,8 +17,9 @@ namespace CinemaStore.Controllers
             _movieService = movieService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        [Route("Get-Movies-From-TMDB")]
+        [Route("Get-All-Movies-From-TMDB")]
         public async Task<IActionResult> GetMoviesFromTMDB()
         {
             var movies = await _tmdbService.GetPopularMoviesAsync();
@@ -32,8 +28,7 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        [Route("Get-Movies-From-PrezeCinemsDB")]
+        [Route("Get-All-Movies-Views")]
         public IActionResult GetMoviesFromPrezeCinemsDB()
         {
             var movies = _movieService.FindAllMovies();
@@ -42,8 +37,7 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        [Route("Get-Movie-By-Title")]
+        [Route("Get-Movie-Views-by-Title")]
         public async Task<IActionResult> GetMovieAvailability(string movieTitle)
         {
             var movie = await _movieService.GetMovieByTitleAsync(movieTitle);
