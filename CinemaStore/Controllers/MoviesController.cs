@@ -38,9 +38,9 @@ namespace CinemaStore.Controllers
 
         [HttpGet]
         [Route("Get-Movie-Views-by-Title")]
-        public async Task<IActionResult> GetMovieAvailability(string movieTitle)
+        public async Task<IActionResult> GetMovieAvailability(string title)
         {
-            var movie = await _movieService.GetMovieByTitleAsync(movieTitle);
+            var movie = await _movieService.GetMovieByTitleAsync(title);
 
             if (movie == null)
             {

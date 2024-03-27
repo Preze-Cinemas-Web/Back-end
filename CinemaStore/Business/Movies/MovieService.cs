@@ -26,7 +26,7 @@ namespace CinemaStore.Business.Movies
             return moviesDTO;
         }
 
-        public async Task<MovieInfoDTO> GetMovieByTitleAsync(string title)
+        public async Task<MovieDTO> GetMovieByTitleAsync(string title)
         {
             var movie = await _context.Movie
                 .Include(m => m.Hall) // Include Hall entity
@@ -37,16 +37,7 @@ namespace CinemaStore.Business.Movies
                 return null;
             }
 
-            var movieDto = new MovieInfoDTO
-            {
-                Title = movie.Title,
-                TimeView = movie.TimeView,
-                DateView = movie.DateView,
-                HallName = movie.Hall.Name,
-                AvailableSeats = movie.AvailableSeats
-            };
-
-            return movieDto;
+            return this._mapper.Map<MovieDTO>(movie);
         }
 
 

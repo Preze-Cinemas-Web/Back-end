@@ -7,6 +7,6 @@ namespace CinemaStore.Business.Movies
     public interface IMovieService
     {
         IEnumerable<MovieDTO> FindAllMovies();
-        Task<MovieInfoDTO> GetMovieByTitleAsync(string title);
+        Task<MovieDTO> GetMovieByTitleAsync(string title);
     }
 }
