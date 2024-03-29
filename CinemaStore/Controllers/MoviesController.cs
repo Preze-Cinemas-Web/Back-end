@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaStore.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [Route("API/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
@@ -18,8 +17,9 @@ namespace CinemaStore.Controllers
             _movieService = movieService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        [Route("Get-Movies-From-TMDB")]
+        [Route("Get-All-Movies-From-TMDB")]
         public async Task<IActionResult> GetMoviesFromTMDB()
         {
             var movies = await _tmdbService.GetPopularMoviesAsync();
@@ -28,12 +28,26 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
-        [Route("Get-Movies-From-PrezeCinemsDB"), Authorize(Roles = "Admin")]
+        [Route("Get-All-Movies-Views")]
         public IActionResult GetMoviesFromPrezeCinemsDB()
         {
             var movies = _movieService.FindAllMovies();
 
             return Ok(movies);
+        }
+
+        [HttpGet]
+        [Route("Get-Movie-Views-by-Title")]
+        public async Task<IActionResult> GetMovieAvailability(string title)
+        {
+            var movie = await _movieService.GetMovieByTitleAsync(title);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(movie);
         }
     }
 }

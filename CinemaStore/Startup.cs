@@ -64,6 +64,7 @@ namespace CinemaStore
                 typeof(IHallService), typeof(HallService));
             services.AddScoped(
                 typeof(IReservationService), typeof(ReservationService));
+            services.AddHttpContextAccessor();
             /****** [3] AutoMapper ******/
             services.AddAutoMapper(typeof(CinemaStoreProfile));
             /****** [4] CORS ******/
