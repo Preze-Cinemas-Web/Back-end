@@ -41,7 +41,7 @@ namespace CinemaStore.Business.Reservations
             if (!(reserv.NumberOfTickets <= 9))
                 return false;
 
-            var reservation = new Reservation
+            var reservationDTO = new ReservationDTO
             {
                 UserId = userId,
                 MovieId = movie.Id,
@@ -49,10 +49,12 @@ namespace CinemaStore.Business.Reservations
                 TotalPrice = reserv.NumberOfTickets * 8
             };
 
-            _context.Reservation.Add(reservation);
+            var reservation = this._mapper.Map<Reservation>(reservationDTO);
+
+            await _context.Reservation.AddAsync(reservation);
             movie.AvailableSeats -= reserv.NumberOfTickets;
 
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return true;
         }
