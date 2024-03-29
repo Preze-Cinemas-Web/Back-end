@@ -5,6 +5,6 @@ namespace CinemaStore.Business.Reservations
     public interface IReservationService
     {
         public IEnumerable<ReservationDTO> FindAllReservations();
-        Task<bool> MakeReservationAsync(ReservationDTO reserv, int userId);
+        Task<bool> MakeReservationAsync(ReservationRequestDTO reserv, int userId);
     }
 }

@@ -5,6 +5,7 @@ using CinemaStore.Business.Users;
 using CinemaStore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using CinemaStore.Business.Movies;
 
 namespace CinemaStore.Business.Reservations
 {
@@ -29,24 +30,27 @@ namespace CinemaStore.Business.Reservations
             return reservsDTO;
         }
 
-        public async Task<bool> MakeReservationAsync(ReservationDTO reserv, int userId)
+        public async Task<bool> MakeReservationAsync(ReservationRequestDTO reserv, int userId)
         {
-            const int ticketPrice = 8;
+            var movie = _context.Movie.FirstOrDefault(u => u.Title == reserv.MovieTitle);   
 
-            if (userId == null || movieId == null)
+            if (userId == null || movie.Id == null)
+                return false;
+            if (!(reserv.NumberOfTickets > 0 && reserv.NumberOfTickets <= movie.AvailableSeats)) 
+                return false;
+            if (!(reserv.NumberOfTickets <= 9))
                 return false;
 
-         //   int totalPrice = numberOfTickets * ticketPrice;
-            
             var reservation = new Reservation
             {
                 UserId = userId,
-                MovieId = movieId,
-          //      NumberOfTickets = numberOfTickets,
-           //     TotalPrice = totalPrice
+                MovieId = movie.Id,
+                NumberOfTickets = reserv.NumberOfTickets,
+                TotalPrice = reserv.NumberOfTickets * 8
             };
 
             _context.Reservation.Add(reservation);
+            movie.AvailableSeats -= reserv.NumberOfTickets;
 
             _context.SaveChangesAsync();
 

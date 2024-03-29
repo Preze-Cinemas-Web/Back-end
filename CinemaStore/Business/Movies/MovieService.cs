@@ -20,8 +20,16 @@ namespace CinemaStore.Business.Movies
 
         public IEnumerable<MovieDTO> FindAllMovies()
         {
-            var movies = _context.Movie.ToList();
-            var moviesDTO = _mapper.Map<IEnumerable<MovieDTO>>(movies);
+            var moviesList = _context.Movie.Include(m => m.Hall).ToList();
+
+            var moviesDTO = moviesList.Select(movie => new MovieDTO
+            {
+                Title = movie.Title,
+                TimeView = movie.TimeView,
+                DateView = movie.DateView,
+                HallName = movie.Hall.Name, // Replace HallId with HallName
+                AvailableSeats = movie.AvailableSeats
+            }).ToList();
 
             return moviesDTO;
         }
@@ -37,10 +45,16 @@ namespace CinemaStore.Business.Movies
                 return null;
             }
 
-            return this._mapper.Map<MovieDTO>(movie);
+            var movieDto = new MovieDTO
+            {
+                Title = movie.Title,
+                TimeView = movie.TimeView,
+                DateView = movie.DateView,
+                HallName = movie.Hall.Name,
+                AvailableSeats = movie.AvailableSeats
+            };
+
+            return movieDto;
         }
-
-
-
     }
 }

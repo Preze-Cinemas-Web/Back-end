@@ -30,8 +30,8 @@ namespace CinemaStore.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("Reservation")]
-        public async Task<IActionResult> MakeReservation([FromBody] ReservationDTO reserv)
+        [Route("Reservation-Request")]
+        public async Task<IActionResult> MakeReservation([FromBody] ReservationRequestDTO reserv)
         {
             try
             {
