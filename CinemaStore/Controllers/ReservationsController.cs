@@ -48,9 +48,45 @@ namespace CinemaStore.Controllers
                 var success = await _reservationService.MakeReservationAsync(reserv, Int32.Parse(userId));
 
                 if (success)
-                    return Ok("Reservation successful.");
+                    return Ok("Your reservation request responds to availability of the view");
                 else
-                    return BadRequest("Failed to make reservation.");
+                    return BadRequest("Your reservation request do not respond to availability of the view");
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("Confirm-Reservation")]
+        public IActionResult ConfirmReservation([FromBody] ConfirmReservationDTO reserv)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized("Invalid token.");
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+
+                var userId = jwtToken.Payload["userId"].ToString();
+
+                var success = _reservationService.ValidateReservation(reserv, Int32.Parse(userId));
+
+                if (success)
+                {
+                    return Ok("Reservation confirmed.");
+                }
+                else
+                    return Unauthorized("Reservation not confirmed.");
             }
             catch (ArgumentNullException ex)
             {

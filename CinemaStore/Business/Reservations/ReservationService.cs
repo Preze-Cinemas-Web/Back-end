@@ -6,6 +6,9 @@ using CinemaStore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using CinemaStore.Business.Movies;
+using MailKit.Security;
+using MimeKit.Text;
+using MimeKit;
 
 namespace CinemaStore.Business.Reservations
 {
@@ -57,6 +60,50 @@ namespace CinemaStore.Business.Reservations
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public bool ValidateReservation(ConfirmReservationDTO reserv, int userId)
+        {
+            var user = _context.User.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null) 
+                return false;
+            if (user.FirstName != reserv.FirstName)
+                return false;
+            if (user.LastName != reserv.LastName)
+                return false;
+            if (user.Email != reserv.Email)
+                return false;
+            if (user.PhoneNumber != reserv.Phone)
+                return false;
+            if (user.Birthdate != reserv.Birthdate)
+                return false;
+
+            return true;
+        }
+        
+        public string DownloadTickets(int userId)
+        {
+            var user = _context.User.FirstOrDefault(u => u.Id == userId);
+
+            var emailMime = new MimeMessage();
+            emailMime.From.Add(MailboxAddress.Parse("prezecinems@ethereal.email"));
+            emailMime.To.Add(MailboxAddress.Parse(user.Email));
+            emailMime.Subject = "Download Tickets";
+            emailMime.Body = new TextPart(TextFormat.Plain)
+            {
+                Text = "You can download your tickets by clicking the link below:" + "https://localhost:7236/API/Reservations/Download-Tickets" + user.EmailVerificationToken
+                + "\n\n" + "Preze Cinems Development Team"
+            };
+
+            using var smtp = new SmtpClient();
+
+            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate(user.Email, password);
+            smtp.Send(emailMime);
+            smtp.Disconnect(true);
+
+            return "Email sent for verification";
         }
     }
 
