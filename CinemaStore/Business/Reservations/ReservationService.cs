@@ -9,6 +9,7 @@ using CinemaStore.Business.Movies;
 using MailKit.Security;
 using MimeKit.Text;
 using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace CinemaStore.Business.Reservations
 {
@@ -82,28 +83,11 @@ namespace CinemaStore.Business.Reservations
             return true;
         }
         
-        public string DownloadTickets(int userId)
+        public IEnumerable<ReservationDTO> DownloadTickets(int userId)
         {
-            var user = _context.User.FirstOrDefault(u => u.Id == userId);
+            var reservationsList = _context.Reservation.Include(m => m.movie).Include(u => u.user).ToList();
 
-            var emailMime = new MimeMessage();
-            emailMime.From.Add(MailboxAddress.Parse("prezecinems@ethereal.email"));
-            emailMime.To.Add(MailboxAddress.Parse(user.Email));
-            emailMime.Subject = "Download Tickets";
-            emailMime.Body = new TextPart(TextFormat.Plain)
-            {
-                Text = "You can download your tickets by clicking the link below:" + "https://localhost:7236/API/Reservations/Download-Tickets" + user.EmailVerificationToken
-                + "\n\n" + "Preze Cinems Development Team"
-            };
 
-            using var smtp = new SmtpClient();
-
-            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate(user.Email, password);
-            smtp.Send(emailMime);
-            smtp.Disconnect(true);
-
-            return "Email sent for verification";
         }
     }
 
