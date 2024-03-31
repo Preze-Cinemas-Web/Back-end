@@ -9,11 +9,6 @@
             startup.ConfigureServices(builder.Services);
             var app = builder.Build();
             startup.Configure(app, builder.Environment);
-            builder.Services.AddHttpClient("tmdb", client =>
-            {
-                client.BaseAddress = new Uri("https://api.themoviedb.org/3/");
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-            });
         }
     }
 }

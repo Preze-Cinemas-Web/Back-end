@@ -37,7 +37,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
                 Email = "edmund.homenick70@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
-                Username = "Lucaros",
+                Username = "Lucarooos",
                 Password = "szckeFrmDEFEs1VWV9",
                 ConfirmPassword = "szckeFrmDEFEs1VWV9",
                 SecurityAnswer = "Blue"
@@ -89,7 +89,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             // Admin Login
             LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
-                Username = "Lucaros",
+                Username = "Lucarooos",
                 Password = "szckeFrmDEFEs1VWV9"
             };
 
@@ -137,7 +137,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             // Admin Login
             ForgotPWUserDTO forgotPWUserDTO = new ForgotPWUserDTO()
             {
-                Username = "Lucaros",
+                Username = "Lucarooos",
                 SecurityAnswer = "Blue"
             };
 

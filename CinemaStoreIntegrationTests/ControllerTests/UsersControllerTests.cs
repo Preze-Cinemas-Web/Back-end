@@ -40,7 +40,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             RegisterUserDTO updateUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Stefanos",
+                FirstName = "Tayler",
                 LastName = "Kasselakis",
                 Email = "autumn.hodkiewicz93@ethereal.email",
                 PhoneNumber = "6971654543",
@@ -109,7 +109,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Users/Delete?id=";
             var client = _factory.CreateClient();
 
-            int userId = 9;
+            int userId = 13;
             route += userId;
 
             var result = await TestUtilities.Delete(client, route);
