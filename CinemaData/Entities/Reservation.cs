@@ -6,10 +6,10 @@ namespace CinemaData.Entities
     {
         [Key]
         public int UserId { get; set; }
-        public User user { get; set; }
+        public User User { get; set; }
         [Key]
         public int MovieId { get; set; }
-        public Movie movie { get; set; }
+        public Movie Movie { get; set; }
         public int NumberOfTickets { get; set; }
         public int TotalPrice { get; set; } 
     }

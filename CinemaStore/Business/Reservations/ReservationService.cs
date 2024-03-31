@@ -83,11 +83,28 @@ namespace CinemaStore.Business.Reservations
             return true;
         }
         
-        public IEnumerable<ReservationDTO> DownloadTickets(int userId)
+        public IEnumerable<DownloadTicketsDTO> DownloadTickets(int userId)
         {
-            var reservationsList = _context.Reservation.Include(m => m.movie).Include(u => u.user).ToList();
+            var reservationsList = _context.Reservation.Include(m => m.Movie).Include(u => u.User).ToList();
 
+            if (reservationsList == null)
+                return null;
 
+            var reservationsDTO = reservationsList.Select(reserv => new DownloadTicketsDTO
+            {
+                FirstName = reserv.User.FirstName,
+                LastName = reserv.User.LastName,
+                Email = reserv.User.Email,
+                Phone = reserv.User.PhoneNumber,
+                Birthdate = reserv.User.Birthdate,
+                MovieTitle = reserv.Movie.Title,
+                TimeView = reserv.Movie.TimeView,
+                DateView = reserv.Movie.DateView,
+                HallName = "Hall " + reserv.Movie.HallId,
+                NumberOfTickets = reserv.NumberOfTickets
+            }).ToList();
+
+            return reservationsDTO;
         }
     }
 
