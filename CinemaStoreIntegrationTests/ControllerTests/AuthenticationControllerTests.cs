@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CinemaStoreIntegrationTests.Tests
+namespace CinemaStoreIntegrationTests.ControllerTests
 {
     public class AuthenticationControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
@@ -34,12 +34,12 @@ namespace CinemaStoreIntegrationTests.Tests
                 Id = 0,
                 FirstName = "Lucas",
                 LastName = "Roberts",
-                Email = "autumn.hodkiewicz93@ethereal.email",
+                Email = "edmund.homenick70@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
-                Username = "ArnoldPoustara",
-                Password = "FBwUDfQ7hzDEzNmKzJ",
-                ConfirmPassword = "FBwUDfQ7hzDEzNmKzJ",
+                Username = "Lucarooos",
+                Password = "szckeFrmDEFEs1VWV9",
+                ConfirmPassword = "szckeFrmDEFEs1VWV9",
                 SecurityAnswer = "Blue"
             };
 
@@ -89,8 +89,8 @@ namespace CinemaStoreIntegrationTests.Tests
             // Admin Login
             LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
-                Username = "ArnoldPoustara",
-                Password = "FBwUDfQ7hzDEzNmKzJ"
+                Username = "Lucarooos",
+                Password = "szckeFrmDEFEs1VWV9"
             };
 
             var result = await TestUtilities.Post(client, route, loginUserDTO);
@@ -137,7 +137,7 @@ namespace CinemaStoreIntegrationTests.Tests
             // Admin Login
             ForgotPWUserDTO forgotPWUserDTO = new ForgotPWUserDTO()
             {
-                Username = "ArnoldPoustara",
+                Username = "Lucarooos",
                 SecurityAnswer = "Blue"
             };
 

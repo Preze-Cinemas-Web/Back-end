@@ -1,12 +1,11 @@
 ﻿using Cinema.Models;
 using CinemaStore;
-using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CinemaStoreIntegrationTests.Tests
+namespace CinemaStoreIntegrationTests.ControllerTests
 {
     public class UsersControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
@@ -41,8 +40,8 @@ namespace CinemaStoreIntegrationTests.Tests
             RegisterUserDTO updateUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Kavloucas",
-                LastName = "Roberts",
+                FirstName = "Tayler",
+                LastName = "Kasselakis",
                 Email = "autumn.hodkiewicz93@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
@@ -110,7 +109,7 @@ namespace CinemaStoreIntegrationTests.Tests
             var route = "https://localhost:7236/API/Users/Delete?id=";
             var client = _factory.CreateClient();
 
-            int userId = 8;
+            int userId = 13;
             route += userId;
 
             var result = await TestUtilities.Delete(client, route);
