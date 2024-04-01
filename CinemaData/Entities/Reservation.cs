@@ -4,6 +4,7 @@ namespace CinemaData.Entities
 {
     public class Reservation
     {
+        public int BookingId
         [Key]
         public int UserId { get; set; }
         public User User { get; set; }

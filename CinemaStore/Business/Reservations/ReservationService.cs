@@ -10,6 +10,9 @@ using MailKit.Security;
 using MimeKit.Text;
 using MimeKit;
 using MailKit.Net.Smtp;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using System;
+using System.Text;
 
 namespace CinemaStore.Business.Reservations
 {
@@ -85,26 +88,52 @@ namespace CinemaStore.Business.Reservations
         
         public IEnumerable<DownloadTicketsDTO> DownloadTickets(int userId)
         {
-            var reservationsList = _context.Reservation.Include(m => m.Movie).Include(u => u.User).ToList();
+            var reservationsList = _context.Reservation
+                .Include(r => r.Movie)
+                    .ThenInclude(m => m.Hall)
+                .Include(r => r.User)
+                .Where(r => r.UserId == userId)
+                .ToList();
 
             if (reservationsList == null)
                 return null;
 
-            var reservationsDTO = reservationsList.Select(reserv => new DownloadTicketsDTO
+            string cinemaCenterName = "Preze Cinemas";
+            var reservationsDTO = new List<DownloadTicketsDTO>();
+            foreach (var reservation in reservationsList)
             {
-                FirstName = reserv.User.FirstName,
-                LastName = reserv.User.LastName,
-                Email = reserv.User.Email,
-                Phone = reserv.User.PhoneNumber,
-                Birthdate = reserv.User.Birthdate,
-                MovieTitle = reserv.Movie.Title,
-                TimeView = reserv.Movie.TimeView,
-                DateView = reserv.Movie.DateView,
-                HallName = "Hall " + reserv.Movie.HallId,
-                NumberOfTickets = reserv.NumberOfTickets
-            }).ToList();
+                string bookingId = GenerateRandomCode(6);
+                string dateTimeString = $"{reservation.Movie.DateView} {reservation.Movie.TimeView}";
+
+                var reservationDTO = new DownloadTicketsDTO
+                {
+                    CinemaCenter = cinemaCenterName,
+                    HallName = reservation.Movie.Hall.Name,
+                    MovieTitle = reservation.Movie.Title,
+                    DateTime = dateTimeString,
+                    NumberOfTickets = reservation.NumberOfTickets,
+                    TotalValue = reservation.TotalPrice,
+                    BookingId = bookingId
+                };
+
+                reservationsDTO.Add(reservationDTO);
+            }
 
             return reservationsDTO;
+        }
+
+        string GenerateRandomCode(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Define characters to use
+            var random = new Random();
+            var code = new StringBuilder(length);
+
+            for (int i = 0; i < length; i++)
+            {
+                code.Append(chars[random.Next(chars.Length)]);
+            }
+
+            return code.ToString();
         }
     }
 
