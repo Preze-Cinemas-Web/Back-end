@@ -128,5 +128,39 @@ namespace CinemaStore.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
             }
         }
+
+        [Authorize]
+        [HttpGet]
+        [Route("Download-Tickets-by-BookingId")]
+        public IActionResult DownloadTicketsByBookingId(string bookingId)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized("Invalid token.");
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+
+                var userId = jwtToken.Payload["userId"].ToString();
+
+                var tickets = _reservationService.DownloadTicketsByBookingId(bookingId, Int32.Parse(userId));
+
+                if (tickets != null)
+                    return Ok(tickets);
+                else
+                    return NotFound("Reservation not found.");
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+        }
     }
 }

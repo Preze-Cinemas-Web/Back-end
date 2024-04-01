@@ -10,6 +10,7 @@ using MailKit.Security;
 using MimeKit.Text;
 using MimeKit;
 using MailKit.Net.Smtp;
+using System.Text;
 
 namespace CinemaStore.Business.Reservations
 {
@@ -17,13 +18,13 @@ namespace CinemaStore.Business.Reservations
     {
         private readonly CinemaContext _context;
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        
 
-        public ReservationService(CinemaContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public ReservationService(CinemaContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
+            
         }
 
         public IEnumerable<ReservationDTO> FindAllReservations()
@@ -45,12 +46,15 @@ namespace CinemaStore.Business.Reservations
             if (!(reserv.NumberOfTickets <= 9))
                 return false;
 
+            string bookingId = GenerateRandomCode(6);
+
             var reservationDTO = new ReservationDTO
             {
                 UserId = userId,
                 MovieId = movie.Id,
                 NumberOfTickets = reserv.NumberOfTickets,
-                TotalPrice = reserv.NumberOfTickets * 8
+                TotalPrice = reserv.NumberOfTickets * 8,
+                BookingId = bookingId
             };
 
             var reservation = this._mapper.Map<Reservation>(reservationDTO);
@@ -82,30 +86,79 @@ namespace CinemaStore.Business.Reservations
 
             return true;
         }
-        
+
         public IEnumerable<DownloadTicketsDTO> DownloadTickets(int userId)
         {
-            var reservationsList = _context.Reservation.Include(m => m.Movie).Include(u => u.User).ToList();
+            var reservationsList = _context.Reservation
+                .Include(r => r.Movie)
+                    .ThenInclude(m => m.Hall)
+                .Include(r => r.User)
+                .Where(r => r.UserId == userId)
+                .ToList();
 
-            if (reservationsList == null)
-                return null;
+            if (reservationsList == null || !reservationsList.Any())
+            {
+                return Enumerable.Empty<DownloadTicketsDTO>();
+            }
 
+            string cinemaCenterName = "Preze Cinemas";
             var reservationsDTO = reservationsList.Select(reserv => new DownloadTicketsDTO
             {
-                FirstName = reserv.User.FirstName,
-                LastName = reserv.User.LastName,
-                Email = reserv.User.Email,
-                Phone = reserv.User.PhoneNumber,
-                Birthdate = reserv.User.Birthdate,
-                MovieTitle = reserv.Movie.Title,
-                TimeView = reserv.Movie.TimeView,
-                DateView = reserv.Movie.DateView,
-                HallName = "Hall " + reserv.Movie.HallId,
-                NumberOfTickets = reserv.NumberOfTickets
+                CinemaCenter = cinemaCenterName,
+                HallName = reserv.Movie?.Hall?.Name ?? "Unknown Hall",
+                MovieTitle = reserv.Movie?.Title ?? "Unknown Movie",
+                DateTime = $"{reserv.Movie?.DateView} {reserv.Movie?.TimeView}",
+                NumberOfTickets = reserv.NumberOfTickets,
+                TotalValue = reserv.TotalPrice,
+                BookingId = reserv.BookingId,
             }).ToList();
 
             return reservationsDTO;
         }
+
+        private string GenerateRandomCode(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Define characters to use
+            var random = new Random();
+            var code = new StringBuilder(length);
+
+            for (int i = 0; i < length; i++)
+            {
+                code.Append(chars[random.Next(chars.Length)]);
+            }
+
+            return code.ToString();
+        }
+
+        public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId)
+        {
+            var reservation = _context.Reservation
+                .Include(r => r.Movie)
+                    .ThenInclude(m => m.Hall)
+                .Include(r => r.User)
+                .Where(u => u.UserId == userId)
+                .FirstOrDefault(r => r.BookingId == bookingId);
+
+            if (reservation == null)
+            {
+                return null;
+            }
+
+            string cinemaCenterName = "Preze Cinemas";
+            var reservationDTO = new DownloadTicketsDTO
+            {
+                CinemaCenter = cinemaCenterName,
+                HallName = reservation.Movie?.Hall?.Name ?? "Unknown Hall",
+                MovieTitle = reservation.Movie?.Title ?? "Unknown Movie",
+                DateTime = $"{reservation.Movie?.DateView} {reservation.Movie?.TimeView}",
+                NumberOfTickets = reservation.NumberOfTickets,
+                TotalValue = reservation.TotalPrice,
+                BookingId = reservation.BookingId,
+            };
+
+            return reservationDTO;   
+        }
+
     }
 
 }

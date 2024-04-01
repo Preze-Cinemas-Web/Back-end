@@ -8,5 +8,6 @@ namespace CinemaStore.Models
         public int MovieId { get; set; }
         public int NumberOfTickets { get; set; }
         public int TotalPrice { get; set; }
+        public string BookingId { get; set; }
     }
 }

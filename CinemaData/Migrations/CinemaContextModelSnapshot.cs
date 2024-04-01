@@ -72,11 +72,16 @@ namespace CinemaData.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HallId");
+
                     b.ToTable("Movie");
                 });
 
             modelBuilder.Entity("CinemaData.Entities.Reservation", b =>
                 {
+                    b.Property<string>("BookingId")
+                        .HasColumnType("nvarchar(6)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -89,7 +94,9 @@ namespace CinemaData.Migrations
                     b.Property<int>("TotalPrice")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "MovieId");
+                    b.HasKey("UserId", "MovieId", "BookingId");
+
+                    b.HasIndex("MovieId");
 
                     b.ToTable("Reservation");
                 });
@@ -149,6 +156,36 @@ namespace CinemaData.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("CinemaData.Entities.Movie", b =>
+                {
+                    b.HasOne("CinemaData.Entities.Hall", "Hall")
+                        .WithMany()
+                        .HasForeignKey("HallId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hall");
+                });
+
+            modelBuilder.Entity("CinemaData.Entities.Reservation", b =>
+                {
+                    b.HasOne("CinemaData.Entities.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CinemaData.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
