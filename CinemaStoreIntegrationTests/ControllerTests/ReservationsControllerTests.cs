@@ -46,6 +46,29 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             Assert.True(reservStatus.Equals("Reservation request accepted."));
         }
 
+        [Fact]
+        public async Task ConfirmReservation()
+        {
+            var route = "https://localhost:7236/API/Reservations/Confirm-Reservation";
+            var client = _factory.CreateClient();
+
+            ConfirmReservationDTO confirmReservDTO = new ConfirmReservationDTO()
+            {
+                FirstName = "George",
+                LastName = "Prezerakos",
+                Email = "prezecinems@ethereal.email",
+                Phone = "6971366764",
+                Birthdate = "1970-07-29"
+            };
+
+            var result = await TestUtilities.Post(client, route, confirmReservDTO);
+            var reservStatus = await ReadReservationStatus(result);
+
+            Assert.True(reservStatus.Equals("Reservation confirmed."));
+        }
+
+
+
         private async Task<IEnumerable<ReservationDTO>> ReadReservations(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
