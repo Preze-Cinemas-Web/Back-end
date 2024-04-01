@@ -117,9 +117,6 @@ namespace CinemaStore.Business.Reservations
         }
 
 
-
-
-
         string GenerateRandomCode(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Define characters to use
