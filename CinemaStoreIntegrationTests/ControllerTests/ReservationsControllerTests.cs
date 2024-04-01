@@ -67,6 +67,19 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             Assert.True(reservStatus.Equals("Reservation confirmed."));
         }
 
+        [Fact]
+        public async Task DownloadTickets()
+        {
+            var route = "https://localhost:7236/API/Reservations/Download-Tickets";
+            var client = _factory.CreateClient();
+
+            var result = await TestUtilities.Get(client, route);
+            var tickets = await ReadTickets(result);
+
+            Assert.True(tickets.Count() >= 0);
+        }
+
+        [Fact]
 
 
         private async Task<IEnumerable<ReservationDTO>> ReadReservations(HttpResponseMessage result)
@@ -75,6 +88,14 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             var content = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<ReservationDTO>>(content);
+        }
+
+        private async Task<IEnumerable<DownloadTicketsDTO>> ReadTickets(HttpResponseMessage result)
+        {
+            Assert.True(result.IsSuccessStatusCode);
+
+            var content = await result.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<DownloadTicketsDTO>>(content);
         }
 
         private async Task<string> ReadReservationStatus(HttpResponseMessage result)
