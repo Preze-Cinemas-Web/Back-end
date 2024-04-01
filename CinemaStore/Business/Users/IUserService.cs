@@ -7,7 +7,7 @@ namespace CinemaStore.Business.Users
     {
         public IEnumerable<RegisterUserDTO> FindAllUsers();
         public RegisterUserDTO ModifyUser(RegisterUserDTO user);
-        public void DeleteUserById(int id);
         public RegisterUserDTO FindUserById(int id);
+        public void DeleteUserById(int id);
     }
 }

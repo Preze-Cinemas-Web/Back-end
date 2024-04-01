@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CinemaStore.Models
+﻿namespace CinemaStore.Models
 {
     public class ReservationDTO
     {

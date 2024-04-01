@@ -23,17 +23,23 @@ namespace CinemaStore
             MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         }
 
-
         /*
-         *  Προσθέτουμε τις δικές μας υπηρεσίες:
+         *  We add our own services:
          *  
-         *  [1] Το ORM (CinemaData/CinemaContext.cs)
-         *  [2] Τις υπηρεσίες για το Business Logic(CinemaStore/Business/IUserService.cs, UserService.cs)
-         *  [3] Τον mapper για την μετατροπή από data σε store και αντίστροφα (CinemaStore/CinemaStoreProfile.cs)
-         *  [4] CORS για την επικοινωνία client με server https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-6.0
+         *  [1] Settings for Communicating TMDB API
+         *  [2] ORM (CinemaData/CinemaContext.cs)
+         *  [3] The services for Business Logic (CinemaStore/Business/IUserService.cs, UserService.cs etc.)
+         *  [4] The mapper for converting from data to store and vice versa (CinemaStore/CinemaStoreProfile.cs)
+         *  [5] CORS for client to server communication https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-6.0
+         *  [6] Authentication with JWT Bearer https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-api-authorization?view=aspnetcore-6.0
+         *  [7] Admin Login (Setup.cs)
+         *  [8] Tmdb API (CinemaStore/Services/TmdbService.cs)
+         *  [9] Controllers (CinemaStore/Controllers)
+         *  [10] Swagger Authorization UI (https://learn.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-6.0)
          */
         public void ConfigureServices(IServiceCollection services)
         {
+            /****** [1] TMDB API Settings ******/
             var tmdbSettings = configRoot.GetSection("TmdbSettings");
             var apiKey = tmdbSettings.GetValue<string>("ApiKey");
 
@@ -46,14 +52,14 @@ namespace CinemaStore
             {
                 ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
             });
-
             services.AddSingleton(sp => new TmdbService(sp.GetRequiredService<IHttpClientFactory>().CreateClient("tmdb"), apiKey));
 
-
             services.AddMvc();
-            /****** [1] DatabaseContext ******/
+
+            /****** [2] ORM ******/
             services.AddDbContext<CinemaContext>();
-            /****** [2] Services & BL ******/
+
+            /****** [3] Services & BL ******/
             services.AddScoped(
                 typeof(IAuthenticationService), typeof(AuthenticationService));
             services.AddScoped(
@@ -64,10 +70,13 @@ namespace CinemaStore
                 typeof(IHallService), typeof(HallService));
             services.AddScoped(
                 typeof(IReservationService), typeof(ReservationService));
+            
             services.AddHttpContextAccessor();
-            /****** [3] AutoMapper ******/
+
+            /****** [4] AutoMapper ******/
             services.AddAutoMapper(typeof(CinemaStoreProfile));
-            /****** [4] CORS ******/
+            
+            /****** [5] CORS ******/
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
@@ -80,9 +89,8 @@ namespace CinemaStore
                                     });
             });
 
-            /****** [6] Authentication ******/
+            /****** [6] Authentication with JWT Bearer ******/
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            /****** [7] Jwt Bearer ******/
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
@@ -96,14 +104,16 @@ namespace CinemaStore
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configRoot["JWT:Key"]))
                 };
             });
-            /****** [8] Admin Login ******/
+            
+            /****** [7] Admin Login ******/
             Setup.configRoot = configRoot;
             Setup.AdminLogin();
 
-            /****** [9] Tmdb API ******/
+            /****** [8] Tmdb API ******/
             services.Configure<TmdbSettings>(configRoot.GetSection("TmdbSettings"));
             services.AddControllersWithViews();
 
+            /****** [9] Controllers ******/
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             

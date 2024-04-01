@@ -12,7 +12,7 @@ namespace CinemaStore.Business.Authentication
         public RegisterUserDTO FindUserByEmailVerificationToken(string token);
         public bool isEmailVerified(string token);
         public string Login(LoginUserDTO loginUserDTO);
-        public string LoginWithAnswer(ForgotPWUserDTO forgotPWUserDTO);
         public RegisterUserDTO FindUserByUsername(string username);
+        public string LoginWithAnswer(ForgotPWUserDTO forgotPWUserDTO);
     }
 }

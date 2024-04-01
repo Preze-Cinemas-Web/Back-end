@@ -3,8 +3,6 @@ using CinemaData;
 using CinemaStore.Models;
 using Microsoft.EntityFrameworkCore;
 
-
-
 namespace CinemaStore.Business.Movies
 {
     public class MovieService : IMovieService
@@ -18,6 +16,9 @@ namespace CinemaStore.Business.Movies
             _mapper = mapper;
         }
 
+        /*
+         *  HTTP GET - Get All Movies
+         */
         public IEnumerable<MovieDTO> FindAllMovies()
         {
             var moviesList = _context.Movie.Include(m => m.Hall).ToList();
@@ -35,6 +36,9 @@ namespace CinemaStore.Business.Movies
             return moviesDTO;
         }
 
+        /*
+         *  HTTP GET - Get Movie by Title
+         */
         public async Task<MovieDTO> GetMovieByTitleAsync(string title)
         {
             var movie = await _context.Movie

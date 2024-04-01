@@ -2,7 +2,6 @@
 using CinemaStore.Business;
 using CinemaStore.Business.Authentication;
 using CinemaStore.Business.Users;
-using CinemaStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

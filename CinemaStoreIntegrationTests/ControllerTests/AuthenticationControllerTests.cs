@@ -86,7 +86,6 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Authentication/Login";
             var client = _factory.CreateClient();
 
-            // Admin Login
             LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
                 Username = "Lucarooos",

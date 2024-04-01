@@ -1,5 +1,4 @@
-﻿using CinemaStore.Business;
-using CinemaStore.Business.Reservations;
+﻿using CinemaStore.Business.Reservations;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,15 +1,8 @@
 ﻿using AutoMapper;
 using CinemaData;
 using CinemaData.Entities;
-using CinemaStore.Business.Users;
 using CinemaStore.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using CinemaStore.Business.Movies;
-using MailKit.Security;
-using MimeKit.Text;
-using MimeKit;
-using MailKit.Net.Smtp;
 using System.Text;
 
 namespace CinemaStore.Business.Reservations
@@ -27,6 +20,9 @@ namespace CinemaStore.Business.Reservations
             
         }
 
+        /*
+         *  HTTP GET - Get All Reservations
+         */
         public IEnumerable<ReservationDTO> FindAllReservations()
         {
             var reservs = _context.Reservation.ToList();
@@ -35,6 +31,9 @@ namespace CinemaStore.Business.Reservations
             return reservsDTO;
         }
 
+        /*
+         *  HTTP POST - Rervation Request
+         */
         public async Task<bool> MakeReservationAsync(ReservationRequestDTO reserv, int userId)
         {
             var movie = _context.Movie.FirstOrDefault(u => u.Title == reserv.MovieTitle);   
@@ -67,6 +66,9 @@ namespace CinemaStore.Business.Reservations
             return true;
         }
 
+        /*
+         *  HTTP POST - Confirm Reservation
+         */
         public bool ValidateReservation(ConfirmReservationDTO reserv, int userId)
         {
             var user = _context.User.FirstOrDefault(u => u.Id == userId);
@@ -87,6 +89,9 @@ namespace CinemaStore.Business.Reservations
             return true;
         }
 
+        /*
+         *  HTTP GET - Download Tickets
+         */
         public IEnumerable<DownloadTicketsDTO> DownloadTickets(int userId)
         {
             var reservationsList = _context.Reservation
@@ -116,6 +121,7 @@ namespace CinemaStore.Business.Reservations
             return reservationsDTO;
         }
 
+        // Booking Id
         private string GenerateRandomCode(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Define characters to use
@@ -130,6 +136,9 @@ namespace CinemaStore.Business.Reservations
             return code.ToString();
         }
 
+        /*
+         *  HTTP GET - Download Tickets by Booking Id
+         */
         public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId)
         {
             var reservation = _context.Reservation

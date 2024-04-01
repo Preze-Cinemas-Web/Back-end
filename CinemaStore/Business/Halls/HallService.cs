@@ -15,6 +15,9 @@ namespace CinemaStore.Business.Halls
             _mapper = mapper;
         }
 
+       /*
+        *  HTTP GET - Get All Halls
+        */
         public IEnumerable<HallDTO> FindAllHalls()
         {
             var halls = _context.Hall.ToList();

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
-using CinemaStore.Models;
+﻿using CinemaStore.Models;
 
 namespace CinemaStore.Business.Movies
 {

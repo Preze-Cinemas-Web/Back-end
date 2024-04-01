@@ -56,12 +56,12 @@ namespace CinemaStore.Business.Authentication
             UserBusinessLogic.DefineAnswerBL(answer);
 
             string hashedPassword = "";
-            HashPassword(password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            HashPassword(password, ref hashedPassword); // Encrypt Password (SHA256)
             registerUserDTO.Password = hashedPassword;
             registerUserDTO.ConfirmPassword = hashedPassword;
 
             string hashedAnswer = "";
-            HashPassword(answer, ref hashedAnswer); // Encrypt Password (Cipher's Encryption)
+            HashPassword(answer, ref hashedAnswer); // Encrypt Security Answer (SHA256)
             registerUserDTO.SecurityAnswer = hashedAnswer;
 
 
@@ -98,6 +98,7 @@ namespace CinemaStore.Business.Authentication
             }
         }
 
+        // Email Verification Token
         private string GenerateRandomToken()
         {
             return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
@@ -113,6 +114,7 @@ namespace CinemaStore.Business.Authentication
             _context.SaveChanges();
         }
 
+        // Send Email Verification to ethereal.email SMTP server
         public string SendEmailVerification(string username, string password)
         {
             var user = _context.User.FirstOrDefault(u => u.Username == username);
@@ -142,6 +144,7 @@ namespace CinemaStore.Business.Authentication
             return "Email sent for verification";
         }
 
+        // Return User by Email Verification Token
         public RegisterUserDTO FindUserByEmailVerificationToken(string token)
         {
             var user = _context.User.FirstOrDefault(u => u.EmailVerificationToken == token);
@@ -150,6 +153,7 @@ namespace CinemaStore.Business.Authentication
             return userDTO;
         }
 
+        // Check if Email is Verified
         public bool isEmailVerified(string token)
         {
             var user = _context.User.FirstOrDefault(u => u.EmailVerificationToken == token);
@@ -177,7 +181,7 @@ namespace CinemaStore.Business.Authentication
             User user = _mapper.Map<User>(userDTO);
 
             string hashedPassword = "";
-            HashPassword(loginUserDTO.Password, ref hashedPassword); // Encrypt Password (Cipher's Encryption)
+            HashPassword(loginUserDTO.Password, ref hashedPassword); // Encrypt Password (SHA256)
 
             if (user.Password == hashedPassword)
             {
@@ -189,6 +193,7 @@ namespace CinemaStore.Business.Authentication
             }
         }
 
+        // Find User by Username
         public RegisterUserDTO FindUserByUsername(string username)
         {
             var usersList = _mapper.Map<IEnumerable<RegisterUserDTO>>(_context.User);
@@ -197,6 +202,9 @@ namespace CinemaStore.Business.Authentication
             return user;
         }
 
+        /*
+         *  HTTP POST - Forgot Password
+         */
         public string LoginWithAnswer(ForgotPWUserDTO forgotPWUserDTO)
         {
             var userDTO = FindUserByUsername(forgotPWUserDTO.Username);

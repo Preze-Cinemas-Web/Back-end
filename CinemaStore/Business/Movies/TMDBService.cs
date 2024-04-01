@@ -15,6 +15,9 @@ namespace CinemaStore.Business.Movies
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
+        /*
+         *  HTTP GET - Get All Movies From TMDB
+         */
         public async Task<dynamic> GetPopularMoviesAsync()
         {
             var requestUri = $"movie/popular?api_key={_apiKey}";

@@ -1,5 +1,4 @@
-﻿using Cinema.Models;
-using CinemaStore;
+﻿using CinemaStore;
 using CinemaStore.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
