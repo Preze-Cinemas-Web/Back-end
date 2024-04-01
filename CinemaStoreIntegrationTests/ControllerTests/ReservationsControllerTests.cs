@@ -28,12 +28,37 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             Assert.True(reservations.Count() >= 0);
         }
 
+        [Fact]
+        public async Task ReservationRequest()
+        {
+            var route = "https://localhost:7236/API/Reservations/Reservation-Request";
+            var client = _factory.CreateClient();
+
+            ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO()
+            {
+                MovieTitle = "Damsel",
+                NumberOfTickets = 2
+            };
+
+            var result = await TestUtilities.Post(client, route, reservationRequestDTO);
+            var reservStatus = await ReadReservationStatus(result);
+
+            Assert.True(reservStatus.Equals("Reservation request accepted."));
+        }
+
         private async Task<IEnumerable<ReservationDTO>> ReadReservations(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
 
             var content = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<ReservationDTO>>(content);
+        }
+
+        private async Task<string> ReadReservationStatus(HttpResponseMessage result)
+        {
+            Assert.True(result.IsSuccessStatusCode);
+
+            return await result.Content.ReadAsStringAsync();
         }
     }
 }

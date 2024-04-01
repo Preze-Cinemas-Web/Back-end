@@ -48,9 +48,9 @@ namespace CinemaStore.Controllers
                 var success = await _reservationService.MakeReservationAsync(reserv, Int32.Parse(userId));
 
                 if (success)
-                    return Ok("Your reservation request responds to availability of the view");
+                    return Ok("Reservation request accepted.");
                 else
-                    return BadRequest("Your reservation request do not respond to availability of the view");
+                    return BadRequest("Reservation request denied.");
             }
             catch (ArgumentNullException ex)
             {
