@@ -80,7 +80,22 @@ namespace CinemaStoreIntegrationTests.ControllerTests
         }
 
         [Fact]
+        public async Task DownloadTicketsByBookingId()
+        {
+            var route = "https://localhost:7236/API/Reservations/Download-Tickets-by-Bookingid?bookingId=";
+            var client = _factory.CreateClient();
 
+            var bookingId = "GM06DD";
+            route += bookingId;
+
+            var result = await TestUtilities.Get(client, route);
+            var tickets = await ReadTicket(result);
+
+            Assert.True(tickets.BookingId == bookingId);
+            Assert.True(tickets.NumberOfTickets == 2);
+            Assert.True(tickets.MovieTitle == "Damsel");
+            Assert.True(tickets.TotalValue == 16);
+        }
 
         private async Task<IEnumerable<ReservationDTO>> ReadReservations(HttpResponseMessage result)
         {
@@ -96,6 +111,14 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             var content = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<DownloadTicketsDTO>>(content);
+        }
+
+        private async Task<DownloadTicketsDTO> ReadTicket(HttpResponseMessage result)
+        {
+            Assert.True(result.IsSuccessStatusCode);
+
+            var content = await result.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<DownloadTicketsDTO>(content);
         }
 
         private async Task<string> ReadReservationStatus(HttpResponseMessage result)
