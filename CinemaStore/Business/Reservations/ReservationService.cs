@@ -116,8 +116,7 @@ namespace CinemaStore.Business.Reservations
             return reservationsDTO;
         }
 
-
-        string GenerateRandomCode(int length)
+        private string GenerateRandomCode(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Define characters to use
             var random = new Random();
@@ -130,6 +129,36 @@ namespace CinemaStore.Business.Reservations
 
             return code.ToString();
         }
+
+        public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId)
+        {
+            var reservation = _context.Reservation
+                .Include(r => r.Movie)
+                    .ThenInclude(m => m.Hall)
+                .Include(r => r.User)
+                .Where(u => u.UserId == userId)
+                .FirstOrDefault(r => r.BookingId == bookingId);
+
+            if (reservation == null)
+            {
+                return null;
+            }
+
+            string cinemaCenterName = "Preze Cinemas";
+            var reservationDTO = new DownloadTicketsDTO
+            {
+                CinemaCenter = cinemaCenterName,
+                HallName = reservation.Movie?.Hall?.Name ?? "Unknown Hall",
+                MovieTitle = reservation.Movie?.Title ?? "Unknown Movie",
+                DateTime = $"{reservation.Movie?.DateView} {reservation.Movie?.TimeView}",
+                NumberOfTickets = reservation.NumberOfTickets,
+                TotalValue = reservation.TotalPrice,
+                BookingId = reservation.BookingId,
+            };
+
+            return reservationDTO;   
+        }
+
     }
 
 }

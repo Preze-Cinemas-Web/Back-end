@@ -10,5 +10,6 @@ namespace CinemaStore.Business.Reservations
         public bool ValidateReservation(ConfirmReservationDTO reserv, int userId);
 
         public IEnumerable<DownloadTicketsDTO> DownloadTickets(int userId);
+        public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId);
     }
 }
