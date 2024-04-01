@@ -11,6 +11,8 @@ namespace CinemaData.Entities
         public int MovieId { get; set; }
         public Movie Movie { get; set; }
         public int NumberOfTickets { get; set; }
-        public int TotalPrice { get; set; } 
+        public int TotalPrice { get; set; }
+        [Key]
+        public string BookingId { get; set; }
     }
 }

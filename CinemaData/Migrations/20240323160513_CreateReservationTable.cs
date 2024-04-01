@@ -14,6 +14,7 @@ namespace CinemaData.Migrations
                 name: "Reservation",
                 columns: table => new
                 {
+                    BookingId = table.Column<string>(type: "nvarchar(6)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     MovieId = table.Column<int>(type: "int", nullable: false),
                     NumberOfTickets = table.Column<int>(type: "int", nullable: false),
