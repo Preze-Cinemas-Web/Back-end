@@ -24,6 +24,7 @@ namespace CinemaStore.Business.Movies
 
             var moviesDTO = moviesList.Select(movie => new MovieDTO
             {
+                Id = movie.Id,
                 Title = movie.Title,
                 TimeView = movie.TimeView,
                 DateView = movie.DateView,
