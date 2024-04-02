@@ -32,15 +32,15 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             RegisterUserDTO registerUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Lucas",
-                LastName = "Roberts",
-                Email = "edmund.homenick70@ethereal.email",
+                FirstName = "Giannis",
+                LastName = "Alafouzos",
+                Email = "hyman.towne@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
-                Username = "Lucarooos",
-                Password = "szckeFrmDEFEs1VWV9",
-                ConfirmPassword = "szckeFrmDEFEs1VWV9",
-                SecurityAnswer = "Blue"
+                Username = "alafouzos69",
+                Password = "J3nbXHTSwG1abX4vnd",
+                ConfirmPassword = "J3nbXHTSwG1abX4vnd",
+                SecurityAnswer = "Ioannidis"
             };
 
             var result = await TestUtilities.Post(client, route, registerUserDTO);
@@ -88,8 +88,8 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
-                Username = "Lucarooos",
-                Password = "szckeFrmDEFEs1VWV9"
+                Username = "alafouzos69",
+                Password = "J3nbXHTSwG1abX4vnd"
             };
 
             var result = await TestUtilities.Post(client, route, loginUserDTO);
@@ -124,7 +124,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             Assert.NotNull(Setup.token); // Check Admin's token
             Assert.True(userId > 1);
             Assert.True(role == "User");
-            Assert.True(username == "ArnoldPoustara");
+            Assert.True(username == "alafouzos69");
         }
 
         [Fact]
@@ -136,8 +136,8 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             // Admin Login
             ForgotPWUserDTO forgotPWUserDTO = new ForgotPWUserDTO()
             {
-                Username = "Lucarooos",
-                SecurityAnswer = "Blue"
+                Username = "alafouzos69",
+                SecurityAnswer = "Ioannidis"
             };
 
             var result = await TestUtilities.Post(client, route, forgotPWUserDTO);
@@ -172,7 +172,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             Assert.NotNull(Setup.token); // Check Admin's token
             Assert.True(userId > 1);
             Assert.True(role == "User");
-            Assert.True(username == "ArnoldPoustara");
+            Assert.True(username == "alafouzos69");
         }
 
         private void HashPassword(string password, ref string hashedPassword)
