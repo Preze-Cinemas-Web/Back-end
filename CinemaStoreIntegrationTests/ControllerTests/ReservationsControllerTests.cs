@@ -36,7 +36,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO()
             {
-                MovieTitle = "Damsel",
+                MovieTitle = "No Way Up",
                 NumberOfTickets = 2
             };
 

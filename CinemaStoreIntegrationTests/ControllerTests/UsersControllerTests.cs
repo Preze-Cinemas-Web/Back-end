@@ -40,12 +40,12 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             RegisterUserDTO updateUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Tayler",
+                FirstName = "Stefanos",
                 LastName = "Kasselakis",
                 Email = "autumn.hodkiewicz93@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
-                Username = "ArnoldVlakas",
+                Username = "alafouzos69",
                 Password = "FBwUDfQ7hzDEzNmKzJ",
                 ConfirmPassword = "FBwUDfQ7hzDEzNmKzJ",
                 SecurityAnswer = "Blue"
@@ -79,7 +79,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Users/Get-User-by-Id?id=";
             var client = _factory.CreateClient();
 
-            int userId = 12;
+            int userId = 2;
             route += userId;
 
             var result = await TestUtilities.Get(client, route);
@@ -94,7 +94,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Users/Get-User-by-Username?username=";
             var client = _factory.CreateClient();
 
-            string username = "ArnoldVlakas";
+            string username = "alafouzos69";
             route += username;
 
             var result = await TestUtilities.Get(client, route);
@@ -109,7 +109,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Users/Delete?id=";
             var client = _factory.CreateClient();
 
-            int userId = 13;
+            int userId = 2;
             route += userId;
 
             var result = await TestUtilities.Delete(client, route);
