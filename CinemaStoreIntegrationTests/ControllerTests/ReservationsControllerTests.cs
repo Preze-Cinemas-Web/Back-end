@@ -29,6 +29,18 @@ namespace CinemaStoreIntegrationTests.ControllerTests
         }
 
         [Fact]
+        public async Task GetReservationsByUserId()
+        {
+            var route = "https://localhost:7236/API/Reservations/Get-Reservations-by-UserId";
+            var client = _factory.CreateClient();
+
+            var result = await TestUtilities.Get(client, route);
+            var reservations = await ReadReservations(result);
+
+            Assert.True(reservations.Count() >= 0);
+        }
+
+        [Fact]
         public async Task ReservationRequest()
         {
             var route = "https://localhost:7236/API/Reservations/Reservation-Request";
