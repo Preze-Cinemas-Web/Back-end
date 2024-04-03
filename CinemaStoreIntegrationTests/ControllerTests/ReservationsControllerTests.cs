@@ -85,6 +85,20 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             Assert.True(tickets.TotalValue == 16);
         }
 
+        [Fact]
+        public async Task CancelReservation()
+        {
+            var route = "https://localhost:7236/API/Reservations/Cancel-Reservation?movieId=";
+            var client = _factory.CreateClient();
+
+            int movieId = 634492;
+            route += movieId;
+
+            var result = await TestUtilities.Delete(client, route);
+
+            Assert.True(result.IsSuccessStatusCode);
+        }
+
         private async Task<IEnumerable<ReservationDTO>> ReadReservations(HttpResponseMessage result)
         {
             Assert.True(result.IsSuccessStatusCode);
