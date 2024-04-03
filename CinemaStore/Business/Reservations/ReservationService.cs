@@ -23,12 +23,68 @@ namespace CinemaStore.Business.Reservations
         /*
          *  HTTP GET - Get All Reservations
          */
-        public IEnumerable<ReservationDTO> FindAllReservations()
+        public IEnumerable<DownloadTicketsDTO> FindAllReservations()
         {
-            var reservs = _context.Reservation.ToList();
-            var reservsDTO = _mapper.Map<IEnumerable<ReservationDTO>>(reservs);
+            var reservsList = _context.Reservation
+                .Include(r => r.Movie)
+                    .ThenInclude(m => m.Hall)
+                .Include(r => r.User)
+                .ToList();
 
-            return reservsDTO;
+            string cinemaCenterName = "Preze Cinemas";
+            var ticketsList = new List<DownloadTicketsDTO>();
+
+            foreach (var reserv in reservsList)
+            {
+                var reservationDTO = new DownloadTicketsDTO
+                {
+                    CinemaCenter = cinemaCenterName,
+                    HallName = reserv.Movie?.Hall?.Name ?? "Unknown Hall",
+                    MovieTitle = reserv.Movie?.Title ?? "Unknown Movie",
+                    DateTime = $"{reserv.Movie?.DateView} {reserv.Movie?.TimeView}",
+                    NumberOfTickets = reserv.NumberOfTickets,
+                    TotalValue = reserv.TotalPrice,
+                    BookingId = reserv.BookingId,
+                };
+
+                ticketsList.Add(reservationDTO);
+            }
+
+            return ticketsList;
+        }
+
+        /*
+         *  HTTP GET - Get Reservations by User Id
+         */
+        public IEnumerable<DownloadTicketsDTO> FindReservationsByUserId(int userId)
+        {
+            var reservsList = _context.Reservation
+                .Include(r => r.Movie)
+                    .ThenInclude(m => m.Hall)
+                .Include(r => r.User)
+                .Where(u => u.UserId == userId)
+                .ToList();
+
+            string cinemaCenterName = "Preze Cinemas";
+            var ticketsList = new List<DownloadTicketsDTO>();
+
+            foreach (var reserv in reservsList)
+            {
+                var reservationDTO = new DownloadTicketsDTO
+                {
+                    CinemaCenter = cinemaCenterName,
+                    HallName = reserv.Movie?.Hall?.Name ?? "Unknown Hall",
+                    MovieTitle = reserv.Movie?.Title ?? "Unknown Movie",
+                    DateTime = $"{reserv.Movie?.DateView} {reserv.Movie?.TimeView}",
+                    NumberOfTickets = reserv.NumberOfTickets,
+                    TotalValue = reserv.TotalPrice,
+                    BookingId = reserv.BookingId,
+                };
+
+                ticketsList.Add(reservationDTO);
+            }
+
+            return ticketsList;
         }
 
         /*
