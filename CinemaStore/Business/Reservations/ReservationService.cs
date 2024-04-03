@@ -134,24 +134,38 @@ namespace CinemaStore.Business.Reservations
         /*
          *  HTTP POST - Confirm Reservation
          */
-        public bool ValidateReservation(ConfirmReservationDTO reserv, int userId)
+        public string ValidateReservation(ConfirmReservationDTO reserv, int userId)
         {
             var user = _context.User.FirstOrDefault(u => u.Id == userId);
+            var reservation = _context.Reservation
+                .Where(u => u.UserId == userId)
+                .FirstOrDefault(r => r.BookingId == "");
 
             if (user == null) 
-                return false;
+                return "User not found.";
+            if (reservation == null)
+                return "Reservation not found.";
+
+            // In case movie is sold out before confirmation
+            var movie = _context.Movie
+                .FirstOrDefault(m => m.Id == reservation.MovieId);
+            if (reservation.NumberOfTickets > movie.AvailableSeats)
+                return "Not enough available seats.";
+
             if (user.FirstName != reserv.FirstName)
-                return false;
+                return "First name unconfirmed.";
             if (user.LastName != reserv.LastName)
-                return false;
+                return "Last name unconfirmed.";
             if (user.Email != reserv.Email)
-                return false;
+                return "Email unconfirmed.";
             if (user.PhoneNumber != reserv.Phone)
-                return false;
+                return "Phone unconfirmed.";
             if (user.Birthdate != reserv.Birthdate)
-                return false;
+                return "Birthdate unconfirmed.";
+            if (reservation.TotalPrice != reserv.Price)
+                return "Total price unconfirmed."; ;
 ;
-            return true;
+            return "Reservation confirmed.";
         }
 
         public string ReturnBookingId(int userId)
@@ -195,7 +209,8 @@ namespace CinemaStore.Business.Reservations
         /*
          *  HTTP GET - Download Tickets by Booking Id
          */
-        public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId)
+
+        public string DownloadTicketsByBookingId(string bookingId, int userId)
         {
             var reservation = _context.Reservation
                 .Include(r => r.Movie)
@@ -221,7 +236,19 @@ namespace CinemaStore.Business.Reservations
                 BookingId = reservation.BookingId,
             };
 
-            return reservationDTO;   
+            string filePath = "Tickets/Reservation#" + reservation.BookingId + ".txt";
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.WriteLine($"Cinema Center: {reservationDTO.CinemaCenter}");
+                writer.WriteLine($"Hall Name: {reservationDTO.HallName}");
+                writer.WriteLine($"Movie Title: {reservationDTO.MovieTitle}");
+                writer.WriteLine($"Date and Time: {reservationDTO.DateTime}");
+                writer.WriteLine($"Number of Tickets: {reservationDTO.NumberOfTickets}");
+                writer.WriteLine($"Total Value: {reservationDTO.TotalValue}");
+                writer.WriteLine($"Booking ID: {reservationDTO.BookingId}");
+            }
+
+            return "Your tickets have been downloaded to " + filePath;
         }
 
         // Delete Reservations by User Id
@@ -241,6 +268,16 @@ namespace CinemaStore.Business.Reservations
             }
 
             _context.SaveChanges();
+
+            // Delete txt files with booking id as title
+            foreach (var reserv in reservations)
+            {
+                string filePath = "Tickets/Reservation#" + reserv.BookingId + ".txt";
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+            }
         }
 
         /*
@@ -264,6 +301,13 @@ namespace CinemaStore.Business.Reservations
             _context.Reservation.Remove(reservation);
 
             _context.SaveChanges();
+
+            // Delete txt files with booking id as title
+            string filePath = "Tickets/Reservation#" + reservation.BookingId + ".txt";
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
 
             return $"Reservation cancelled.\n" + reservationDTO;
         }

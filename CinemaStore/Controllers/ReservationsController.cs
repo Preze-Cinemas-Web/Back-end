@@ -107,15 +107,35 @@ namespace CinemaStore.Controllers
 
                 var userId = jwtToken.Payload["userId"].ToString();
 
-                var success = _reservationService.ValidateReservation(reserv, Int32.Parse(userId));
+                var confirmStatus = _reservationService.ValidateReservation(reserv, Int32.Parse(userId));
 
-                if (success)
+                var bookingId = "";
+                switch (confirmStatus)
                 {
-                    var bookingId = _reservationService.ReturnBookingId(Int32.Parse(userId));
-                    return Ok($"Reservation with id {bookingId} confirmed.");
+                    case "User not found.":
+                        return NotFound(confirmStatus);
+                    case "Reservation not found.":
+                        return NotFound(confirmStatus);
+                    case "First name unconfirmed.":
+                        return Unauthorized(confirmStatus);
+                    case "Last name unconfirmed.":
+                        return Unauthorized(confirmStatus);
+                    case "Email unconfirmed.":
+                        return Unauthorized(confirmStatus);
+                    case "Phone unconfirmed.":
+                        return Unauthorized(confirmStatus);
+                    case "Birthdate unconfirmed.":
+                        return Unauthorized(confirmStatus);
+                    case "Total price unconfirmed.":
+                        return BadRequest(confirmStatus);
+                    case "Not enough tickets.":
+                        return BadRequest(confirmStatus);
+                    case "Reservation confirmed.":
+                        bookingId = _reservationService.ReturnBookingId(Int32.Parse(userId));
+                        break;
                 }
-                else
-                    return Unauthorized("Reservation not confirmed.");
+
+                return Ok($"Reservation with id {bookingId} confirmed.");
             }
             catch (ArgumentNullException ex)
             {
@@ -144,12 +164,12 @@ namespace CinemaStore.Controllers
 
                 var userId = jwtToken.Payload["userId"].ToString();
 
-                var tickets = _reservationService.DownloadTicketsByBookingId(bookingId, Int32.Parse(userId));
+                var ticketsStatus = _reservationService.DownloadTicketsByBookingId(bookingId, Int32.Parse(userId));
 
-                if (tickets != null)
-                    return Ok(tickets);
+                if (ticketsStatus != null)
+                    return Ok(ticketsStatus);
                 else
-                    return NotFound("Reservation not found.");
+                    return NotFound(ticketsStatus);
             }
             catch (ArgumentNullException ex)
             {
