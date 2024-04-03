@@ -100,11 +100,11 @@ namespace CinemaStoreIntegrationTests.ControllerTests
         [Fact]
         public async Task CancelReservation()
         {
-            var route = "https://localhost:7236/API/Reservations/Cancel-Reservation?movieId=";
+            var route = "https://localhost:7236/API/Reservations/Cancel-Reservation?bookinId=";
             var client = _factory.CreateClient();
 
-            int movieId = 634492;
-            route += movieId;
+            string bookingId = "";
+            route += bookingId;
 
             var result = await TestUtilities.Delete(client, route);
 
