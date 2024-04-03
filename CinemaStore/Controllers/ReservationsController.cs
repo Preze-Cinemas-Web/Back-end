@@ -28,6 +28,26 @@ namespace CinemaStore.Controllers
         }
 
         [Authorize]
+        [HttpGet]
+        [Route("Get-Reservations-by-UserId")]
+        public IActionResult GetReservationsByUserId()
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            if (string.IsNullOrEmpty(token))
+                return Unauthorized("Invalid token.");
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Payload["userId"].ToString();
+
+            var reservations = _reservationService.FindReservationsByUserId(Int32.Parse(userId));
+
+            return Ok(reservations);
+        }
+
+        [Authorize]
         [HttpPost]
         [Route("Reservation-Request")]
         public async Task<IActionResult> MakeReservation([FromBody] ReservationRequestDTO reserv)

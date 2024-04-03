@@ -5,7 +5,8 @@ namespace CinemaStore.Business.Reservations
 {
     public interface IReservationService
     {
-        public IEnumerable<ReservationDTO> FindAllReservations();
+        public IEnumerable<DownloadTicketsDTO> FindAllReservations();
+        public IEnumerable<DownloadTicketsDTO> FindReservationsByUserId(int userId);
         Task<string> MakeReservationAsync(ReservationRequestDTO reserv, int userId);
         public bool ValidateReservation(ConfirmReservationDTO reserv, int userId);
         public string ReturnBookingId(int userId);
