@@ -52,6 +52,7 @@ namespace CinemaStore.Business.Movies
 
             var movieDto = new MovieDTO
             {
+                Id = movie.Id,
                 Title = movie.Title,
                 TimeView = movie.TimeView,
                 DateView = movie.DateView,

@@ -1,4 +1,5 @@
 ﻿using CinemaStore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaStore.Business.Reservations
 {
@@ -11,5 +12,7 @@ namespace CinemaStore.Business.Reservations
 
         public IEnumerable<DownloadTicketsDTO> DownloadTickets(int userId);
         public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId);
+
+        public void DeleteReservationsByUserId(int id);
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Cinema.Models;
 using CinemaStore.Business;
 using CinemaStore.Business.Authentication;
+using CinemaStore.Business.Reservations;
 using CinemaStore.Business.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace CinemaStore.Controllers
 {
@@ -13,12 +15,14 @@ namespace CinemaStore.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IReservationService _reservationService;
         private readonly IAuthenticationService _authenticationService;
 
-        public UsersController(IUserService userService, IAuthenticationService authenticationService)
+        public UsersController(IUserService userService, IAuthenticationService authenticationService, IReservationService reservationService)
         {
             _userService = userService;
             _authenticationService = authenticationService;
+            _reservationService = reservationService;
         }
 
         [HttpGet]
@@ -31,23 +35,28 @@ namespace CinemaStore.Controllers
         }
 
         [HttpPut("Update")]
-        public ActionResult<RegisterUserDTO> UpdateUser(string username, [FromBody] RegisterUserDTO updatedUserDTO)
+        public ActionResult<RegisterUserDTO> UpdateUser([FromBody] RegisterUserDTO updatedUserDTO)
         {
             try
             {
-                if (username != updatedUserDTO.Username)
-                {
-                    return BadRequest("Invalid username");
-                }
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-                var existingUser = _authenticationService.FindUserByUsername(username);
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized("Invalid token.");
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+
+                var userId = jwtToken.Payload["userId"].ToString();
+
+                var existingUser = _userService.FindUserById(Int32.Parse(userId));
                 
                 if (existingUser == null)
                 {
                     return NotFound("User not found");
                 }
 
-                var updatedUser = _userService.ModifyUser(updatedUserDTO);
+                var updatedUser = _userService.ModifyUser(updatedUserDTO, Int32.Parse(userId));
                 
                 return updatedUser;
             }
@@ -105,6 +114,8 @@ namespace CinemaStore.Controllers
                 }
 
                 _userService.DeleteUserById(id);
+                _reservationService.DeleteReservationsByUserId(id);
+
                 return NoContent();
             }
             catch (Exception)

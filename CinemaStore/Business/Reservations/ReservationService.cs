@@ -168,6 +168,26 @@ namespace CinemaStore.Business.Reservations
             return reservationDTO;   
         }
 
+        
+        // Delete Reservation by User Id
+        public void DeleteReservationsByUserId(int id)
+        {
+            var reservations = _context.Reservation.Include(m => m.Movie).Where(r => r.UserId == id).ToList();
+
+            if (reservations == null || !reservations.Any())
+            {
+                return;
+            }
+
+            foreach (var reserv in reservations)
+            {
+                reserv.Movie.AvailableSeats += reserv.NumberOfTickets;
+                _context.Reservation.Remove(reserv);
+            }
+
+            _context.SaveChanges();
+        }
+
     }
 
 }

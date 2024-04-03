@@ -30,7 +30,7 @@ namespace CinemaStore.Business.Users
         /*
          * HTTP PUT - Update User
          */
-        public RegisterUserDTO ModifyUser(RegisterUserDTO updatedUserDTO)
+        public RegisterUserDTO ModifyUser(RegisterUserDTO updatedUserDTO, int userId)
         {
             string firstName = updatedUserDTO.FirstName;
             UserBusinessLogic.DefineNameBL(firstName, "First Name");
@@ -64,7 +64,8 @@ namespace CinemaStore.Business.Users
             _authenticationService.HashPassword(answer, ref hashedAnswer); // Encrypt Password (SHA256 Encryption)
             updatedUserDTO.SecurityAnswer = hashedAnswer;
 
-            User existingUser = _context.User.FirstOrDefault(u => u.Username == username);
+            User existingUser = _context.User.FirstOrDefault(u => u.Id == userId);
+            bool emailChanged = false;
 
             if (existingUser == null)
             {
@@ -83,6 +84,11 @@ namespace CinemaStore.Business.Users
 
             if (updatedUserDTO.Email != null)
             {
+                if (updatedUserDTO.Email != existingUser.Email)
+                    emailChanged = true;
+                else
+                    emailChanged = false;
+
                 existingUser.Email = updatedUserDTO.Email;
             }
 
@@ -111,14 +117,16 @@ namespace CinemaStore.Business.Users
                 existingUser.SecurityAnswer = updatedUserDTO.SecurityAnswer;
             }
 
-            if (!updatedUserDTO.Equals(existingUser.Email))
+            if (emailChanged)
             {
                 existingUser.EmailVerifiedAt = "";
                 _context.SaveChanges();
                 _authenticationService.SendEmailVerification(username, password);
             }
-
-            _context.SaveChanges();
+            else
+            {
+                _context.SaveChanges();
+            }
 
             return _mapper.Map<RegisterUserDTO>(existingUser);
         }
