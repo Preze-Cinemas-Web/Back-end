@@ -118,38 +118,6 @@ namespace CinemaStore.Business.Reservations
         }
 
         /*
-         *  HTTP GET - Download Tickets
-         */
-        public IEnumerable<DownloadTicketsDTO> DownloadTickets(int userId)
-        {
-            var reservationsList = _context.Reservation
-                .Include(r => r.Movie)
-                    .ThenInclude(m => m.Hall)
-                .Include(r => r.User)
-                .Where(r => r.UserId == userId)
-                .ToList();
-
-            if (reservationsList == null || !reservationsList.Any())
-            {
-                return Enumerable.Empty<DownloadTicketsDTO>();
-            }
-
-            string cinemaCenterName = "Preze Cinemas";
-            var reservationsDTO = reservationsList.Select(reserv => new DownloadTicketsDTO
-            {
-                CinemaCenter = cinemaCenterName,
-                HallName = reserv.Movie?.Hall?.Name ?? "Unknown Hall",
-                MovieTitle = reserv.Movie?.Title ?? "Unknown Movie",
-                DateTime = $"{reserv.Movie?.DateView} {reserv.Movie?.TimeView}",
-                NumberOfTickets = reserv.NumberOfTickets,
-                TotalValue = reserv.TotalPrice,
-                BookingId = reserv.BookingId,
-            }).ToList();
-
-            return reservationsDTO;
-        }
-
-        /*
          *  HTTP GET - Download Tickets by Booking Id
          */
         public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId)

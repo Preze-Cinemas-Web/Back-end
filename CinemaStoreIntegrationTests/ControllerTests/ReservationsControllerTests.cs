@@ -68,18 +68,6 @@ namespace CinemaStoreIntegrationTests.ControllerTests
         }
 
         [Fact]
-        public async Task DownloadTickets()
-        {
-            var route = "https://localhost:7236/API/Reservations/Download-Tickets";
-            var client = _factory.CreateClient();
-
-            var result = await TestUtilities.Get(client, route);
-            var tickets = await ReadTickets(result);
-
-            Assert.True(tickets.Count() >= 0);
-        }
-
-        [Fact]
         public async Task DownloadTicketsByBookingId()
         {
             var route = "https://localhost:7236/API/Reservations/Download-Tickets-by-Bookingid?bookingId=";
@@ -103,14 +91,6 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             var content = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<ReservationDTO>>(content);
-        }
-
-        private async Task<IEnumerable<DownloadTicketsDTO>> ReadTickets(HttpResponseMessage result)
-        {
-            Assert.True(result.IsSuccessStatusCode);
-
-            var content = await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<DownloadTicketsDTO>>(content);
         }
 
         private async Task<DownloadTicketsDTO> ReadTicket(HttpResponseMessage result)

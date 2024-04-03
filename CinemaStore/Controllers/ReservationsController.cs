@@ -100,37 +100,6 @@ namespace CinemaStore.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("Download-Tickets")]
-        public IActionResult DownloadTickets()
-        {
-            try
-            {
-                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-                if (string.IsNullOrEmpty(token))
-                    return Unauthorized("Invalid token.");
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtToken = tokenHandler.ReadJwtToken(token);
-
-                var userId = jwtToken.Payload["userId"].ToString();
-
-                var tickets = _reservationService.DownloadTickets(Int32.Parse(userId));
-
-                return Ok(tickets);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
-            }
-        }
-
-        [Authorize]
-        [HttpGet]
         [Route("Download-Tickets-by-BookingId")]
         public IActionResult DownloadTicketsByBookingId(string bookingId)
         {
