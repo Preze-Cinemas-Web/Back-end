@@ -221,7 +221,7 @@ namespace CinemaStore.Business.Reservations
 
             if (reservation == null)
             {
-                return null;
+                return "Reservation not found.";
             }
 
             string cinemaCenterName = "Preze Cinemas";
@@ -236,19 +236,19 @@ namespace CinemaStore.Business.Reservations
                 BookingId = reservation.BookingId,
             };
 
-            string filePath = "Tickets/Reservation#" + reservation.BookingId + ".txt";
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                writer.WriteLine($"Cinema Center: {reservationDTO.CinemaCenter}");
-                writer.WriteLine($"Hall Name: {reservationDTO.HallName}");
-                writer.WriteLine($"Movie Title: {reservationDTO.MovieTitle}");
-                writer.WriteLine($"Date and Time: {reservationDTO.DateTime}");
-                writer.WriteLine($"Number of Tickets: {reservationDTO.NumberOfTickets}");
-                writer.WriteLine($"Total Value: {reservationDTO.TotalValue}");
-                writer.WriteLine($"Booking ID: {reservationDTO.BookingId}");
-            }
+             string filePath = "Tickets/Reservation#" + reservation.BookingId + ".txt";
+             using (StreamWriter writer = new StreamWriter(filePath))
+             {
+                 writer.WriteLine($"Cinema Center: {reservationDTO.CinemaCenter}");
+                 writer.WriteLine($"Hall Name: {reservationDTO.HallName}");
+                 writer.WriteLine($"Movie Title: {reservationDTO.MovieTitle}");
+                 writer.WriteLine($"Date and Time: {reservationDTO.DateTime}");
+                 writer.WriteLine($"Number of Tickets: {reservationDTO.NumberOfTickets}");
+                 writer.WriteLine($"Total Value: {reservationDTO.TotalValue}");
+                 writer.WriteLine($"Booking ID: {reservationDTO.BookingId}");
+             } 
 
-            return "Your tickets have been downloaded to " + filePath;
+            return "Your tickets have been downloaded to "; //+ filePath;
         }
 
         // Delete Reservations by User Id
