@@ -34,16 +34,28 @@ namespace CinemaStore.Business.Reservations
         /*
          *  HTTP POST - Rervation Request
          */
-        public async Task<bool> MakeReservationAsync(ReservationRequestDTO reserv, int userId)
+        public async Task<string> MakeReservationAsync(ReservationRequestDTO reserv, int userId)
         {
+            var hasUnconfirmedReservations = _context.Reservation.
+                Where(b => b.BookingId == "").
+                Include(m => m.Movie).
+                FirstOrDefault(r => r.UserId == userId);
+
+
+            if (hasUnconfirmedReservations != null)
+                return "You have an unconfirmed reservation.\n" +
+                    "Movie   : " + hasUnconfirmedReservations.Movie.Title + "\n" +
+                    "Tickets : " + hasUnconfirmedReservations.NumberOfTickets + "\n" +
+                    "Total   : " + hasUnconfirmedReservations.TotalPrice;
+
             var movie = _context.Movie.FirstOrDefault(u => u.Title == reserv.MovieTitle);   
 
-            if (userId == null || movie.Id == null)
-                return false;
+            if (movie == null)
+                return "Movie not found.";
             if (!(reserv.NumberOfTickets > 0 && reserv.NumberOfTickets <= movie.AvailableSeats)) 
-                return false;
+                return "Number of tickets request denied.";
             if (!(reserv.NumberOfTickets <= 9))
-                return false;
+                return "You are allowed to book 1-9 tickets.";
 
             var reservationDTO = new ReservationDTO
             {
@@ -57,11 +69,10 @@ namespace CinemaStore.Business.Reservations
             var reservation = this._mapper.Map<Reservation>(reservationDTO);
 
             await _context.Reservation.AddAsync(reservation);
-            movie.AvailableSeats -= reserv.NumberOfTickets;
 
             await _context.SaveChangesAsync();
 
-            return true;
+            return "Reservation request accepted.";
         }
 
         /*
@@ -95,8 +106,16 @@ namespace CinemaStore.Business.Reservations
                 bookingId = GenerateRandomCode(6);
             }
 
-            var reservation = _context.Reservation.Where(b => b.BookingId == "").FirstOrDefault(r => r.UserId == userId);
+            var reservation = _context.Reservation.
+                Where(b => b.BookingId == "").
+                Include(m => m.Movie).
+                FirstOrDefault(r => r.UserId == userId);
+            
+            var movie = _context.Movie.FirstOrDefault(m => m.Id == reservation.MovieId);
+            
+            movie.AvailableSeats -= reservation.NumberOfTickets;
             reservation.BookingId = bookingId;
+            
             _context.SaveChanges();
 
             return bookingId;
@@ -149,8 +168,7 @@ namespace CinemaStore.Business.Reservations
             return reservationDTO;   
         }
 
-        
-        // Delete Reservation by User Id
+        // Delete Reservations by User Id
         public void DeleteReservationsByUserId(int id)
         {
             var reservations = _context.Reservation.Include(m => m.Movie).Where(r => r.UserId == id).ToList();
@@ -167,6 +185,28 @@ namespace CinemaStore.Business.Reservations
             }
 
             _context.SaveChanges();
+        }
+
+        /*
+         *  HTTP DELETE - Delete Reservation by User Id and MovieId
+         */
+        public string DeleteReservationByUserIdAndMovieId(int userId, int movieId)
+        {
+            var reservation = _context.Reservation.Include(m => m.Movie).FirstOrDefault(r => r.UserId == userId && r.MovieId == movieId);
+
+            if (reservation == null)
+            {
+                return "Reservation not found.";
+            }
+            
+            var bookingId = reservation.BookingId;
+
+            reservation.Movie.AvailableSeats += reservation.NumberOfTickets;
+            _context.Reservation.Remove(reservation);
+
+            _context.SaveChanges();
+
+            return $"Reservation with id {bookingId} cancelled.";
         }
 
     }

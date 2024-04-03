@@ -44,12 +44,21 @@ namespace CinemaStore.Controllers
 
                 var userId = jwtToken.Payload["userId"].ToString();
 
-                var success = await _reservationService.MakeReservationAsync(reserv, Int32.Parse(userId));
+                var reservStatus = await _reservationService.MakeReservationAsync(reserv, Int32.Parse(userId));
                 
-                if (success)
-                    return Ok("Reservation request accepted.");
-                else
-                    return BadRequest("Reservation request denied.");
+                switch(reservStatus)
+                {
+                    case "Movie not found.":
+                        return NotFound(reservStatus);
+                    case "Number of tickets request denied.":
+                        return BadRequest(reservStatus);
+                    case "You are allowed to book 1-9 tickets.":
+                        return BadRequest(reservStatus);
+                    case "Reservation request accepted.":
+                        return Ok(reservStatus);
+                    default:
+                        return Unauthorized(reservStatus);
+                }
             }
             catch (ArgumentNullException ex)
             {
@@ -121,6 +130,40 @@ namespace CinemaStore.Controllers
                     return Ok(tickets);
                 else
                     return NotFound("Reservation not found.");
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("Cancel-Reservation")]
+        public IActionResult DeleteReservations(int movieId)
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized("Invalid token.");
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+
+                var userId = jwtToken.Payload["userId"].ToString();
+
+                var cancelStatus = _reservationService.DeleteReservationByUserIdAndMovieId(Int32.Parse(userId), movieId);
+
+                if (cancelStatus == "Reservation not found.")
+                    return NotFound(cancelStatus);
+                else
+                    return Ok(cancelStatus);
             }
             catch (ArgumentNullException ex)
             {
