@@ -12,6 +12,6 @@ namespace CinemaStore.Business.Reservations
         public string ReturnBookingId(int userId);
         public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId);
         public void DeleteReservationsByUserId(int id);
-        public string DeleteReservationByUserIdAndMovieId(int userId, int movieId);
+        public string DeleteReservationByBookingId(string bookingId);
     }
 }

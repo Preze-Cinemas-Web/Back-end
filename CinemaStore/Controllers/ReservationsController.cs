@@ -164,7 +164,7 @@ namespace CinemaStore.Controllers
         [Authorize]
         [HttpDelete]
         [Route("Cancel-Reservation")]
-        public IActionResult DeleteReservations(int movieId)
+        public IActionResult DeleteReservations(string bookingId)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace CinemaStore.Controllers
 
                 var userId = jwtToken.Payload["userId"].ToString();
 
-                var cancelStatus = _reservationService.DeleteReservationByUserIdAndMovieId(Int32.Parse(userId), movieId);
+                var cancelStatus = _reservationService.DeleteReservationByBookingId(bookingId);
 
                 if (cancelStatus == "Reservation not found.")
                     return NotFound(cancelStatus);

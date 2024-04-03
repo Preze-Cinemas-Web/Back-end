@@ -246,9 +246,9 @@ namespace CinemaStore.Business.Reservations
         /*
          *  HTTP DELETE - Delete Reservation by User Id and MovieId
          */
-        public string DeleteReservationByUserIdAndMovieId(int userId, int movieId)
+        public string DeleteReservationByBookingId(string bookingId)
         {
-            var reservation = _context.Reservation.Include(m => m.Movie).FirstOrDefault(r => r.UserId == userId && r.MovieId == movieId);
+            var reservation = _context.Reservation.Include(m => m.Movie).FirstOrDefault(b => b.BookingId == bookingId);
 
             if (reservation == null)
             {
