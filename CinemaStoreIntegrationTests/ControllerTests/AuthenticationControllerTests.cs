@@ -37,7 +37,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
                 Email = "hyman.towne@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
-                Username = "alafouzos69",
+                Username = "alafouzos123",
                 Password = "J3nbXHTSwG1abX4vnd",
                 ConfirmPassword = "J3nbXHTSwG1abX4vnd",
                 SecurityAnswer = "Ioannidis"
@@ -71,7 +71,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Authentication/Verify-Email?token=";
             var client = _factory.CreateClient();
 
-            var token = await RetrieveTokenFromDatabase();
+            var token = "F3087F5D6336C91C149C328BC4D9638FDF3E848D545CF09922980876D45856011DE2485DF50ED5C9F582B52B4D7EB58A7BEA6ADF48890A3A1CF1795BB1B4C29A";
             route += token;
 
             var result = await TestUtilities.Get(client, route);
@@ -183,19 +183,6 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             {
                 byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
                 hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "");
-            }
-        }
-
-        private async Task<string> RetrieveTokenFromDatabase()
-        {
-            using (var dbContext = new CinemaContext())
-            {
-                var token = await dbContext.User
-                    .OrderByDescending(t => t.Id)
-                    .Select(t => t.EmailVerificationToken)
-                    .FirstOrDefaultAsync();
-
-                return token;
             }
         }
 

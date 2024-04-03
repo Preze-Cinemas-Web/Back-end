@@ -34,24 +34,23 @@ namespace CinemaStoreIntegrationTests.ControllerTests
         [Fact]
         public async Task UpdateUser()
         {
-            var route = "https://localhost:7236/API/Users/Update?username=";
+            var route = "https://localhost:7236/API/Users/Update";
             var client = _factory.CreateClient();
 
             RegisterUserDTO updateUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Stefanos",
-                LastName = "Kasselakis",
-                Email = "autumn.hodkiewicz93@ethereal.email",
-                PhoneNumber = "6971654543",
-                Birthdate = "1987-11-01",
-                Username = "alafouzos69",
-                Password = "FBwUDfQ7hzDEzNmKzJ",
-                ConfirmPassword = "FBwUDfQ7hzDEzNmKzJ",
-                SecurityAnswer = "Blue"
+                FirstName = "Giorgos",
+                LastName = "Prezerakos",
+                Email = "prezecinems@ethereal.email",
+                PhoneNumber = "6971366764",
+                Birthdate = "1970-07-29",
+                Username = "prezerak",
+                Password = "GPrez_123123123123123123123123",
+                ConfirmPassword = "GPrez_123123123123123123123123",
+                SecurityAnswer = "Milwaukee Bucks"
             };
 
-            route += updateUserDTO.Username;
             var result = await TestUtilities.Put(client, route, updateUserDTO);
             var user = await ReadUser(result);
 
@@ -79,7 +78,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Users/Get-User-by-Id?id=";
             var client = _factory.CreateClient();
 
-            int userId = 2;
+            int userId = 3;
             route += userId;
 
             var result = await TestUtilities.Get(client, route);
@@ -109,7 +108,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Users/Delete?id=";
             var client = _factory.CreateClient();
 
-            int userId = 2;
+            int userId = 4;
             route += userId;
 
             var result = await TestUtilities.Delete(client, route);

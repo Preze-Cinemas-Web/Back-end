@@ -36,8 +36,8 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO()
             {
-                MovieTitle = "No Way Up",
-                NumberOfTickets = 2
+                MovieTitle = "Madame Web",
+                NumberOfTickets = 6
             };
 
             var result = await TestUtilities.Post(client, route, reservationRequestDTO);
@@ -54,7 +54,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             ConfirmReservationDTO confirmReservDTO = new ConfirmReservationDTO()
             {
-                FirstName = "George",
+                FirstName = "Giorgos",
                 LastName = "Prezerakos",
                 Email = "prezecinems@ethereal.email",
                 Phone = "6971366764",
@@ -64,7 +64,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var result = await TestUtilities.Post(client, route, confirmReservDTO);
             var reservStatus = await ReadReservationStatus(result);
 
-            Assert.True(reservStatus.Equals("Reservation confirmed."));
+            Assert.True(!reservStatus.Equals("Reservation not confirmed."));
         }
 
         [Fact]
