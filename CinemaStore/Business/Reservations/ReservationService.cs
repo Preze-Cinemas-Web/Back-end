@@ -199,14 +199,17 @@ namespace CinemaStore.Business.Reservations
                 return "Reservation not found.";
             }
             
-            var bookingId = reservation.BookingId;
+            var reservationDTO =  
+                    "Movie   : " + reservation.Movie.Title + "\n" +
+                    "Tickets : " + reservation.NumberOfTickets + "\n" +
+                    "Total   : " + reservation.TotalPrice;
 
             reservation.Movie.AvailableSeats += reservation.NumberOfTickets;
             _context.Reservation.Remove(reservation);
 
             _context.SaveChanges();
 
-            return $"Reservation with id {bookingId} cancelled.";
+            return $"Reservation cancelled.\n" + reservationDTO;
         }
 
     }
