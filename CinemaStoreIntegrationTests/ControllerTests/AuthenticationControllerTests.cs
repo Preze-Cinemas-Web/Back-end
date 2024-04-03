@@ -32,15 +32,15 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             RegisterUserDTO registerUserDTO = new RegisterUserDTO()
             {
                 Id = 0,
-                FirstName = "Giannis",
-                LastName = "Alafouzos",
-                Email = "hyman.towne@ethereal.email",
+                FirstName = "Annetta",
+                LastName = "Wyman",
+                Email = "annetta53@ethereal.email",
                 PhoneNumber = "6971654543",
                 Birthdate = "1987-11-01",
-                Username = "alafouzos123",
-                Password = "J3nbXHTSwG1abX4vnd",
-                ConfirmPassword = "J3nbXHTSwG1abX4vnd",
-                SecurityAnswer = "Ioannidis"
+                Username = "AnnetaKoita",
+                Password = "P335qc37sRAYxZmCYJ",
+                ConfirmPassword = "P335qc37sRAYxZmCYJ",
+                SecurityAnswer = "Madonna"
             };
 
             var result = await TestUtilities.Post(client, route, registerUserDTO);
@@ -71,7 +71,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Authentication/Verify-Email?token=";
             var client = _factory.CreateClient();
 
-            var token = "F3087F5D6336C91C149C328BC4D9638FDF3E848D545CF09922980876D45856011DE2485DF50ED5C9F582B52B4D7EB58A7BEA6ADF48890A3A1CF1795BB1B4C29A";
+            var token = "6E53269F7F1CFCA5FEBD69CFFD0956E4D560162D147837C31D49CA729DF885E532155B08BD1E586A74C825F7336248747B8DE584A4F1040D9B039DE374565BC4";
             route += token;
 
             var result = await TestUtilities.Get(client, route);
@@ -88,8 +88,8 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             LoginUserDTO loginUserDTO = new LoginUserDTO()
             {
-                Username = "alafouzos69",
-                Password = "J3nbXHTSwG1abX4vnd"
+                Username = "prezerak",
+                Password = "GPrez_123123123123123123123123"
             };
 
             var result = await TestUtilities.Post(client, route, loginUserDTO);
@@ -122,9 +122,9 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             }
 
             Assert.NotNull(Setup.token); // Check Admin's token
-            Assert.True(userId > 1);
-            Assert.True(role == "User");
-            Assert.True(username == "alafouzos69");
+            Assert.True(userId == 1);
+            Assert.True(role == "Admin");
+            Assert.True(username == "prezerak");
         }
 
         [Fact]
@@ -136,8 +136,8 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             // Admin Login
             ForgotPWUserDTO forgotPWUserDTO = new ForgotPWUserDTO()
             {
-                Username = "alafouzos69",
-                SecurityAnswer = "Ioannidis"
+                Username = "AnnetaKoita",
+                SecurityAnswer = "Madonna"
             };
 
             var result = await TestUtilities.Post(client, route, forgotPWUserDTO);
@@ -172,7 +172,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             Assert.NotNull(Setup.token); // Check Admin's token
             Assert.True(userId > 1);
             Assert.True(role == "User");
-            Assert.True(username == "alafouzos69");
+            Assert.True(username == "AnnetaKoita");
         }
 
         private void HashPassword(string password, ref string hashedPassword)

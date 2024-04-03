@@ -93,7 +93,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Users/Get-User-by-Username?username=";
             var client = _factory.CreateClient();
 
-            string username = "alafouzos69";
+            string username = "prezerak";
             route += username;
 
             var result = await TestUtilities.Get(client, route);
