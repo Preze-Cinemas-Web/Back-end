@@ -45,7 +45,7 @@ namespace CinemaStore.Controllers
                 var userId = jwtToken.Payload["userId"].ToString();
 
                 var success = await _reservationService.MakeReservationAsync(reserv, Int32.Parse(userId));
-
+                
                 if (success)
                     return Ok("Reservation request accepted.");
                 else
@@ -82,7 +82,8 @@ namespace CinemaStore.Controllers
 
                 if (success)
                 {
-                    return Ok("Reservation confirmed.");
+                    var bookingId = _reservationService.ReturnBookingId(Int32.Parse(userId));
+                    return Ok($"Reservation with id {bookingId} confirmed.");
                 }
                 else
                     return Unauthorized("Reservation not confirmed.");

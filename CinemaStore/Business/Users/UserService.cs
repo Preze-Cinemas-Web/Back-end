@@ -128,7 +128,10 @@ namespace CinemaStore.Business.Users
                 _context.SaveChanges();
             }
 
-            return _mapper.Map<RegisterUserDTO>(existingUser);
+            var userDTO = _mapper.Map<RegisterUserDTO>(existingUser);
+            userDTO.Id = 0;
+
+            return userDTO;
         }
 
        /*

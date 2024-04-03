@@ -9,6 +9,7 @@ namespace CinemaStore.Business.Reservations
         Task<bool> MakeReservationAsync(ReservationRequestDTO reserv, int userId);
 
         public bool ValidateReservation(ConfirmReservationDTO reserv, int userId);
+        public string ReturnBookingId(int userId);
 
         public IEnumerable<DownloadTicketsDTO> DownloadTickets(int userId);
         public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId);

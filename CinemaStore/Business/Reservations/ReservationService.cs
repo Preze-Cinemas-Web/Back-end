@@ -45,15 +45,13 @@ namespace CinemaStore.Business.Reservations
             if (!(reserv.NumberOfTickets <= 9))
                 return false;
 
-            string bookingId = GenerateRandomCode(6);
-
             var reservationDTO = new ReservationDTO
             {
                 UserId = userId,
                 MovieId = movie.Id,
                 NumberOfTickets = reserv.NumberOfTickets,
                 TotalPrice = reserv.NumberOfTickets * 8,
-                BookingId = bookingId
+                BookingId = ""
             };
 
             var reservation = this._mapper.Map<Reservation>(reservationDTO);
@@ -85,8 +83,38 @@ namespace CinemaStore.Business.Reservations
                 return false;
             if (user.Birthdate != reserv.Birthdate)
                 return false;
-
+;
             return true;
+        }
+
+        public string ReturnBookingId(int userId)
+        {
+            var bookingId = GenerateRandomCode(6);
+            while (_context.Reservation.Any(b => b.BookingId == bookingId))
+            {
+                bookingId = GenerateRandomCode(6);
+            }
+
+            var reservation = _context.Reservation.Where(b => b.BookingId == "").FirstOrDefault(r => r.UserId == userId);
+            reservation.BookingId = bookingId;
+            _context.SaveChanges();
+
+            return bookingId;
+        }
+
+        // Booking Id
+        private string GenerateRandomCode(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Define characters to use
+            var random = new Random();
+            var code = new StringBuilder(length);
+
+            for (int i = 0; i < length; i++)
+            {
+                code.Append(chars[random.Next(chars.Length)]);
+            }
+
+            return code.ToString();
         }
 
         /*
@@ -119,21 +147,6 @@ namespace CinemaStore.Business.Reservations
             }).ToList();
 
             return reservationsDTO;
-        }
-
-        // Booking Id
-        private string GenerateRandomCode(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Define characters to use
-            var random = new Random();
-            var code = new StringBuilder(length);
-
-            for (int i = 0; i < length; i++)
-            {
-                code.Append(chars[random.Next(chars.Length)]);
-            }
-
-            return code.ToString();
         }
 
         /*
