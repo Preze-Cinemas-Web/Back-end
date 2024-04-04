@@ -29,7 +29,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
         }
 
         [Fact]
-        public async Task GerMovieViewsByTitle()
+        public async Task GetMovieViewsByTitle()
         {
             var route = "https://localhost:7236/API/Movies/Get-Movie-Views-by-Title?title=";
             var client = _factory.CreateClient();

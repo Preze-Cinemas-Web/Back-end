@@ -75,7 +75,7 @@ namespace CinemaStore.Controllers
         }
 
         [HttpGet]
-        [Route("Get-User-by-Id"), Authorize] 
+        [Route("Get-User-by-Id"), Authorize(Roles = "Admin")] 
         public ActionResult<RegisterUserDTO> GetUserById(int id)
         {
             var user = _userService.FindUserById(id);

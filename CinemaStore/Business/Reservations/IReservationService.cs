@@ -8,10 +8,11 @@ namespace CinemaStore.Business.Reservations
         public IEnumerable<DownloadTicketsDTO> FindAllReservations();
         public IEnumerable<DownloadTicketsDTO> FindReservationsByUserId(int userId);
         Task<string> MakeReservationAsync(ReservationRequestDTO reserv, int userId);
-        public bool ValidateReservation(ConfirmReservationDTO reserv, int userId);
+        public string ValidateReservation(ConfirmReservationDTO reserv, int userId);
         public string ReturnBookingId(int userId);
-        public DownloadTicketsDTO DownloadTicketsByBookingId(string bookingId, int userId);
+        public string DownloadTicketsByBookingId(string bookingId, int userId);
         public void DeleteReservationsByUserId(int id);
-        public string DeleteReservationByUserIdAndMovieId(int userId, int movieId);
+        public string DeleteReservationByBookingId(string bookingId);
+        public string DeleteUnconfirmedReservation(int userId);
     }
 }

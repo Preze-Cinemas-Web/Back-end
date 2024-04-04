@@ -73,7 +73,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
         }
 
         [Fact]
-        public async Task GerUserById()
+        public async Task GetUserById()
         {
             var route = "https://localhost:7236/API/Users/Get-User-by-Id?id=";
             var client = _factory.CreateClient();
@@ -88,7 +88,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
         }
 
         [Fact]
-        public async Task GerUserByUsername()
+        public async Task GetUserByUsername()
         {
             var route = "https://localhost:7236/API/Users/Get-User-by-Username?username=";
             var client = _factory.CreateClient();

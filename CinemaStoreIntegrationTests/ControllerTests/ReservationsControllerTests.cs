@@ -48,8 +48,8 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             ReservationRequestDTO reservationRequestDTO = new ReservationRequestDTO()
             {
-                MovieTitle = "Madame Web",
-                NumberOfTickets = 6
+                MovieTitle = "The Weapon",
+                NumberOfTickets = 5
             };
 
             var result = await TestUtilities.Post(client, route, reservationRequestDTO);
@@ -70,41 +70,48 @@ namespace CinemaStoreIntegrationTests.ControllerTests
                 LastName = "Prezerakos",
                 Email = "prezecinems@ethereal.email",
                 Phone = "6971366764",
-                Birthdate = "1970-07-29"
+                Birthdate = "1970-07-29",
+                Price = 40
             };
 
             var result = await TestUtilities.Post(client, route, confirmReservDTO);
             var reservStatus = await ReadReservationStatus(result);
 
-            Assert.True(!reservStatus.Equals("Reservation not confirmed."));
+            Assert.False(reservStatus.Equals("User not found."));
+            Assert.False(reservStatus.Equals("Reservation not found."));
+            Assert.False(reservStatus.Equals("First name unconfirmed."));
+            Assert.False(reservStatus.Equals("Last name unconfirmed."));
+            Assert.False(reservStatus.Equals("Email unconfirmed."));
+            Assert.False(reservStatus.Equals("Phone unconfirmed."));
+            Assert.False(reservStatus.Equals("Birthdate unconfirmed."));
+            Assert.False(reservStatus.Equals("Total price unconfirmed."));
+            Assert.False(reservStatus.Equals("Not enough tickets."));
         }
 
         [Fact]
         public async Task DownloadTicketsByBookingId()
         {
-            var route = "https://localhost:7236/API/Reservations/Download-Tickets-by-Bookingid?bookingId=";
+            // Remove folder Tickets cuz 500 
+            var route = "https://localhost:7236/API/Reservations/Download-Tickets-by-BookingId?bookingId=";
             var client = _factory.CreateClient();
 
-            var bookingId = "GM06DD";
+            var bookingId = "E7XSP9";
             route += bookingId;
 
             var result = await TestUtilities.Get(client, route);
-            var tickets = await ReadTicket(result);
+            var ticketStatus = await ReadReservationStatus(result);
 
-            Assert.True(tickets.BookingId == bookingId);
-            Assert.True(tickets.NumberOfTickets == 2);
-            Assert.True(tickets.MovieTitle == "Damsel");
-            Assert.True(tickets.TotalValue == 16);
+            Assert.False(ticketStatus.Equals("Reservation not found."));
         }
 
         [Fact]
         public async Task CancelReservation()
         {
-            var route = "https://localhost:7236/API/Reservations/Cancel-Reservation?movieId=";
+            var route = "https://localhost:7236/API/Reservations/Cancel-Reservation?bookingId=";
             var client = _factory.CreateClient();
 
-            int movieId = 634492;
-            route += movieId;
+            string bookingId = "OBO9YA";
+            route += bookingId;
 
             var result = await TestUtilities.Delete(client, route);
 
@@ -117,14 +124,6 @@ namespace CinemaStoreIntegrationTests.ControllerTests
 
             var content = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<ReservationDTO>>(content);
-        }
-
-        private async Task<DownloadTicketsDTO> ReadTicket(HttpResponseMessage result)
-        {
-            Assert.True(result.IsSuccessStatusCode);
-
-            var content = await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<DownloadTicketsDTO>(content);
         }
 
         private async Task<string> ReadReservationStatus(HttpResponseMessage result)

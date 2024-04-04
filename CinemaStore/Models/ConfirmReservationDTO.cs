@@ -14,5 +14,7 @@ namespace CinemaStore.Models
         public string Phone { get; set; }
         [Required]
         public string Birthdate { get; set; }
+        [Required]
+        public int Price { get; set; }
     }
 }
