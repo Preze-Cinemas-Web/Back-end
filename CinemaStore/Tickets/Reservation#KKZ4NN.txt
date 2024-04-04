@@ -1,7 +1,0 @@
-Cinema Center: Preze Cinemas
-Hall Name: Hall 3
-Movie Title: Damsel
-Date and Time: 2024-03-25 02:00 PM
-Number of Tickets: 7
-Total Value: 56
-Booking ID: KKZ4NN

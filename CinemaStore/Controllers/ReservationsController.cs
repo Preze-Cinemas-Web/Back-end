@@ -166,10 +166,10 @@ namespace CinemaStore.Controllers
 
                 var ticketsStatus = _reservationService.DownloadTicketsByBookingId(bookingId, Int32.Parse(userId));
 
-                if (ticketsStatus != null)
-                    return Ok(ticketsStatus);
-                else
+                if (ticketsStatus.Equals("Reservation not found."))
                     return NotFound(ticketsStatus);
+                
+                return Ok(ticketsStatus);
             }
             catch (ArgumentNullException ex)
             {
@@ -183,7 +183,7 @@ namespace CinemaStore.Controllers
 
         [Authorize]
         [HttpDelete]
-        [Route("Cancel-Reservation")]
+        [Route("Cancel-Confirmed-Reservation")]
         public IActionResult DeleteReservations(string bookingId)
         {
             try
@@ -199,6 +199,40 @@ namespace CinemaStore.Controllers
                 var userId = jwtToken.Payload["userId"].ToString();
 
                 var cancelStatus = _reservationService.DeleteReservationByBookingId(bookingId);
+
+                if (cancelStatus == "Reservation not found.")
+                    return NotFound(cancelStatus);
+                else
+                    return Ok(cancelStatus);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse { Status = "Error", Message = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("Cancel-Unconfirmed-Reservation")]
+        public IActionResult DeleteUnconfirmedReservations()
+        {
+            try
+            {
+                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                if (string.IsNullOrEmpty(token))
+                    return Unauthorized("Invalid token.");
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+
+                var userId = jwtToken.Payload["userId"].ToString();
+
+                var cancelStatus = _reservationService.DeleteUnconfirmedReservation(Int32.Parse(userId));
 
                 if (cancelStatus == "Reservation not found.")
                     return NotFound(cancelStatus);

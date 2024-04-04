@@ -93,7 +93,7 @@ namespace CinemaStore.Business.Reservations
         public async Task<string> MakeReservationAsync(ReservationRequestDTO reserv, int userId)
         {
             var hasUnconfirmedReservations = _context.Reservation.
-                Where(b => b.BookingId == "").
+                Where(b => b.BookingId == " ").
                 Include(m => m.Movie).
                 FirstOrDefault(r => r.UserId == userId);
 
@@ -119,7 +119,7 @@ namespace CinemaStore.Business.Reservations
                 MovieId = movie.Id,
                 NumberOfTickets = reserv.NumberOfTickets,
                 TotalPrice = reserv.NumberOfTickets * 8,
-                BookingId = ""
+                BookingId = " "
             };
 
             var reservation = this._mapper.Map<Reservation>(reservationDTO);
@@ -139,7 +139,7 @@ namespace CinemaStore.Business.Reservations
             var user = _context.User.FirstOrDefault(u => u.Id == userId);
             var reservation = _context.Reservation
                 .Where(u => u.UserId == userId)
-                .FirstOrDefault(r => r.BookingId == "");
+                .FirstOrDefault(r => r.BookingId == " ");
 
             if (user == null) 
                 return "User not found.";
@@ -177,7 +177,7 @@ namespace CinemaStore.Business.Reservations
             }
 
             var reservation = _context.Reservation.
-                Where(b => b.BookingId == "").
+                Where(b => b.BookingId == " ").
                 Include(m => m.Movie).
                 FirstOrDefault(r => r.UserId == userId);
             
@@ -248,7 +248,7 @@ namespace CinemaStore.Business.Reservations
                  writer.WriteLine($"Booking ID: {reservationDTO.BookingId}");
              } 
 
-            return "Your tickets have been downloaded to "; //+ filePath;
+            return "Your tickets have been downloaded to " + filePath;
         }
 
         // Delete Reservations by User Id
@@ -285,7 +285,9 @@ namespace CinemaStore.Business.Reservations
          */
         public string DeleteReservationByBookingId(string bookingId)
         {
-            var reservation = _context.Reservation.Include(m => m.Movie).FirstOrDefault(b => b.BookingId == bookingId);
+            var reservation = _context.Reservation
+                .Include(m => m.Movie)
+                .FirstOrDefault(b => b.BookingId == bookingId);
 
             if (reservation == null)
             {
@@ -308,6 +310,33 @@ namespace CinemaStore.Business.Reservations
             {
                 File.Delete(filePath);
             }
+
+            return $"Reservation cancelled.\n" + reservationDTO;
+        }
+
+        /*
+         *  HTTP DELETE - Delete Unconfirmed Reservation
+         */
+        public string DeleteUnconfirmedReservation(int userId)
+        {
+            var reservation = _context.Reservation
+                .Include(m => m.Movie)
+                .Where(u => u.UserId == userId)
+                .FirstOrDefault(b => b.BookingId == " ");
+
+            if (reservation == null)
+            {
+                return "Reservation not found.";
+            }
+
+            var reservationDTO =
+                    "Movie   : " + reservation.Movie.Title + "\n" +
+                    "Tickets : " + reservation.NumberOfTickets + "\n" +
+                    "Total   : " + reservation.TotalPrice;
+
+            _context.Reservation.Remove(reservation);
+
+            _context.SaveChanges();
 
             return $"Reservation cancelled.\n" + reservationDTO;
         }

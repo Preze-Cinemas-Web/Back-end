@@ -1,0 +1,7 @@
+Cinema Center: Preze Cinemas
+Hall Name: Hall 2
+Movie Title: Madame Web
+Date and Time: 2024-03-25 12:00 PM
+Number of Tickets: 9
+Total Value: 72
+Booking ID: F529V2
