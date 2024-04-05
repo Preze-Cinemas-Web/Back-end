@@ -97,6 +97,10 @@ namespace CinemaStore.Business.Reservations
                 Include(m => m.Movie).
                 FirstOrDefault(r => r.UserId == userId);
 
+            var user = _context.User.FirstOrDefault(u => u.Id == userId);
+
+            if (user.EmailVerifiedAt.Equals(""))
+                return "Email not verified.";
 
             if (hasUnconfirmedReservations != null)
                 return "You have an unconfirmed reservation.\n" +

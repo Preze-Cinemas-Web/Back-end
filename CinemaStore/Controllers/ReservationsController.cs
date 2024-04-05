@@ -74,6 +74,8 @@ namespace CinemaStore.Controllers
                         return BadRequest(reservStatus);
                     case "You are allowed to book 1-9 tickets.":
                         return BadRequest(reservStatus);
+                    case "Email not verified.":
+                        return Unauthorized(reservStatus);
                     case "Reservation request accepted.":
                         return Ok(reservStatus);
                     default:
