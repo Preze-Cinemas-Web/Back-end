@@ -20,7 +20,7 @@ namespace CinemaStore
             token = tokenHandler.WriteToken(tokenJWT);
         }
 
-        private static JwtSecurityToken GetToken(int userId, string username, string role) // Add userId and role parameters
+        private static JwtSecurityToken GetToken(int userId, string username, string role) // Add userId, username and role parameters
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configRoot["JWT:Key"]));
 
@@ -31,8 +31,8 @@ namespace CinemaStore
                                claims: new[]
                                {
                                    new Claim("userId", userId.ToString()), // Add userId claim
-                                   new Claim("username", username),
-                                   new Claim("role", role) // Add role claim
+                                   new Claim("username", username),        // Add username claim
+                                   new Claim("role", role)                 // Add role claim
                                },
                                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                                );

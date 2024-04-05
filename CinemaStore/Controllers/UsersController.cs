@@ -50,15 +50,15 @@ namespace CinemaStore.Controllers
                 var userId = jwtToken.Payload["userId"].ToString();
 
                 var existingUser = _userService.FindUserById(Int32.Parse(userId));
-                
+
                 if (existingUser == null)
                 {
                     return NotFound("User not found");
                 }
 
                 var updatedUser = _userService.ModifyUser(updatedUserDTO, Int32.Parse(userId));
-                
-                return updatedUser;
+
+                return Ok(updatedUser);
             }
             catch (ArgumentNullException ex1)
             {
@@ -82,7 +82,31 @@ namespace CinemaStore.Controllers
             
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
+            }
+
+            return Ok(user);
+        }
+
+        [HttpGet]
+        [Route("Get-User"), Authorize]
+        public ActionResult<RegisterUserDTO> GetUser()
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            if (string.IsNullOrEmpty(token))
+                return Unauthorized("Invalid token.");
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Payload["userId"].ToString();
+
+            var user = _userService.FindUserById(Int32.Parse(userId));
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
             }
 
             return Ok(user);
@@ -96,7 +120,7 @@ namespace CinemaStore.Controllers
             
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
 
             return Ok(user);
@@ -110,7 +134,7 @@ namespace CinemaStore.Controllers
                 var existingUser = _userService.FindUserById(id);
                 if (existingUser == null)
                 {
-                    return NotFound();
+                    return NotFound("User not found.");
                 }
 
                 _userService.DeleteUserById(id);

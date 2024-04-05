@@ -177,7 +177,7 @@ namespace CinemaStore.Controllers
             }
         }
 
-        private JwtSecurityToken GetToken(int userId, string username, string role) // Add userId and role parameters
+        private JwtSecurityToken GetToken(int userId, string username, string role) // Add userId username, and role parameters
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
 
@@ -187,9 +187,9 @@ namespace CinemaStore.Controllers
                                expires: DateTime.Now.AddDays(1),
                                claims: new[]
                                {
-                                   new Claim("userId", userId.ToString()), // Add userId claim
-                                   new Claim("username", username), // Add username claim
-                                   new Claim("role", role) // Add role claim
+                                   new Claim("userId", userId.ToString()),  // Add userId claim
+                                   new Claim("username", username),         // Add username claim
+                                   new Claim("role", role)                  // Add role claim
                                },
                                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                                );

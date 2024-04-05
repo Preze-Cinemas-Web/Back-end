@@ -78,13 +78,25 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var route = "https://localhost:7236/API/Users/Get-User-by-Id?id=";
             var client = _factory.CreateClient();
 
-            int userId = 3;
+            int userId = 1;
             route += userId;
 
             var result = await TestUtilities.Get(client, route);
             var user = await ReadUser(result);
 
             Assert.True(user.Id == userId);
+        }
+
+        [Fact]
+        public async Task GetUser()
+        {
+            var route = "https://localhost:7236/API/Users/Get-User";
+            var client = _factory.CreateClient();
+
+            var result = await TestUtilities.Get(client, route);
+            var user = await ReadUser(result);
+
+            Assert.True(user.Id > 0);
         }
 
         [Fact]
@@ -99,6 +111,7 @@ namespace CinemaStoreIntegrationTests.ControllerTests
             var result = await TestUtilities.Get(client, route);
             var user = await ReadUser(result);
 
+            Assert.True(user.Id > 0);
             Assert.True(user.Username == username);
         }
 
