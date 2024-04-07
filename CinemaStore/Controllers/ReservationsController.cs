@@ -79,7 +79,7 @@ namespace CinemaStore.Controllers
                     case "Reservation request accepted.":
                         return Ok(reservStatus);
                     default:
-                        return Unauthorized(reservStatus);
+                        return BadRequest(reservStatus);
                 }
             }
             catch (ArgumentNullException ex)
@@ -119,15 +119,15 @@ namespace CinemaStore.Controllers
                     case "Reservation not found.":
                         return NotFound(confirmStatus);
                     case "First name unconfirmed.":
-                        return Unauthorized(confirmStatus);
+                        return BadRequest(confirmStatus);
                     case "Last name unconfirmed.":
-                        return Unauthorized(confirmStatus);
+                        return BadRequest(confirmStatus);
                     case "Email unconfirmed.":
-                        return Unauthorized(confirmStatus);
+                        return BadRequest(confirmStatus);
                     case "Phone unconfirmed.":
-                        return Unauthorized(confirmStatus);
+                        return BadRequest(confirmStatus);
                     case "Birthdate unconfirmed.":
-                        return Unauthorized(confirmStatus);
+                        return BadRequest(confirmStatus);
                     case "Total price unconfirmed.":
                         return BadRequest(confirmStatus);
                     case "Not enough tickets.":
